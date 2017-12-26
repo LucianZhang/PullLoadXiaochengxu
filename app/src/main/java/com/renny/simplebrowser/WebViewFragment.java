@@ -17,21 +17,16 @@ import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
-import java.util.HashMap;
-import java.util.Map;
-
 
 /**
  * Created by yh on 2016/6/27.
  */
 public class WebViewFragment extends Fragment {
 
-    private Map<String, String> title_map = new HashMap<>();//存放标题 键是url 值是标题
-    View rootView;
-    WebView mWebView;
+    private View rootView;
+    private WebView mWebView;
     private String mUrl;
     private OnReceivedListener onReceivedTitleListener;
-    private boolean isOnReceivedTitle = false;//是否触发
 
     @Nullable
     @Override
@@ -63,31 +58,12 @@ public class WebViewFragment extends Fragment {
             public void onReceivedTitle(WebView webView, String title) {
                 super.onReceivedTitle(webView, title);
                 if (onReceivedTitleListener != null) {
-                    String url = webView.getUrl();
-                    if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(title) && !TextUtils.equals(title, url)) {
-                        onReceivedTitleListener.onReceivedTitle(title);
-                        title_map.put(url, title);//存放标题
-                        isOnReceivedTitle = true;
-                    }
+                    onReceivedTitleListener.onReceivedTitle(title);
+
                 }
             }
         };
         WebViewClient webViewClient = new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView webView, String url) {
-                super.onPageFinished(webView, url);
-                if (onReceivedTitleListener != null) {
-                    onReceivedTitleListener.onPageFinish(webView,url);
-                }
-                if (!isOnReceivedTitle && title_map.containsKey(url)) {
-                    String title = title_map.get(url);
-                    if (onReceivedTitleListener != null) {
-                        onReceivedTitleListener.onReceivedTitle(title);
-                    }
-                    isOnReceivedTitle = true;
-                }
-
-            }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView webView, String url) {
@@ -113,7 +89,7 @@ public class WebViewFragment extends Fragment {
             intent.putExtra("referer", url);
             getActivity().startActivity(intent);
         } catch (Exception e) {
-            Log.e("xxx","您所打开的第三方App未安装！");
+            Log.e("xxx", "您所打开的第三方App未安装！");
             return false;
         }
 
@@ -130,7 +106,5 @@ public class WebViewFragment extends Fragment {
 
     public interface OnReceivedListener {
         void onReceivedTitle(String title);
-
-        void onPageFinish(WebView webView,String url);
     }
 }
