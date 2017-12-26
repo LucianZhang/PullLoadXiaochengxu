@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
     HomePageFragment mHomePageFragment;
     TextView titleView;
     GestureLayout mGestureLayout;
-    private String homePage = "https://juejin.im/user/5795bb80d342d30059f14b1c";
     FragmentTransaction trans;
     private boolean isOnHomePage = false;
+    private boolean fromBack = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +52,17 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
                 WebBackForwardList list = webView.copyBackForwardList();
                 int size = list.getSize();
                 if (edgeFlags == ViewDragHelper.EDGE_LEFT) {
-                    return webView.canGoBack() || !isOnHomePage;
+                    view.setBackgroundResource(R.color.colorAccent);
+                    return webView.canGoBack() || !isOnHomePage || (fromBack && isOnHomePage);
                 } else if (edgeFlags == ViewDragHelper.EDGE_RIGHT) {
+                    view.setBackgroundResource(R.color.colorAccent);
                     if (isOnHomePage) {
                         return size > 0;
                     } else {
                         return webView.canGoForward();
                     }
                 } else if (edgeFlags == ViewDragHelper.EDGE_BOTTOM) {
+                    view.setBackgroundResource(R.color.colorAccent);
                     return !isOnHomePage;
                 }
                 return false;
@@ -70,7 +73,11 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
                 if (edgeFlags == ViewDragHelper.EDGE_LEFT) {
                     backPreviousPage();
                 } else if (edgeFlags == ViewDragHelper.EDGE_RIGHT) {
-                    goNextPage();
+                    if (isOnHomePage) {
+                        goWebview(null);
+                    } else {
+                        goNextPage();
+                    }
                 } else if (edgeFlags == ViewDragHelper.EDGE_BOTTOM) {
                     goHomePage();
                 }
@@ -87,8 +94,6 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
                 }
             }
         });
-
-
     }
 
     private void goWebview(String url) {
@@ -112,8 +117,9 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
     private void goHomePage() {
         getSupportFragmentManager().beginTransaction().replace(R.id.container,
                 mHomePageFragment).commit();
-        titleView.setText(" ");
+        titleView.setText("主页");
         isOnHomePage = true;
+        fromBack = true;
     }
 
     private void backPreviousPage() {
