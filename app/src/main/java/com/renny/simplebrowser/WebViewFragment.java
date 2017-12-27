@@ -58,6 +58,7 @@ public class WebViewFragment extends Fragment {
                 mWebView.reload();
             }
         });
+        refreshLayout.setEnableLoadmore(false);
         WebSettings setting = mWebView.getSettings();
         setting.setJavaScriptEnabled(true);
         setting.setDomStorageEnabled(true);
@@ -73,7 +74,6 @@ public class WebViewFragment extends Fragment {
             }
         };
         WebViewClient webViewClient = new WebViewClient() {
-
             @Override
             public void onPageFinished(WebView webView, String s) {
                 super.onPageFinished(webView, s);

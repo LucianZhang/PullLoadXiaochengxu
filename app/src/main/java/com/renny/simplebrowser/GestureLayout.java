@@ -50,107 +50,109 @@ public class GestureLayout extends RelativeLayout {
         mLeftPos = new Point();
         mRightPos = new Point();
         mHomePos = new Point();
-        mViewDragHelper = ViewDragHelper.create(this, 1.0f, new ViewDragHelper.Callback() {
-            @Override
-            public boolean tryCaptureView(View child, int pointerId) {
-                //mEdgeTrackerView禁止直接移动
-                return false;
-            }
-
-            @Override
-            public int clampViewPositionVertical(View child, int top, int dy) {
-                int topBound = 0;
-                int bottomBound = 0;
-                if (child == leftRefreshView) {
-                    return mLeftPos.y;
-                } else if (child == rightRefreshView) {
-                    return mRightPos.y;
-                } else if (child == backHomeView) {
-                    topBound = getHeight() - child.getHeight() * 2;
-                    bottomBound = getHeight();
-                }
-                return Math.min(Math.max(top, topBound), bottomBound);
-            }
-
-            public int clampViewPositionHorizontal(View child, int left, int dx) {
-                int leftBound = 0;
-                int rightBound = 0;
-                if (child == leftRefreshView) {
-                    leftBound = -child.getWidth();
-                } else if (child == rightRefreshView) {
-                    leftBound = getWidth() - child.getWidth();
-                    rightBound = getWidth();
-                } else if (child == backHomeView) {
-                    return mHomePos.x;
-                }
-                return Math.min(Math.max(left, leftBound), rightBound);
-            }
-
-            @Override
-            public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
-                if (mGestureListener != null) {
-                    if (changedView == leftRefreshView && leftRefreshView.getLeft() == 0) {
-                        mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_LEFT, leftRefreshView);
-                    } else if (changedView == rightRefreshView && rightRefreshView.getRight() == getWidth()) {
-                        mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_RIGHT, rightRefreshView);
-                    } else if (changedView == backHomeView) {
-                        if (backHomeView.getTop() == getHeight() - 2 * backHomeView.getHeight()) {
-                            backHomeView.setSelected(true);
-                            mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_BOTTOM, backHomeView);
-                        } else {
-                            backHomeView.setSelected(false);
-                        }
-                    }
-                }
-            }
-
-            //手指释放的时候回调
-            @Override
-            public void onViewReleased(View releasedChild, float xvel, float yvel) {
-                //mAutoBackView手指释放时可以自动回去
-                if (mGestureListener != null) {
-
-                    if (releasedChild == leftRefreshView) {
-                        if (leftRefreshView.getLeft() == 0) {
-                            mGestureListener.onViewMaxPositionReleased(ViewDragHelper.EDGE_LEFT, leftRefreshView);
-                        }
-                        mViewDragHelper.settleCapturedViewAt(mLeftPos.x, mLeftPos.y);
-                        invalidate();
-                    } else if (releasedChild == rightRefreshView) {
-                        if (rightRefreshView.getRight() == getWidth()) {
-                            mGestureListener.onViewMaxPositionReleased(ViewDragHelper.EDGE_RIGHT, rightRefreshView);
-                        }
-                        mViewDragHelper.settleCapturedViewAt(mRightPos.x, mRightPos.y);
-                        invalidate();
-                    } else if (releasedChild == backHomeView) {
-                        if (backHomeView.getTop() == getHeight() - 2 * backHomeView.getHeight()) {
-                            mGestureListener.onViewMaxPositionReleased(ViewDragHelper.EDGE_BOTTOM, backHomeView);
-                        }
-                        mViewDragHelper.settleCapturedViewAt(mHomePos.x, mHomePos.y);
-                        invalidate();
-                    }
-                }
-            }
-
-            //在边界拖动时回调
-            @Override
-            public void onEdgeDragStarted(int edgeFlags, int pointerId) {
-                if (mGestureListener != null) {
-                    ImageView dragView = null;
-                    if (edgeFlags == ViewDragHelper.EDGE_LEFT) {
-                        dragView = leftRefreshView;
-                    } else if (edgeFlags == ViewDragHelper.EDGE_RIGHT) {
-                        dragView = rightRefreshView;
-                    } else if (edgeFlags == ViewDragHelper.EDGE_BOTTOM) {
-                        dragView = backHomeView;
-                    }
-                    if (dragView != null && mGestureListener.dragStartedEnable(edgeFlags, dragView)) {
-                        mViewDragHelper.captureChildView(dragView, pointerId);
-                    }
-                }
-            }
-        });
+        mViewDragHelper = ViewDragHelper.create(this, 1.0f, new GestureDragCallback());
         mViewDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT | ViewDragHelper.EDGE_RIGHT | ViewDragHelper.EDGE_BOTTOM);
+    }
+
+    private class GestureDragCallback extends ViewDragHelper.Callback {
+        @Override
+        public boolean tryCaptureView(View child, int pointerId) {
+            //mEdgeTrackerView禁止直接移动
+            return false;
+        }
+
+        @Override
+        public int clampViewPositionVertical(View child, int top, int dy) {
+            int topBound = 0;
+            int bottomBound = 0;
+            if (child == leftRefreshView) {
+                return mLeftPos.y;
+            } else if (child == rightRefreshView) {
+                return mRightPos.y;
+            } else if (child == backHomeView) {
+                topBound = getHeight() - child.getHeight() * 2;
+                bottomBound = getHeight();
+            }
+            return Math.min(Math.max(top, topBound), bottomBound);
+        }
+
+        public int clampViewPositionHorizontal(View child, int left, int dx) {
+            int leftBound = 0;
+            int rightBound = 0;
+            if (child == leftRefreshView) {
+                leftBound = -child.getWidth();
+            } else if (child == rightRefreshView) {
+                leftBound = getWidth() - child.getWidth();
+                rightBound = getWidth();
+            } else if (child == backHomeView) {
+                return mHomePos.x;
+            }
+            return Math.min(Math.max(left, leftBound), rightBound);
+        }
+
+        @Override
+        public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
+            if (mGestureListener != null) {
+                if (changedView == leftRefreshView && leftRefreshView.getLeft() == 0) {
+                    mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_LEFT, leftRefreshView);
+                } else if (changedView == rightRefreshView && rightRefreshView.getRight() == getWidth()) {
+                    mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_RIGHT, rightRefreshView);
+                } else if (changedView == backHomeView) {
+                    if (backHomeView.getTop() == getHeight() - 2 * backHomeView.getHeight()) {
+                        backHomeView.setSelected(true);
+                        mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_BOTTOM, backHomeView);
+                    } else {
+                        backHomeView.setSelected(false);
+                    }
+                }
+            }
+        }
+
+        //手指释放的时候回调
+        @Override
+        public void onViewReleased(View releasedChild, float xvel, float yvel) {
+            //mAutoBackView手指释放时可以自动回去
+            if (mGestureListener != null) {
+
+                if (releasedChild == leftRefreshView) {
+                    if (leftRefreshView.getLeft() == 0) {
+                        mGestureListener.onViewMaxPositionReleased(ViewDragHelper.EDGE_LEFT, leftRefreshView);
+                    }
+                    mViewDragHelper.settleCapturedViewAt(mLeftPos.x, mLeftPos.y);
+                    invalidate();
+                } else if (releasedChild == rightRefreshView) {
+                    if (rightRefreshView.getRight() == getWidth()) {
+                        mGestureListener.onViewMaxPositionReleased(ViewDragHelper.EDGE_RIGHT, rightRefreshView);
+                    }
+                    mViewDragHelper.settleCapturedViewAt(mRightPos.x, mRightPos.y);
+                    invalidate();
+                } else if (releasedChild == backHomeView) {
+                    if (backHomeView.getTop() == getHeight() - 2 * backHomeView.getHeight()) {
+                        mGestureListener.onViewMaxPositionReleased(ViewDragHelper.EDGE_BOTTOM, backHomeView);
+                    }
+                    mViewDragHelper.settleCapturedViewAt(mHomePos.x, mHomePos.y);
+                    invalidate();
+                }
+            }
+        }
+
+        //在边界拖动时回调
+        @Override
+        public void onEdgeDragStarted(int edgeFlags, int pointerId) {
+            if (mGestureListener != null) {
+                ImageView dragView = null;
+                if (edgeFlags == ViewDragHelper.EDGE_LEFT) {
+                    dragView = leftRefreshView;
+                } else if (edgeFlags == ViewDragHelper.EDGE_RIGHT) {
+                    dragView = rightRefreshView;
+                } else if (edgeFlags == ViewDragHelper.EDGE_BOTTOM) {
+                    dragView = backHomeView;
+                }
+                if (dragView != null && mGestureListener.dragStartedEnable(edgeFlags, dragView)) {
+                    mViewDragHelper.captureChildView(dragView, pointerId);
+                }
+            }
+        }
     }
 
     @Override
@@ -230,6 +232,7 @@ public class GestureLayout extends RelativeLayout {
         void onViewMaxPositionReleased(int edgeFlags, ImageView view);
 
         void onViewMaxPositionArrive(int edgeFlags, ImageView view);
+
     }
 
     /**

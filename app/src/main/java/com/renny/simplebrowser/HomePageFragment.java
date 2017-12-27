@@ -71,14 +71,14 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
         if (mGoPageListener != null) {
             int id = v.getId();
             switch (id) {
-                case R.id.github:
-                    mGoPageListener.onGopage(github);
-                    break;
                 case R.id.profile:
                     mGoPageListener.onGopage(homePage);
                     break;
                 case R.id.baidu:
                     mGoPageListener.onGopage(baidu);
+                    break;
+                case R.id.github:
+                    mGoPageListener.onGopage(github);
                     break;
             }
         }
