@@ -2,7 +2,7 @@ package com.renny.simplebrowser;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -14,33 +14,23 @@ import com.tencent.smtt.sdk.WebBackForwardList;
 import com.tencent.smtt.sdk.WebView;
 
 public class MainActivity extends AppCompatActivity implements WebViewFragment.OnReceivedListener {
-    private final String WEB_TAG = "simple_web";
     WebViewFragment webViewFragment;
     HomePageFragment mHomePageFragment;
     TextView titleView;
     GestureLayout mGestureLayout;
-    FragmentTransaction trans;
+    FragmentManager mFragmentManager;
     private boolean isOnHomePage = false;
     private boolean fromBack = false;
     private long mExitTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         titleView = findViewById(R.id.title);
         mGestureLayout = findViewById(R.id.gesture_layout);
-        trans = getSupportFragmentManager().beginTransaction();
-        mHomePageFragment = new HomePageFragment();
-        mHomePageFragment.setGoPageListener(new HomePageFragment.goPageListener() {
-            @Override
-            public void onGopage(String url) {
-                goWebview(url);
-            }
-        });
-        trans.add(R.id.container, mHomePageFragment);
-        trans.addToBackStack(null);
-        trans.commit();
-        isOnHomePage = true;
+        mFragmentManager = getSupportFragmentManager();
+        goHomePage();
         mGestureLayout.setGestureListener(new GestureLayout.GestureListener() {
             @Override
             public boolean dragStartedEnable(int edgeFlags, ImageView view) {
@@ -54,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
                 WebBackForwardList list = webView.copyBackForwardList();
                 int size = list.getSize();
                 if (edgeFlags == ViewDragHelper.EDGE_LEFT) {
-                    return webView.canGoBack() || !isOnHomePage || (fromBack && isOnHomePage);
+                    return webView.canGoBack() || !isOnHomePage || fromBack;
                 } else if (edgeFlags == ViewDragHelper.EDGE_RIGHT) {
                     if (isOnHomePage) {
                         return size > 0;
@@ -70,10 +60,10 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
             @Override
             public void onViewMaxPositionReleased(int edgeFlags, ImageView view) {
                 if (edgeFlags == ViewDragHelper.EDGE_LEFT) {
-                    returnPreviousPage();
+                    returnLastPage();
                 } else if (edgeFlags == ViewDragHelper.EDGE_RIGHT) {
                     if (isOnHomePage) {
-                        goWebview(null);
+                        goWebView(null);
                     } else {
                         goNextPage();
                     }
@@ -90,14 +80,21 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
         });
     }
 
-    private void goWebview(String url) {
+
+    private void setTitle(String title) {
+        if (!TextUtils.isEmpty(title)) {
+            titleView.setText(title);
+        }
+    }
+
+    private void goWebView(String url) {
         if (webViewFragment == null || !TextUtils.isEmpty(url)) {
             webViewFragment = new WebViewFragment();
             Bundle args = new Bundle();
             args.putString("url", url);
             webViewFragment.setArguments(args);
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,
+        mFragmentManager.beginTransaction().replace(R.id.container,
                 webViewFragment).commit();
         isOnHomePage = false;
         fromBack = false;
@@ -107,29 +104,27 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
         }
     }
 
-    private void goNextPage() {
-        WebView webView = webViewFragment.getWebView();
-        webView.goForward();
-        setTitle(webView.getTitle());
-    }
-
-    private void setTitle(String title) {
-        if (!TextUtils.isEmpty(title)) {
-            titleView.setText(title);
-        }
-    }
-
     private void goHomePage() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                mHomePageFragment).commit();
+        if (mHomePageFragment == null) {
+            mHomePageFragment = new HomePageFragment();
+            mHomePageFragment.setGoPageListener(new HomePageFragment.goPageListener() {
+                @Override
+                public void onGopage(String url) {
+                    goWebView(url);
+                }
+            });
+            mFragmentManager.beginTransaction().add(R.id.container, mHomePageFragment).commit();
+        } else {
+            mFragmentManager.beginTransaction().replace(R.id.container,
+                    mHomePageFragment).commit();
+        }
         setTitle("主页");
         isOnHomePage = true;
-
     }
 
-    private void returnPreviousPage() {
+    private void returnLastPage() {
         if (fromBack && isOnHomePage) {
-            goWebview(null);
+            goWebView(null);
         } else {
             WebView webView = webViewFragment.getWebView();
             if (webView.canGoBack()) {
@@ -138,6 +133,14 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
             } else {
                 goHomePage();
             }
+        }
+    }
+
+    private void goNextPage() {
+        WebView webView = webViewFragment.getWebView();
+        if (webView.canGoForward()) {
+            webView.goForward();
+            setTitle(webView.getTitle());
         }
     }
 
