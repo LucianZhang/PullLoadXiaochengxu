@@ -1,5 +1,6 @@
 package com.renny.simplebrowser;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.ViewDragHelper;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tencent.smtt.sdk.WebBackForwardList;
 import com.tencent.smtt.sdk.WebView;
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
     FragmentTransaction trans;
     private boolean isOnHomePage = false;
     private boolean fromBack = false;
-
+    private long mExitTime = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,10 +143,23 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
 
     @Override
     public void onBackPressed() {
-        WebView webView = webViewFragment.getWebView();
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else super.onBackPressed();
+        if (!isOnHomePage) {
+            WebView webView = webViewFragment.getWebView();
+            if (webView.canGoBack()) {
+                webView.goBack();
+            } else {
+                goHomePage();
+            }
+        } else {
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                Intent home = new Intent(Intent.ACTION_MAIN);
+                home.addCategory(Intent.CATEGORY_HOME);
+                startActivity(home);
+            }
+        }
     }
 
     @Override

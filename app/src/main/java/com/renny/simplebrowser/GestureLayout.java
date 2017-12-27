@@ -3,6 +3,7 @@ package com.renny.simplebrowser;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Point;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.ViewDragHelper;
@@ -65,7 +66,7 @@ public class GestureLayout extends RelativeLayout {
                 } else if (child == rightRefreshView) {
                     return mRightPos.y;
                 } else if (child == backHomeView) {
-                    topBound = getHeight() - child.getHeight();
+                    topBound = getHeight() - child.getHeight() * 2;
                     bottomBound = getHeight();
                 }
                 return Math.min(Math.max(top, topBound), bottomBound);
@@ -93,10 +94,10 @@ public class GestureLayout extends RelativeLayout {
                     } else if (changedView == rightRefreshView && rightRefreshView.getRight() == getWidth()) {
                         mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_RIGHT, rightRefreshView);
                     } else if (changedView == backHomeView) {
-                        if (backHomeView.getBottom() == getHeight()) {
+                        if (backHomeView.getTop() == getHeight() - 2 * backHomeView.getHeight()) {
                             backHomeView.setSelected(true);
                             mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_BOTTOM, backHomeView);
-                        }else {
+                        } else {
                             backHomeView.setSelected(false);
                         }
                     }
@@ -122,7 +123,7 @@ public class GestureLayout extends RelativeLayout {
                         mViewDragHelper.settleCapturedViewAt(mRightPos.x, mRightPos.y);
                         invalidate();
                     } else if (releasedChild == backHomeView) {
-                        if (backHomeView.getBottom() == getHeight()) {
+                        if (backHomeView.getTop() == getHeight() - 2 * backHomeView.getHeight()) {
                             mGestureListener.onViewMaxPositionReleased(ViewDragHelper.EDGE_BOTTOM, backHomeView);
                         }
                         mViewDragHelper.settleCapturedViewAt(mHomePos.x, mHomePos.y);
@@ -191,25 +192,31 @@ public class GestureLayout extends RelativeLayout {
         super.onFinishInflate();
         if (leftRefreshView == null) {
             leftRefreshView = new ImageView(getContext());
-            RelativeLayout.LayoutParams lpLeft = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LayoutParams lpLeft = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lpLeft.addRule(CENTER_VERTICAL);
             addView(leftRefreshView, lpLeft);
             leftRefreshView.setBackgroundResource(leftDrawableId);
+
         }
         if (rightRefreshView == null) {
             rightRefreshView = new ImageView(getContext());
-            RelativeLayout.LayoutParams lpRight = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LayoutParams lpRight = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lpRight.addRule(CENTER_VERTICAL);
             addView(rightRefreshView, lpRight);
             rightRefreshView.setBackgroundResource(rightDrawableId);
         }
         if (backHomeView == null) {
             backHomeView = new ImageView(getContext());
-            RelativeLayout.LayoutParams lpHome = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LayoutParams lpHome = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lpHome.addRule(CENTER_HORIZONTAL);
             addView(backHomeView, lpHome);
             backHomeView.setBackgroundResource(bottomDrawableId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                backHomeView.setElevation(10);
+            }
         }
+
+
     }
 
     public void setGestureListener(GestureListener gestureListener) {

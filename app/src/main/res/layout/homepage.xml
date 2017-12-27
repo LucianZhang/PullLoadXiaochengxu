@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp">
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp">
 
     <LinearLayout
         android:id="@+id/url_lay"
@@ -23,6 +23,14 @@
             android:singleLine="true"
             android:textCursorDrawable="@drawable/color_cursor"/>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:layout_above="@id/url_lay"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/logo"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,6 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/btn_orange"
+            android:maxLines="1"
             android:padding="5dp"
             android:text="github地址"
             android:textSize="14sp"/>
