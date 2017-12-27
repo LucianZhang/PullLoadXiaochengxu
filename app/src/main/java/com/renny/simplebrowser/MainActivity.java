@@ -52,17 +52,14 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
                 WebBackForwardList list = webView.copyBackForwardList();
                 int size = list.getSize();
                 if (edgeFlags == ViewDragHelper.EDGE_LEFT) {
-                    view.setBackgroundResource(R.color.colorAccent);
                     return webView.canGoBack() || !isOnHomePage || (fromBack && isOnHomePage);
                 } else if (edgeFlags == ViewDragHelper.EDGE_RIGHT) {
-                    view.setBackgroundResource(R.color.colorAccent);
                     if (isOnHomePage) {
                         return size > 0;
                     } else {
                         return webView.canGoForward();
                     }
                 } else if (edgeFlags == ViewDragHelper.EDGE_BOTTOM) {
-                    view.setBackgroundResource(R.color.colorAccent);
                     return !isOnHomePage;
                 }
                 return false;
@@ -71,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
             @Override
             public void onViewMaxPositionReleased(int edgeFlags, ImageView view) {
                 if (edgeFlags == ViewDragHelper.EDGE_LEFT) {
-                    backPreviousPage();
+                    returnPreviousPage();
                 } else if (edgeFlags == ViewDragHelper.EDGE_RIGHT) {
                     if (isOnHomePage) {
                         goWebview(null);
@@ -79,19 +76,14 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
                         goNextPage();
                     }
                 } else if (edgeFlags == ViewDragHelper.EDGE_BOTTOM) {
+                    fromBack = true;
                     goHomePage();
                 }
             }
 
             @Override
             public void onViewMaxPositionArrive(int edgeFlags, ImageView view) {
-                if (edgeFlags == ViewDragHelper.EDGE_LEFT) {
-                    view.setBackgroundResource(R.color.color_btn_major_deep);
-                } else if (edgeFlags == ViewDragHelper.EDGE_RIGHT) {
-                    view.setBackgroundResource(R.color.color_btn_major_deep);
-                } else if (edgeFlags == ViewDragHelper.EDGE_BOTTOM) {
-                    view.setBackgroundResource(R.color.color_btn_major_deep);
-                }
+
             }
         });
     }
@@ -106,28 +98,44 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
         getSupportFragmentManager().beginTransaction().replace(R.id.container,
                 webViewFragment).commit();
         isOnHomePage = false;
+        fromBack = false;
+        WebView webView = webViewFragment.getWebView();
+        if (webView != null) {
+            setTitle(webView.getTitle());
+        }
     }
 
     private void goNextPage() {
         WebView webView = webViewFragment.getWebView();
         webView.goForward();
+        setTitle(webView.getTitle());
+    }
 
+    private void setTitle(String title) {
+        if (!TextUtils.isEmpty(title)) {
+            titleView.setText(title);
+        }
     }
 
     private void goHomePage() {
         getSupportFragmentManager().beginTransaction().replace(R.id.container,
                 mHomePageFragment).commit();
-        titleView.setText("主页");
+        setTitle("主页");
         isOnHomePage = true;
-        fromBack = true;
+
     }
 
-    private void backPreviousPage() {
-        WebView webView = webViewFragment.getWebView();
-        if (webView.canGoBack()) {
-            webView.goBack();
+    private void returnPreviousPage() {
+        if (fromBack && isOnHomePage) {
+            goWebview(null);
         } else {
-            goHomePage();
+            WebView webView = webViewFragment.getWebView();
+            if (webView.canGoBack()) {
+                webView.goBack();
+                setTitle(webView.getTitle());
+            } else {
+                goHomePage();
+            }
         }
     }
 
@@ -143,6 +151,5 @@ public class MainActivity extends AppCompatActivity implements WebViewFragment.O
     public void onReceivedTitle(String title) {
         titleView.setText(title);
     }
-
 
 }

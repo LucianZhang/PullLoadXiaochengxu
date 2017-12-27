@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
@@ -49,6 +51,13 @@ public class WebViewFragment extends Fragment {
 
     public void afterViewBind(Bundle savedInstanceState) {
         mWebView = rootView.findViewById(R.id.webview);
+        final RefreshLayout refreshLayout =  rootView.findViewById(R.id.refreshLayout);
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                mWebView.reload();
+            }
+        });
         WebSettings setting = mWebView.getSettings();
         setting.setJavaScriptEnabled(true);
         setting.setDomStorageEnabled(true);
@@ -64,6 +73,12 @@ public class WebViewFragment extends Fragment {
             }
         };
         WebViewClient webViewClient = new WebViewClient() {
+
+            @Override
+            public void onPageFinished(WebView webView, String s) {
+                super.onPageFinished(webView, s);
+                refreshLayout.finishRefresh();
+            }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView webView, String url) {

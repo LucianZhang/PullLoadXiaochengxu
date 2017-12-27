@@ -24,6 +24,7 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
     private View rootView;
     private String homePage = "https://juejin.im/user/5795bb80d342d30059f14b1c";
     private String baidu = "https://www.baidu.com/";
+    private String github = "https://github.com/renjianan/SimpleBrowser";
 
     EditText mEditText;
 
@@ -42,6 +43,7 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
         mEditText = rootView.findViewById(R.id.url_edit);
         rootView.findViewById(R.id.profile).setOnClickListener(this);
         rootView.findViewById(R.id.baidu).setOnClickListener(this);
+        rootView.findViewById(R.id.github).setOnClickListener(this);
         mEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -69,11 +71,15 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
         if (mGoPageListener != null) {
             int id = v.getId();
             switch (id) {
+                case R.id.github:
+                    mGoPageListener.onGopage(github);
+                    break;
                 case R.id.profile:
                     mGoPageListener.onGopage(homePage);
                     break;
                 case R.id.baidu:
                     mGoPageListener.onGopage(baidu);
+                    break;
             }
         }
     }

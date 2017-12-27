@@ -1,6 +1,7 @@
 package com.renny.simplebrowser;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -23,6 +25,7 @@ public class GestureLayout extends RelativeLayout {
 
     private Point mLeftPos, mRightPos, mHomePos;
     private GestureListener mGestureListener;
+    int leftDrawableId, rightDrawableId, bottomDrawableId;
 
     public GestureLayout(@NonNull Context context) {
         this(context, null);
@@ -34,10 +37,15 @@ public class GestureLayout extends RelativeLayout {
 
     public GestureLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(attrs);
     }
 
-    private void init() {
+    private void init(AttributeSet attrs) {
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.GestureLayout);
+        leftDrawableId = typedArray.getResourceId(R.styleable.GestureLayout_leftDrawable, R.drawable.bg_left);
+        rightDrawableId = typedArray.getResourceId(R.styleable.GestureLayout_rightDrawable, R.drawable.bg_right);
+        bottomDrawableId = typedArray.getResourceId(R.styleable.GestureLayout_bottomDrawable, R.drawable.bg_home);
+        typedArray.recycle();
         mLeftPos = new Point();
         mRightPos = new Point();
         mHomePos = new Point();
@@ -84,8 +92,13 @@ public class GestureLayout extends RelativeLayout {
                         mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_LEFT, leftRefreshView);
                     } else if (changedView == rightRefreshView && rightRefreshView.getRight() == getWidth()) {
                         mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_RIGHT, rightRefreshView);
-                    } else if (changedView == backHomeView && backHomeView.getBottom() == getHeight()) {
-                        mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_BOTTOM, backHomeView);
+                    } else if (changedView == backHomeView) {
+                        if (backHomeView.getBottom() == getHeight()) {
+                            backHomeView.setSelected(true);
+                            mGestureListener.onViewMaxPositionArrive(ViewDragHelper.EDGE_BOTTOM, backHomeView);
+                        }else {
+                            backHomeView.setSelected(false);
+                        }
                     }
                 }
             }
@@ -178,24 +191,24 @@ public class GestureLayout extends RelativeLayout {
         super.onFinishInflate();
         if (leftRefreshView == null) {
             leftRefreshView = new ImageView(getContext());
-            RelativeLayout.LayoutParams lpLeft = new RelativeLayout.LayoutParams(80, 40);
+            RelativeLayout.LayoutParams lpLeft = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lpLeft.addRule(CENTER_VERTICAL);
             addView(leftRefreshView, lpLeft);
-            leftRefreshView.setBackgroundResource(R.color.colorAccent);
+            leftRefreshView.setBackgroundResource(leftDrawableId);
         }
         if (rightRefreshView == null) {
             rightRefreshView = new ImageView(getContext());
-            RelativeLayout.LayoutParams lpRight = new RelativeLayout.LayoutParams(80, 40);
+            RelativeLayout.LayoutParams lpRight = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lpRight.addRule(CENTER_VERTICAL);
             addView(rightRefreshView, lpRight);
-            rightRefreshView.setBackgroundResource(R.color.colorAccent);
+            rightRefreshView.setBackgroundResource(rightDrawableId);
         }
         if (backHomeView == null) {
             backHomeView = new ImageView(getContext());
-            RelativeLayout.LayoutParams lpHome = new RelativeLayout.LayoutParams(40, 80);
+            RelativeLayout.LayoutParams lpHome = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lpHome.addRule(CENTER_HORIZONTAL);
             addView(backHomeView, lpHome);
-            backHomeView.setBackgroundResource(R.color.colorAccent);
+            backHomeView.setBackgroundResource(bottomDrawableId);
         }
     }
 

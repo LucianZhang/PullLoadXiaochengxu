@@ -5,20 +5,29 @@
                 android:paddingLeft="50dp"
                 android:paddingRight="50dp">
 
-    <EditText
-        android:id="@+id/url_edit"
+    <LinearLayout
+        android:id="@+id/url_lay"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/bg_stroke_grey"
-        android:imeOptions="actionGo"
-        android:inputType="text"
-        android:singleLine="true"/>
+        android:background="@drawable/bg_stroke_grey">
+
+        <EditText
+            android:id="@+id/url_edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:background="@null"
+            android:imeOptions="actionGo"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/color_cursor"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/url_edit"
+        android:layout_below="@id/url_lay"
         android:orientation="horizontal">
 
         <TextView
@@ -27,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/btn_orange"
+            android:padding="5dp"
             android:text="我的掘金主页"
             android:textSize="14sp"/>
 
@@ -36,9 +46,19 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/btn_orange"
+            android:padding="5dp"
             android:text="百度"
             android:textSize="14sp"/>
 
+        <TextView
+            android:id="@+id/github"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_orange"
+            android:padding="5dp"
+            android:text="github地址"
+            android:textSize="14sp"/>
 
     </LinearLayout>
 
