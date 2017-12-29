@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.tencent.smtt.sdk.WebBackForwardList;
 import com.tencent.smtt.sdk.WebView;
 
-public class MainActivity extends AppCompatActivity implements WebViewFragment.OnReceivedListener {
+public class WebViewActivity extends AppCompatActivity implements WebViewFragment.OnReceivedListener {
     WebViewFragment webViewFragment;
     HomePageFragment mHomePageFragment;
     TextView titleView;

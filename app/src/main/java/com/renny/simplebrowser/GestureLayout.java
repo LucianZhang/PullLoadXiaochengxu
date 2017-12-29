@@ -4,19 +4,16 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-/**
- * Created by Renny on 2017/12/25.
- */
 
 public class GestureLayout extends RelativeLayout {
 
@@ -26,6 +23,7 @@ public class GestureLayout extends RelativeLayout {
 
     private Point mLeftPos, mRightPos, mHomePos;
     private GestureListener mGestureListener;
+    @DrawableRes
     int leftDrawableId, rightDrawableId, bottomDrawableId;
 
     public GestureLayout(@NonNull Context context) {
@@ -194,7 +192,7 @@ public class GestureLayout extends RelativeLayout {
         super.onFinishInflate();
         if (leftRefreshView == null) {
             leftRefreshView = new ImageView(getContext());
-            LayoutParams lpLeft = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LayoutParams lpLeft = new LayoutParams(dip2px(40), dip2px(80));
             lpLeft.addRule(CENTER_VERTICAL);
             addView(leftRefreshView, lpLeft);
             leftRefreshView.setBackgroundResource(leftDrawableId);
@@ -202,14 +200,14 @@ public class GestureLayout extends RelativeLayout {
         }
         if (rightRefreshView == null) {
             rightRefreshView = new ImageView(getContext());
-            LayoutParams lpRight = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LayoutParams lpRight = new LayoutParams(dip2px(40), dip2px(80));
             lpRight.addRule(CENTER_VERTICAL);
             addView(rightRefreshView, lpRight);
             rightRefreshView.setBackgroundResource(rightDrawableId);
         }
         if (backHomeView == null) {
             backHomeView = new ImageView(getContext());
-            LayoutParams lpHome = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LayoutParams lpHome = new LayoutParams(dip2px(30), dip2px(30));
             lpHome.addRule(CENTER_HORIZONTAL);
             addView(backHomeView, lpHome);
             backHomeView.setBackgroundResource(bottomDrawableId);

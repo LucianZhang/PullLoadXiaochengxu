@@ -12,8 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.renny.simplebrowser.pullrefresh.PullToRefreshBase;
+import com.renny.simplebrowser.pullrefresh.PullToRefreshWebView;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
@@ -50,15 +50,20 @@ public class WebViewFragment extends Fragment {
     }
 
     public void afterViewBind(Bundle savedInstanceState) {
-        mWebView = rootView.findViewById(R.id.webview);
-        final RefreshLayout refreshLayout =  rootView.findViewById(R.id.refreshLayout);
-        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+        final PullToRefreshWebView pullToRefreshWebView = rootView.findViewById(R.id.refreshLayout);
+        mWebView = pullToRefreshWebView.getRefreshableView();
+        pullToRefreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
             @Override
-            public void onRefresh(RefreshLayout refreshlayout) {
+            public void onPullDownToRefresh(PullToRefreshBase<WebView> refreshView) {
                 mWebView.reload();
             }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<WebView> refreshView) {
+
+            }
         });
-        refreshLayout.setEnableLoadmore(false);
+        pullToRefreshWebView.setPullLoadEnabled(false);
         WebSettings setting = mWebView.getSettings();
         setting.setJavaScriptEnabled(true);
         setting.setDomStorageEnabled(true);
@@ -74,10 +79,18 @@ public class WebViewFragment extends Fragment {
             }
         };
         WebViewClient webViewClient = new WebViewClient() {
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                pullToRefreshWebView.onPullDownRefreshComplete();
+
+            }
+
             @Override
             public void onPageFinished(WebView webView, String s) {
                 super.onPageFinished(webView, s);
-                refreshLayout.finishRefresh();
+                pullToRefreshWebView.onPullDownRefreshComplete();
             }
 
             @Override
