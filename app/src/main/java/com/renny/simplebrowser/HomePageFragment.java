@@ -73,10 +73,16 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
         if (mGoPageListener != null) {
             if (TextUtils.isEmpty(text)) {
                 Toast.makeText(getActivity(), "请输入网址", Toast.LENGTH_SHORT).show();
-            } else if (!isUrl(text)) {
-                mGoPageListener.onGopage("http://www.baidu.com/s?wd=" + text);
             } else {
-                mGoPageListener.onGopage(text);
+                String temp = text;
+                if (!temp.startsWith("http") && !temp.startsWith("https")) {
+                    temp = "https://" + temp;
+                }
+                if (!isUrl(temp)) {
+                    mGoPageListener.onGopage("http://www.baidu.com/s?wd=" + text);
+                } else {
+                    mGoPageListener.onGopage(temp);
+                }
             }
         }
     }
@@ -91,6 +97,7 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
                 } else {
                     Toast.makeText(getActivity(), "拒绝", Toast.LENGTH_LONG).show();
                 }
+                break;
             default:
                 break;
         }
@@ -153,7 +160,7 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
 
     private boolean isUrl(String url) {
         Pattern pattern = Pattern
-                .compile("^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+$");
+                .compile("(http|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&:/~\\+#]*[\\w\\-\\@?^=%&/~\\+#])?");
         return pattern.matcher(url).matches();
     }
 }
