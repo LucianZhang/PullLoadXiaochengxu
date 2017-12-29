@@ -47,11 +47,13 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
         mEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_GO) {
+                if (actionId == EditorInfo.IME_ACTION_GO && mGoPageListener != null) {
                     String text = mEditText.getText().toString();
-                    if (TextUtils.isEmpty(text) || !isUrl(text)) {
+                    if (TextUtils.isEmpty(text)) {
                         Toast.makeText(getActivity(), "请输入网址", Toast.LENGTH_SHORT).show();
-                    } else if (mGoPageListener != null) {
+                    } else if (!isUrl(text)) {
+                        mGoPageListener.onGopage("http://www.baidu.com/s?wd=" + text);
+                    } else {
                         mGoPageListener.onGopage(text);
                     }
                     return true;
