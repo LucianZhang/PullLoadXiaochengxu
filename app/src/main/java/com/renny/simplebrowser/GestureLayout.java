@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,11 +77,16 @@ public class GestureLayout extends RelativeLayout {
         }
 
         public int clampViewPositionHorizontal(View child, int left, int dx) {
+            Log.d("xxxx", left + "   " + dx);
             int leftBound = 0;
             int rightBound = 0;
             if (child == leftRefreshView) {
+                if (MotionX > child.getWidth() * 3 && dx < 0)
+                    return child.getLeft();
                 leftBound = -child.getWidth();
             } else if (child == rightRefreshView) {
+                if (MotionX < getWidth() - child.getWidth() * 3 && dx > 0)
+                    return child.getLeft();
                 leftBound = getWidth() - child.getWidth();
                 rightBound = getWidth();
             } else if (child == backHomeView) {
@@ -159,8 +165,12 @@ public class GestureLayout extends RelativeLayout {
         return mViewDragHelper.shouldInterceptTouchEvent(event);
     }
 
+    int MotionX = 0, MotionY = 0;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        MotionX = (int) event.getX();
+        MotionY = (int) event.getY();
         mViewDragHelper.processTouchEvent(event);
         return true;
     }
