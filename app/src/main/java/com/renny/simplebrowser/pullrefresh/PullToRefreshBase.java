@@ -53,7 +53,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
     /**
      * 阻尼系数
      */
-    private static final float OFFSET_RADIO = 2.5f;
+    private static final float OFFSET_RADIO = 2.0f;
     /**
      * 上一次移动的点
      */
