@@ -11,6 +11,7 @@ import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -192,15 +193,14 @@ public class GestureLayout extends RelativeLayout {
         super.onFinishInflate();
         if (leftRefreshView == null) {
             leftRefreshView = new ImageView(getContext());
-            LayoutParams lpLeft = new LayoutParams(dip2px(40), dip2px(68));
+            LayoutParams lpLeft = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lpLeft.addRule(CENTER_VERTICAL);
             addView(leftRefreshView, lpLeft);
             leftRefreshView.setBackgroundResource(leftDrawableId);
-
         }
         if (rightRefreshView == null) {
             rightRefreshView = new ImageView(getContext());
-            LayoutParams lpRight = new LayoutParams(dip2px(34), dip2px(68));
+            LayoutParams lpRight = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lpRight.addRule(CENTER_VERTICAL);
             addView(rightRefreshView, lpRight);
             rightRefreshView.setBackgroundResource(rightDrawableId);

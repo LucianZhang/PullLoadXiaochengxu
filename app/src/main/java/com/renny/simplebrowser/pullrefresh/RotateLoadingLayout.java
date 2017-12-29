@@ -96,7 +96,7 @@ public class RotateLoadingLayout extends LoadingLayout {
 
     @Override
     protected View createLoadingView(Context context, AttributeSet attrs) {
-        return LayoutInflater.from(context).inflate(R.layout.pull_to_refresh_header, null);
+        return LayoutInflater.from(context).inflate(R.layout.refresh_header, null);
     }
 
     @Override

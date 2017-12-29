@@ -55,6 +55,10 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
      */
     private static final float OFFSET_RADIO = 2.0f;
     /**
+     * 下拉刷新触发范围
+     */
+    private static final float REFRESH_RADIO = 0.25f;
+    /**
      * 上一次移动的点
      */
     private float mLastMotionY = -1;
@@ -292,26 +296,26 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
                 // 1，位移差大于mTouchSlop，这是为了防止快速拖动引发刷新
                 // 2，isPullRefreshing()，如果当前正在下拉刷新的话，是允许向上滑动，并把刷新的HeaderView挤上去
                 // 3，isPullLoading()，理由与第2条相同
-                if ((absDiff > mTouchSlop || isPullRefreshing() || isPullLoading()) && (touchDownY < getHeight() * 0.25)) {
-                mLastMotionY = event.getY();
-                // 第一个显示出来，Header已经显示或拉下
-                if (isPullRefreshEnabled() && isReadyForPullDown()) {
-                    // 1，Math.abs(getScrollY()) > 0：表示当前滑动的偏移量的绝对值大于0，表示当前HeaderView滑出来了或完全
-                    // 不可见，存在这样一种case，当正在刷新时并且RefreshableView已经滑到顶部，向上滑动，那么我们期望的结果是
-                    // 依然能向上滑动，直到HeaderView完全不可见
-                    // 2，deltaY > 0.5f：表示下拉的值大于0.5f
-                    mIsHandledTouchEvent = (Math.abs(getScrollYValue()) > 0 || deltaY > 0.5f);
-                    // 如果截断事件，我们则仍然把这个事件交给刷新View去处理，典型的情况是让ListView/GridView将按下
-                    // Child的Selector隐藏
-                    if (mIsHandledTouchEvent) {
-                        mRefreshableView.onTouchEvent(event);
+                if ((absDiff > mTouchSlop || isPullRefreshing() || isPullLoading()) && (touchDownY < getHeight() * REFRESH_RADIO)) {
+                    mLastMotionY = event.getY();
+                    // 第一个显示出来，Header已经显示或拉下
+                    if (isPullRefreshEnabled() && isReadyForPullDown()) {
+                        // 1，Math.abs(getScrollY()) > 0：表示当前滑动的偏移量的绝对值大于0，表示当前HeaderView滑出来了或完全
+                        // 不可见，存在这样一种case，当正在刷新时并且RefreshableView已经滑到顶部，向上滑动，那么我们期望的结果是
+                        // 依然能向上滑动，直到HeaderView完全不可见
+                        // 2，deltaY > 0.5f：表示下拉的值大于0.5f
+                        mIsHandledTouchEvent = (Math.abs(getScrollYValue()) > 0 || deltaY > 0.5f);
+                        // 如果截断事件，我们则仍然把这个事件交给刷新View去处理，典型的情况是让ListView/GridView将按下
+                        // Child的Selector隐藏
+                        if (mIsHandledTouchEvent) {
+                            mRefreshableView.onTouchEvent(event);
+                        }
+                    } else if (isPullLoadEnabled() && isReadyForPullUp()) {
+                        // 原理如上
+                        mIsHandledTouchEvent = (Math.abs(getScrollYValue()) > 0 || deltaY < -0.5f);
                     }
-                } else if (isPullLoadEnabled() && isReadyForPullUp()) {
-                    // 原理如上
-                    mIsHandledTouchEvent = (Math.abs(getScrollYValue()) > 0 || deltaY < -0.5f);
                 }
-            }
-            break;
+                break;
 
             default:
                 break;
@@ -334,7 +338,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
             case MotionEvent.ACTION_MOVE:
                 final float deltaY = ev.getY() - mLastMotionY;
                 mLastMotionY = ev.getY();
-                if (isPullRefreshEnabled() && isReadyForPullDown() && touchDownY < getHeight() * 0.25) {
+                if (isPullRefreshEnabled() && isReadyForPullDown() && touchDownY < getHeight() * REFRESH_RADIO) {
                     pullHeaderLayout(deltaY / OFFSET_RADIO);
                     handled = true;
                 } else if (isPullLoadEnabled() && isReadyForPullUp()) {

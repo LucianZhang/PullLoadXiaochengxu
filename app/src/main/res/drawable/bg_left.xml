@@ -8,7 +8,7 @@
                 android:topRightRadius="40dp"/>
             <solid android:color="@color/colorPrimary"/>
             <size
-                android:width="34dp"
+                android:width="25dp"
                 android:height="68dp"/>
         </shape>
     </item>
