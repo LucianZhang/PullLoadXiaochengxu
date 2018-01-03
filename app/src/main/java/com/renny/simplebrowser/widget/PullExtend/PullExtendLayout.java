@@ -3,7 +3,6 @@ package com.renny.simplebrowser.widget.PullExtend;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -210,12 +209,10 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         if (0 == footerHeight) {
             footerHeight = mFooterHeight;
         }
-
         int pLeft = getPaddingLeft();
         int pTop = -headerHeight;
         int pRight = getPaddingRight();
         int pBottom = -footerHeight;
-        Log.d("cccc", pTop + "   " + pBottom + "  " + mRefreshableView.getHeight() + " " + getHeight());
         setPadding(pLeft, pTop, pRight, pBottom);
     }
 
@@ -235,7 +232,6 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
     @Override
     public final boolean onInterceptTouchEvent(MotionEvent event) {
 
-        Log.d("wwww", event.getY() + "");
         if (!isInterceptTouchEventEnabled()) {
             return false;
         }
@@ -263,10 +259,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
             case MotionEvent.ACTION_MOVE:
                 final float deltaY = event.getY() - mLastMotionY;
                 final float absDiff = Math.abs(deltaY);
-                // 这里有三个条件：
-                // 1，位移差大于mTouchSlop，这是为了防止快速拖动引发刷新
-                // 2，isPullRefreshing()，如果当前正在下拉刷新的话，是允许向上滑动，并把刷新的HeaderView挤上去
-                // 3，isPullLoading()，理由与第2条相同
+                // 位移差大于mTouchSlop，这是为了防止快速拖动引发刷新
                 if ((absDiff > mTouchSlop)) {
                     mLastMotionY = event.getY();
                     // 第一个显示出来，Header已经显示或拉下
