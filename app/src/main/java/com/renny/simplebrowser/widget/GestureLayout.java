@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.view;
+package com.renny.simplebrowser.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;

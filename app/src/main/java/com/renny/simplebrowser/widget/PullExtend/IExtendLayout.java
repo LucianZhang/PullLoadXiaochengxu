@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.view.PullExtend;
+package com.renny.simplebrowser.widget.PullExtend;
 
 /**
  * 下拉刷新和上拉加载更多的界面接口

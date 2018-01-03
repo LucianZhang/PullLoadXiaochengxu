@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.view.pullrefresh;
+package com.renny.simplebrowser.widget.pullrefresh;
 
 
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.renny.simplebrowser.view.pullrefresh.ILoadingLayout.State;
+import com.renny.simplebrowser.widget.pullrefresh.ILoadingLayout.State;
 
 /**
  * 这个实现了下拉刷新和上拉加载更多的功能

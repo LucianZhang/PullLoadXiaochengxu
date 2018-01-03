@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.view.PullExtend;
+package com.renny.simplebrowser.widget.PullExtend;
 
 /**
  * Created by Renny on 2018/1/2.

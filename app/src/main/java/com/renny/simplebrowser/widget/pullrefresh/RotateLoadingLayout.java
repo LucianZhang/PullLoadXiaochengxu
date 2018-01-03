@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.view.pullrefresh;
+package com.renny.simplebrowser.widget.pullrefresh;
 
 
 import android.content.Context;

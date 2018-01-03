@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.view.PullExtend;
+package com.renny.simplebrowser.widget.PullExtend;
 
 
 import android.content.Context;
@@ -6,12 +6,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 
-import com.renny.simplebrowser.view.PullExtend.IExtendLayout.State;
+import com.renny.simplebrowser.widget.PullExtend.IExtendLayout.State;
 
 
 /**
@@ -29,11 +30,8 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
     /**
      * 阻尼系数
      */
-    private static final float OFFSET_RADIO = 1.0f;
-    /**
-     * 下拉刷新触发范围
-     */
-    private static final float REFRESH_RADIO = 0.25f;
+    private float offsetRadio = 1.0f;
+
     /**
      * 上一次移动的点
      */
@@ -46,14 +44,19 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
      * 下拉刷新的布局
      */
     private ExtendLayout mHeaderLayout;
+
     /**
      * 上拉加载更多的布局
      */
     private ExtendLayout mFooterLayout;
     /**
-     * HeaderView的高度
+     * 列表开始显示的高度
      */
     private int mHeaderHeight;
+    /**
+     *列表的高度
+     */
+    private int ListHeight;
     /**
      * FooterView的高度
      */
@@ -74,6 +77,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
      * 是否截断touch事件
      */
     private boolean mInterceptEventEnable = true;
+
     /**
      * 表示是否消费了touch事件，如果是，则不调用父类的onTouchEvent方法
      */
@@ -156,13 +160,17 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         init(getContext());
     }
 
+    public void setOffsetRadio(float offsetRadio) {
+        this.offsetRadio = offsetRadio;
+    }
+
     /**
      * 初始化
      *
      * @param context context
      */
     private void init(Context context) {
-        mTouchSlop = 0;
+        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 
         // 得到Header的高度，这个高度需要用这种方式得到，在onLayout方法里面得到的高度始终是0
         getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
@@ -181,6 +189,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         // 得到header和footer的内容高度，它将会作为拖动刷新的一个临界值，如果拖动距离大于这个高度
         // 然后再松开手，就会触发刷新操作
         int headerHeight = (null != mHeaderLayout) ? mHeaderLayout.getContentSize() : 0;
+        ListHeight = (null != mHeaderLayout) ? mHeaderLayout.getListSize() : 0;
         int footerHeight = (null != mFooterLayout) ? mFooterLayout.getContentSize() : 0;
 
         if (headerHeight < 0) {
@@ -226,7 +235,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
     @Override
     public final boolean onInterceptTouchEvent(MotionEvent event) {
 
-        Log.d("wwww", event.getY()+"");
+        Log.d("wwww", event.getY() + "");
         if (!isInterceptTouchEventEnabled()) {
             return false;
         }
@@ -282,7 +291,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
             default:
                 break;
         }
-        return  mIsHandledTouchEvent;
+        return mIsHandledTouchEvent;
     }
 
 
@@ -299,10 +308,10 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
                 final float deltaY = ev.getY() - mLastMotionY;
                 mLastMotionY = ev.getY();
                 if (isPullRefreshEnabled() && isReadyForPullDown()) {
-                    pullHeaderLayout(deltaY / OFFSET_RADIO);
+                    pullHeaderLayout(deltaY / offsetRadio);
                     handled = true;
                 } else if (isPullLoadEnabled() && isReadyForPullUp()) {
-                    pullFooterLayout(deltaY / OFFSET_RADIO);
+                    pullFooterLayout(deltaY / offsetRadio);
                     handled = true;
                 } else {
                     mIsHandledTouchEvent = false;
@@ -335,7 +344,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
             default:
                 break;
         }
-        Log.d("wwww--handled", handled+"");
+        Log.d("wwww--handled", handled + "");
         return handled;
     }
 
@@ -498,6 +507,12 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         int oldScrollY = getScrollYValue();
         if (delta < 0 && (oldScrollY - delta) >= 0) {
             setScrollTo(0, 0);
+            mPullUpState = State.RESET;
+            onStateChanged(State.RESET, false);
+            if (null != mHeaderLayout && 0 != mHeaderHeight) {
+                setOffsetRadio(1.5f);
+                mHeaderLayout.onPull(0);
+            }
             return;
         }
 
@@ -505,7 +520,12 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         setScrollBy(0, -(int) delta);
 
         if (null != mHeaderLayout && 0 != mHeaderHeight) {
-            mHeaderLayout.onPull(getScrollYValue());
+            if (Math.abs(getScrollYValue()) > ListHeight) {
+                setOffsetRadio(1.5f);
+            } else {
+                setOffsetRadio(1.0f);
+            }
+            mHeaderLayout.onPull(Math.abs(getScrollYValue()));
         }
 
         // 未处于刷新状态，更新箭头
@@ -537,8 +557,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         setScrollBy(0, -(int) delta);
 
         if (null != mFooterLayout && 0 != mFooterHeight) {
-            float scale = Math.abs(getScrollYValue()) / (float) mFooterHeight;
-            mFooterLayout.onPull(getScrollYValue());
+            mFooterLayout.onPull(Math.abs(getScrollYValue()));
         }
 
         int scrollY = Math.abs(getScrollYValue());
@@ -567,11 +586,14 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         }
 
         if (refreshing) {
-            smoothScrollTo(-mHeaderHeight);
+            smoothScrollTo(-ListHeight);
         } else {
             smoothScrollTo(0);
+            mPullDownState = State.RESET;
+            onStateChanged(State.RESET, true);
         }
     }
+
 
     /**
      * 重置footer
@@ -589,6 +611,8 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
             smoothScrollTo(mFooterHeight);
         } else {
             smoothScrollTo(0);
+            mPullDownState = State.RESET;
+            onStateChanged(State.RESET, true);
         }
     }
 
@@ -837,8 +861,14 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
                 final int deltaY = Math.round((mScrollFromY - mScrollToY)
                         * mInterpolator.getInterpolation(normalizedTime / (float) oneSecond));
                 mCurrentY = mScrollFromY - deltaY;
-
                 setScrollTo(0, mCurrentY);
+                if (mCurrentY == 0) {
+                    mPullDownState = State.RESET;
+                    onStateChanged(State.RESET, true);
+                }
+                if (null != mHeaderLayout && 0 != mHeaderHeight) {
+                    mHeaderLayout.onPull(Math.abs(getScrollYValue()));
+                }
             }
 
             // If we're not at the target Y, keep going...

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.renny.simplebrowser.view.PullExtend.PullExtendLayout
+<com.renny.simplebrowser.widget.PullExtend.PullExtendLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <com.renny.simplebrowser.view.PullExtend.PullNewHeader
+    <com.renny.simplebrowser.widget.PullExtend.ExtendListHeader
+        android:id="@+id/extend_header"
         android:layout_width="match_parent"
-        android:layout_height="160dp"/>
+        android:layout_height="460dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -94,4 +95,4 @@
         </LinearLayout>
 
     </RelativeLayout>
-</com.renny.simplebrowser.view.PullExtend.PullExtendLayout>
+</com.renny.simplebrowser.widget.PullExtend.PullExtendLayout>

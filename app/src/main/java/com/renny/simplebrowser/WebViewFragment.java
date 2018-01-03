@@ -4,44 +4,34 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.renny.simplebrowser.view.pullrefresh.PullToRefreshBase;
-import com.renny.simplebrowser.view.pullrefresh.PullToRefreshWebView;
+import com.renny.simplebrowser.base.BaseFragment;
+import com.renny.simplebrowser.widget.pullrefresh.PullToRefreshBase;
+import com.renny.simplebrowser.widget.pullrefresh.PullToRefreshWebView;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
 
-/**
- * Created by yh on 2016/6/27.
- */
-public class WebViewFragment extends Fragment {
 
-    private View rootView;
+public class WebViewFragment extends BaseFragment {
+
     private WebView mWebView;
     private String mUrl;
     private OnReceivedListener onReceivedTitleListener;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (getArguments() != null) {
-            mUrl = getArguments().getString("url");
-            Log.d("hello-xxx", mUrl);
-        }
-        if (!TextUtils.isEmpty(mUrl) && rootView == null) {
-            rootView = inflater.inflate(R.layout.webview_item, container, false);
-            afterViewBind(savedInstanceState);
-        }
-        return rootView;
+    protected int getLayoutId() {
+        return R.layout.webview_item;
+    }
+
+
+    @Override
+    protected void initParams(Bundle bundle) {
+        mUrl = bundle.getString("url");
     }
 
 
@@ -49,7 +39,7 @@ public class WebViewFragment extends Fragment {
         return mWebView;
     }
 
-    public void afterViewBind(Bundle savedInstanceState) {
+    public void afterViewBind(View rootView, Bundle savedInstanceState) {
         final PullToRefreshWebView pullToRefreshWebView = rootView.findViewById(R.id.refreshLayout);
         mWebView = pullToRefreshWebView.getRefreshableView();
         pullToRefreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {

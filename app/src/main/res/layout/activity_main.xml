@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.renny.simplebrowser.view.GestureLayout
+    <com.renny.simplebrowser.widget.GestureLayout
         android:id="@+id/gesture_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-    </com.renny.simplebrowser.view.GestureLayout>
+    </com.renny.simplebrowser.widget.GestureLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

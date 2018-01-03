@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.renny.simplebrowser.view.GestureLayout;
+import com.renny.simplebrowser.widget.GestureLayout;
 import com.tencent.smtt.sdk.WebBackForwardList;
 import com.tencent.smtt.sdk.WebView;
 

@@ -1,4 +1,6 @@
-package com.renny.simplebrowser.view.PullExtend;
+package com.renny.simplebrowser.widget.pullrefresh;
+
+import android.view.View;
 
 
 /**
@@ -6,8 +8,9 @@ package com.renny.simplebrowser.view.PullExtend;
  * 
  * @author Li Hong
  * @since 2013-8-22
+ * @param <T>
  */
-public interface IPullToExtend {
+public interface IPullToRefresh<T extends View> {
     
     /**
      * 设置当前下拉刷新是否可用
@@ -56,7 +59,7 @@ public interface IPullToExtend {
      * 
      * @param refreshListener 监听器对象
      */
-    public void setOnRefreshListener(OnRefreshListener refreshListener);
+    public void setOnRefreshListener(PullToRefreshBase.OnRefreshListener<T> refreshListener);
     
     /**
      * 结束下拉刷新
@@ -68,20 +71,26 @@ public interface IPullToExtend {
      */
     public void onPullUpRefreshComplete();
     
-
+    /**
+     * 得到可刷新的View对象
+     * 
+     * @return 返回调用{@link #createRefreshableView(Context, AttributeSet)} 方法返回的对象
+     */
+    public T getRefreshableView();
+    
     /**
      * 得到Header布局对象
      * 
      * @return Header布局对象
      */
-    public ExtendLayout getHeaderExtendLayout();
+    public LoadingLayout getHeaderLoadingLayout();
     
     /**
      * 得到Footer布局对象
      * 
      * @return Footer布局对象
      */
-    public ExtendLayout getFooterExtendLayout();
+    public LoadingLayout getFooterLoadingLayout();
     
     /**
      * 设置最后更新的时间文本

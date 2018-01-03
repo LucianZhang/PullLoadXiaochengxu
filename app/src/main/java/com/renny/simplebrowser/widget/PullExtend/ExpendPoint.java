@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.view.PullExtend;
+package com.renny.simplebrowser.widget.PullExtend;
 
 import android.content.Context;
 import android.graphics.Canvas;

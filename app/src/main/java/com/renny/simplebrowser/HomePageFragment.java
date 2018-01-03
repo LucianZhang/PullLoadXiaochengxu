@@ -5,22 +5,25 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.renny.simplebrowser.adapter.ExtendHeadAdapter;
+import com.renny.simplebrowser.base.BaseFragment;
+import com.renny.simplebrowser.widget.PullExtend.ExtendListHeader;
 import com.renny.zxing.Activity.CaptureActivity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static android.app.Activity.RESULT_OK;
@@ -29,28 +32,33 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by yh on 2016/6/27.
  */
-public class HomePageFragment extends Fragment implements View.OnClickListener {
+public class HomePageFragment extends BaseFragment implements View.OnClickListener {
     private goPageListener mGoPageListener;
-    private View rootView;
     private String homePage = "https://juejin.im/user/5795bb80d342d30059f14b1c";
     private String baidu = "https://www.baidu.com/";
     private String github = "https://github.com/renjianan/SimpleBrowser";
     private static final int REQUEST_SCAN = 0;
     EditText mEditText;
+    ExtendListHeader mPullNewHeader;
+    RecyclerView mRecyclerView;
+    List<String> mDatas = new ArrayList<>();
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.homepage, container, false);
-            afterViewBind(savedInstanceState);
-        }
-        return rootView;
+    protected int getLayoutId() {
+        return R.layout.homepage;
     }
 
 
-    public void afterViewBind(Bundle savedInstanceState) {
+    public void afterViewBind(View rootView, Bundle savedInstanceState) {
         mEditText = rootView.findViewById(R.id.url_edit);
+        mPullNewHeader = rootView.findViewById(R.id.extend_header);
+        mRecyclerView = mPullNewHeader.getRecyclerView();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        for (int i = 1; i < 10; i++) {
+            mDatas.add("应用  " + i);
+        }
+        mRecyclerView.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_list, mDatas) );
+
         rootView.findViewById(R.id.profile).setOnClickListener(this);
         rootView.findViewById(R.id.baidu).setOnClickListener(this);
         rootView.findViewById(R.id.github).setOnClickListener(this);
@@ -79,7 +87,7 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
                 if (!temp.startsWith("http") && !temp.startsWith("https")) {
                     temp = "https://" + temp;
                 }
-                if (!isUrl(temp.replace(" ",""))) {
+                if (!isUrl(temp.replace(" ", ""))) {
                     mGoPageListener.onGopage("http://www.baidu.com/s?wd=" + text);
                 } else {
                     mGoPageListener.onGopage(temp);
