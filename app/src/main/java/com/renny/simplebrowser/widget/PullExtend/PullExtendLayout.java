@@ -54,7 +54,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
      */
     private int mHeaderHeight;
     /**
-     *列表的高度
+     * 列表的高度
      */
     private int ListHeight;
     /**
@@ -156,7 +156,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         } else {
             throw new IllegalStateException("布局异常，最多三个，最少一个");
         }
-        mRefreshableView.setClickable(true);
+        // mRefreshableView.setClickable(true);需要自己设置
         init(getContext());
     }
 
@@ -267,7 +267,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
                 // 1，位移差大于mTouchSlop，这是为了防止快速拖动引发刷新
                 // 2，isPullRefreshing()，如果当前正在下拉刷新的话，是允许向上滑动，并把刷新的HeaderView挤上去
                 // 3，isPullLoading()，理由与第2条相同
-                if ((absDiff > mTouchSlop || isPullRefreshing() || isPullLoading())) {
+                if ((absDiff > mTouchSlop)) {
                     mLastMotionY = event.getY();
                     // 第一个显示出来，Header已经显示或拉下
                     if (isPullRefreshEnabled() && isReadyForPullDown()) {
@@ -344,7 +344,6 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
             default:
                 break;
         }
-        Log.d("wwww--handled", handled + "");
         return handled;
     }
 
