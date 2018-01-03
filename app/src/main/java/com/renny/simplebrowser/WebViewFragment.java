@@ -12,8 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.renny.simplebrowser.pullrefresh.PullToRefreshBase;
-import com.renny.simplebrowser.pullrefresh.PullToRefreshWebView;
+import com.renny.simplebrowser.view.pullrefresh.PullToRefreshBase;
+import com.renny.simplebrowser.view.pullrefresh.PullToRefreshWebView;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;

@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.pullrefresh;
+package com.renny.simplebrowser.view.pullrefresh;
 
 
 import android.content.Context;
@@ -138,7 +138,8 @@ public class RotateLoadingLayout extends LoadingLayout {
     }
 
     @Override
-    public void onPull(float scale) {
+    public void onPull(int  offset) {
+        float scale = Math.abs(offset) / (float) getContentSize();
         float angle = scale * 180f; // SUPPRESS CHECKSTYLE
         mArrowImageView.setRotation(angle);
     }

@@ -61,6 +61,7 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
                 String text = mEditText.getText().toString();
                 if (actionId == EditorInfo.IME_ACTION_GO && mGoPageListener != null) {
                     startBrowser(text);
+                    mEditText.setText("");
                     return true;
                 }
                 return false;
@@ -78,7 +79,7 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
                 if (!temp.startsWith("http") && !temp.startsWith("https")) {
                     temp = "https://" + temp;
                 }
-                if (!isUrl(temp)) {
+                if (!isUrl(temp.replace(" ",""))) {
                     mGoPageListener.onGopage("http://www.baidu.com/s?wd=" + text);
                 } else {
                     mGoPageListener.onGopage(temp);

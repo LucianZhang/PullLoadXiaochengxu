@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.pullrefresh;
+package com.renny.simplebrowser.view.pullrefresh;
 
 
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.renny.simplebrowser.pullrefresh.ILoadingLayout.State;
+import com.renny.simplebrowser.view.pullrefresh.ILoadingLayout.State;
 
 /**
  * 这个实现了下拉刷新和上拉加载更多的功能
@@ -338,7 +338,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
             case MotionEvent.ACTION_MOVE:
                 final float deltaY = ev.getY() - mLastMotionY;
                 mLastMotionY = ev.getY();
-                if (isPullRefreshEnabled() && isReadyForPullDown() && touchDownY < getHeight() * REFRESH_RADIO) {
+                if (isPullRefreshEnabled() && isReadyForPullDown() ) {
                     pullHeaderLayout(deltaY / OFFSET_RADIO);
                     handled = true;
                 } else if (isPullLoadEnabled() && isReadyForPullUp()) {
@@ -641,7 +641,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
         if (null != mHeaderLayout && 0 != mHeaderHeight) {
             float scale = Math.abs(getScrollYValue()) / (float) mHeaderHeight;
-            mHeaderLayout.onPull(scale);
+            mHeaderLayout.onPull(getScrollYValue());
         }
 
         // 未处于刷新状态，更新箭头
@@ -674,7 +674,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
         if (null != mFooterLayout && 0 != mFooterHeight) {
             float scale = Math.abs(getScrollYValue()) / (float) mFooterHeight;
-            mFooterLayout.onPull(scale);
+            mFooterLayout.onPull(getScrollYValue());
         }
 
         int scrollY = Math.abs(getScrollYValue());

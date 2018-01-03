@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.pullrefresh;
+package com.renny.simplebrowser.view.pullrefresh;
 
 /**
  * 下拉刷新和上拉加载更多的界面接口
@@ -76,7 +76,7 @@ public interface ILoadingLayout {
     /**
      * 在拉动时调用
      * 
-     * @param scale 拉动的比例
+     * @param offset 拉动的距离
      */
-    public void onPull(float scale);
+    public void onPull(int  offset);
 }

@@ -6,12 +6,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.renny.simplebrowser.view.GestureLayout;
 import com.tencent.smtt.sdk.WebBackForwardList;
 import com.tencent.smtt.sdk.WebView;
+
+import java.util.ArrayList;
 
 public class WebViewActivity extends AppCompatActivity implements WebViewFragment.OnReceivedListener {
     WebViewFragment webViewFragment;
@@ -27,6 +31,17 @@ public class WebViewActivity extends AppCompatActivity implements WebViewFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().getDecorView().addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                ArrayList<View> outView = new ArrayList<View>();
+                getWindow().getDecorView().findViewsWithText(outView, "QQ浏览器", View.FIND_VIEWS_WITH_TEXT);
+                if (outView.size() > 0) {
+                    outView.get(0).setVisibility(View.GONE);
+                }
+            }
+        });
+
         titleView = findViewById(R.id.title);
         mGestureLayout = findViewById(R.id.gesture_layout);
         mFragmentManager = getSupportFragmentManager();

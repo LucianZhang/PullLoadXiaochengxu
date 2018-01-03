@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.pullrefresh;
+package com.renny.simplebrowser.view.PullExtend;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
  * @author Li Hong
  * @since 2013-8-16
  */
-public abstract class LoadingLayout extends FrameLayout implements ILoadingLayout {
+public abstract class ExtendLayout extends FrameLayout implements IExtendLayout {
     
     /**容器布局*/
     private View mContainer;
@@ -27,7 +27,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
      * 
      * @param context context
      */
-    public LoadingLayout(Context context) {
+    public ExtendLayout(Context context) {
         this(context, null);
     }
     
@@ -37,7 +37,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
      * @param context context
      * @param attrs attrs
      */
-    public LoadingLayout(Context context, AttributeSet attrs) {
+    public ExtendLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
     
@@ -48,7 +48,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
      * @param attrs attrs
      * @param defStyle defStyle
      */
-    public LoadingLayout(Context context, AttributeSet attrs, int defStyle) {
+    public ExtendLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         
         init(context, attrs);
@@ -154,7 +154,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
     }
 
     @Override
-    public void onPull(float scale) {
+    public void onPull(int  offset) {
         
     }
     
