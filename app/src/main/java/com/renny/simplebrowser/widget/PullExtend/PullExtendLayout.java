@@ -510,7 +510,6 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
 
         // 向下滑动布局
         setScrollBy(0, -(int) delta);
-
         if (null != mHeaderLayout && 0 != mHeaderHeight) {
             if (Math.abs(getScrollYValue()) > ListHeight) {
                 setOffsetRadio(1.5f);
@@ -528,7 +527,6 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
             } else {
                 mPullDownState = State.PULL_TO_REFRESH;
             }
-
             mHeaderLayout.setState(mPullDownState);
             onStateChanged(mPullDownState, true);
         }
@@ -545,13 +543,10 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
             setScrollTo(0, 0);
             return;
         }
-
         setScrollBy(0, -(int) delta);
-
         if (null != mFooterLayout && 0 != mFooterHeight) {
             mFooterLayout.onPull(Math.abs(getScrollYValue()));
         }
-
         int scrollY = Math.abs(getScrollYValue());
         if (isPullLoadEnabled() && !isPullLoading()) {
             if (scrollY > mFooterHeight) {
@@ -559,7 +554,6 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
             } else {
                 mPullUpState = State.PULL_TO_REFRESH;
             }
-
             mFooterLayout.setState(mPullUpState);
             onStateChanged(mPullUpState, false);
         }
@@ -634,7 +628,6 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         if (isPullRefreshing()) {
             return;
         }
-
         mPullDownState = State.REFRESHING;
         onStateChanged(State.REFRESHING, true);
 

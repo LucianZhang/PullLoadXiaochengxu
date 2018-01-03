@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -54,7 +53,6 @@ public class ExpendPoint extends View {
         super.onDraw(canvas);
         float centerX = getWidth() / 2;
         float centerY = getHeight() / 2;
-        Log.d("percent", percent + "");
         if (percent <= 0.5f) {
             mPaint.setAlpha(255);
             float radius = percent * 2 * maxRadius;

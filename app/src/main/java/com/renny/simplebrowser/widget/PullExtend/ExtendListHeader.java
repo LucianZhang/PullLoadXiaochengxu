@@ -4,10 +4,8 @@ package com.renny.simplebrowser.widget.PullExtend;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.renny.simplebrowser.R;
 
@@ -22,19 +20,15 @@ public class ExtendListHeader extends ExtendLayout {
 
 
     float ContainerHeight = dip2px(60);
-    float TotalHeight = dip2px(460);
-    float ListHeight = dip2px(80);
+    float ListHeight = dip2px(120);
     boolean arrived = false;
     private RecyclerView mRecyclerView;
+
     /**
-     * Header的容器
-     */
-    private RelativeLayout mHeaderContainer;
-    /**
-     * 箭头图片
+     * 原点
      */
 
-    ExpendPoint mExpendPoint;
+    private  ExpendPoint mExpendPoint;
 
     /**
      * 构造方法
@@ -66,7 +60,6 @@ public class ExtendListHeader extends ExtendLayout {
     private void init(Context context) {
         mRecyclerView = findViewById(R.id.list);
         mExpendPoint = findViewById(R.id.expend_point);
-        mHeaderContainer = findViewById(R.id.pull_to_refresh_header_content);
     }
 
     @Override
@@ -120,7 +113,6 @@ public class ExtendListHeader extends ExtendLayout {
         }else if (offset==0){
             onReset();
         }
-        Log.d("vvvv", offset + " " + arrived);
         if (!arrived) {
             float percent = Math.abs(offset) / ContainerHeight;
             int moreOffset = Math.abs(offset) - (int) ContainerHeight;
