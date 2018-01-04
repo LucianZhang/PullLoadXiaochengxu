@@ -19,8 +19,10 @@ import android.widget.Toast;
 
 import com.renny.simplebrowser.adapter.ExtendHeadAdapter;
 import com.renny.simplebrowser.base.BaseFragment;
+import com.renny.simplebrowser.base.CommonAdapter;
 import com.renny.simplebrowser.widget.PullExtend.ExtendListFooter;
 import com.renny.simplebrowser.widget.PullExtend.ExtendListHeader;
+import com.renny.simplebrowser.widget.toast.ToastHelper;
 import com.renny.zxing.Activity.CaptureActivity;
 
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     EditText mEditText;
     ExtendListHeader mPullNewHeader;
     ExtendListFooter mPullNewFooter;
-    RecyclerView listHeader,listFooter;
+    RecyclerView listHeader, listFooter;
     List<String> mDatas = new ArrayList<>();
 
     @Override
@@ -62,8 +64,18 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         for (int i = 1; i < 10; i++) {
             mDatas.add("应用  " + i);
         }
-        listHeader.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_list, mDatas) );
-        listFooter.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_list, mDatas) );
+        listHeader.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_list, mDatas).setItemClickListener(new CommonAdapter.ItemClickListener() {
+            @Override
+            public void onItemClicked(int position, View view) {
+                ToastHelper.makeToast("应用  " + (position + 1));
+            }
+        }));
+        listFooter.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_list, mDatas).setItemClickListener(new CommonAdapter.ItemClickListener() {
+            @Override
+            public void onItemClicked(int position, View view) {
+                ToastHelper.makeToast("应用  " + (position + 1));
+            }
+        }));
 
         rootView.findViewById(R.id.profile).setOnClickListener(this);
         rootView.findViewById(R.id.baidu).setOnClickListener(this);

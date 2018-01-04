@@ -2,7 +2,7 @@ package com.renny.simplebrowser.base;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
@@ -12,15 +12,14 @@ import java.util.List;
  */
 
 public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
-    protected Context mContext;
-    protected int mLayoutId;
-    protected List<T> mDatas;
-    protected LayoutInflater mInflater;
+    private Context mContext;
+    private int mLayoutId;
+    private List<T> mDatas;
+    protected ItemClickListener mItemClickListener;
 
 
     public CommonAdapter(Context context, int layoutId, List<T> datas) {
         mContext = context;
-        mInflater = LayoutInflater.from(context);
         mLayoutId = layoutId;
         mDatas = datas;
     }
@@ -31,14 +30,28 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        convert(holder, mDatas.get(position));
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+
+        convert(holder, position);
     }
 
-    public abstract void convert(ViewHolder holder, T t);
+    protected T getData(int position) {
+        return mDatas.get(position);
+    }
+
+    protected abstract void convert(ViewHolder holder, int position);
 
     @Override
     public int getItemCount() {
         return mDatas.size();
+    }
+
+    public CommonAdapter setItemClickListener(ItemClickListener itemClickListener) {
+        mItemClickListener = itemClickListener;
+        return this;
+    }
+
+    public interface ItemClickListener {
+        void onItemClicked(int position, View view);
     }
 }

@@ -1,6 +1,7 @@
 package com.renny.simplebrowser.adapter;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.TextView;
 
 import com.renny.simplebrowser.R;
@@ -20,8 +21,19 @@ public class ExtendHeadAdapter extends CommonAdapter<String> {
     }
 
     @Override
-    public void convert(ViewHolder holder, String s) {
+    protected void convert(ViewHolder holder, final int position) {
+        String data=getData(position);
         TextView tv = holder.getView(R.id.item_title);
-        tv.setText(s);
+        tv.setText(data);
+        if (mItemClickListener != null) {
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mItemClickListener.onItemClicked(position, v);
+                }
+            });
+        }
     }
+
+
 }

@@ -531,7 +531,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         setScrollBy(0, -(int) delta);
         int scrollY = Math.abs(getScrollYValue());
         if (null != mFooterLayout && 0 != mFooterHeight) {
-            if (scrollY > footerListHeight) {
+            if (scrollY >=footerListHeight) {
                 mFooterLayout.setState(State.arrivedListHeight);
                 setOffsetRadio(3.0f);
             } else {
