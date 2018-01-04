@@ -4,21 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.ViewDragHelper;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.renny.simplebrowser.R;
+import com.renny.simplebrowser.base.BaseActivity;
 import com.renny.simplebrowser.widget.GestureLayout;
 import com.tencent.smtt.sdk.WebBackForwardList;
 import com.tencent.smtt.sdk.WebView;
 
-import java.util.ArrayList;
-
-public class WebViewActivity extends AppCompatActivity implements WebViewFragment.OnReceivedListener {
+public class WebViewActivity extends BaseActivity implements WebViewFragment.OnReceivedListener {
     WebViewFragment webViewFragment;
     HomePageFragment mHomePageFragment;
     TextView titleView;
@@ -29,22 +26,20 @@ public class WebViewActivity extends AppCompatActivity implements WebViewFragmen
     private long mExitTime = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        getWindow().getDecorView().addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                ArrayList<View> outView = new ArrayList<View>();
-                getWindow().getDecorView().findViewsWithText(outView, "QQ浏览器", View.FIND_VIEWS_WITH_TEXT);
-                if (outView.size() > 0) {
-                    outView.get(0).setVisibility(View.GONE);
-                }
-            }
-        });
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
 
+    @Override
+    protected void bindView(Bundle savedInstanceState) {
         titleView = findViewById(R.id.title);
         mGestureLayout = findViewById(R.id.gesture_layout);
+
+    }
+
+    @Override
+    protected void afterViewBind(Bundle savedInstanceState) {
+        super.afterViewBind(savedInstanceState);
         mFragmentManager = getSupportFragmentManager();
         goHomePage();
         mGestureLayout.setGestureListener(new GestureLayout.GestureListener() {
@@ -95,7 +90,6 @@ public class WebViewActivity extends AppCompatActivity implements WebViewFragmen
             }
         });
     }
-
 
     private void setTitle(String title) {
         if (!TextUtils.isEmpty(title)) {
