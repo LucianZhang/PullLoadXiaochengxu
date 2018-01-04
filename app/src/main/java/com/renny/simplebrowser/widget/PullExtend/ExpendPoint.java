@@ -44,15 +44,18 @@ public class ExpendPoint extends View {
     }
 
     public void setPercent(float percent) {
-        this.percent = percent;
-        invalidate();
+        if (percent != this.percent) {
+            this.percent = percent;
+            invalidate();
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float centerX = getWidth() / 2;
-        float centerY = getHeight() / 2;
+        maxRadius = getHeight() / 2f;
+        float centerX = getWidth() / 2f;
+        float centerY = getHeight() / 2f;
         if (percent <= 0.5f) {
             mPaint.setAlpha(255);
             float radius = percent * 2 * maxRadius;

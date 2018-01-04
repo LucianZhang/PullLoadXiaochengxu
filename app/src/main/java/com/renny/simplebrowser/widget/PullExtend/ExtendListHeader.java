@@ -19,8 +19,8 @@ import com.renny.simplebrowser.R;
 public class ExtendListHeader extends ExtendLayout {
 
 
-    float ContainerHeight = dip2px(60);
-    float ListHeight = dip2px(120);
+    float containerHeight = dip2px(60);
+    float listHeight = dip2px(120);
     boolean arrived = false;
     private RecyclerView mRecyclerView;
 
@@ -75,12 +75,12 @@ public class ExtendListHeader extends ExtendLayout {
 
     @Override
     public int getContentSize() {
-        return (int) (ContainerHeight);
+        return (int) (containerHeight);
     }
 
     @Override
     public int getListSize() {
-        return (int) (ListHeight);
+        return (int) (listHeight);
     }
 
 
@@ -108,30 +108,30 @@ public class ExtendListHeader extends ExtendLayout {
 
     @Override
     public void onPull(int offset) {
-        if (offset > ListHeight) {
+        if (offset > listHeight) {
             arrived = true;
         }else if (offset==0){
             onReset();
         }
         if (!arrived) {
-            float percent = Math.abs(offset) / ContainerHeight;
-            int moreOffset = Math.abs(offset) - (int) ContainerHeight;
+            float percent = Math.abs(offset) / containerHeight;
+            int moreOffset = Math.abs(offset) - (int) containerHeight;
             if (percent <= 1.0f) {
                 mExpendPoint.setPercent(percent);
                 mExpendPoint.setTranslationY(-Math.abs(offset) / 2 + mExpendPoint.getHeight() / 2);
-                mRecyclerView.setTranslationY(-ContainerHeight);
+                mRecyclerView.setTranslationY(-containerHeight);
             } else {
-                float subPercent = (moreOffset) / (ListHeight - ContainerHeight);
+                float subPercent = (moreOffset) / (listHeight - containerHeight);
                 subPercent = Math.min(1.0f, subPercent);
-                mExpendPoint.setTranslationY(-(int) ContainerHeight / 2 + mExpendPoint.getHeight() / 2 + (int) ContainerHeight * subPercent / 2);
+                mExpendPoint.setTranslationY(-(int) containerHeight / 2 + mExpendPoint.getHeight() / 2 + (int) containerHeight * subPercent / 2);
                 mExpendPoint.setPercent(1.0f);
                 float alpha = (1 - subPercent * 2);
                 mExpendPoint.setAlpha(Math.max(alpha, 0));
-                mRecyclerView.setTranslationY(-(1 - subPercent) * ContainerHeight);
+                mRecyclerView.setTranslationY(-(1 - subPercent) * containerHeight);
             }
         }
-        if (Math.abs(offset) >= ListHeight) {
-            mRecyclerView.setTranslationY(-(Math.abs(offset) - ListHeight) / 2);
+        if (Math.abs(offset) >= listHeight) {
+            mRecyclerView.setTranslationY(-(Math.abs(offset) - listHeight) / 2);
         }
     }
 
