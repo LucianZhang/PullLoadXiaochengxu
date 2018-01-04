@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.widget.toast;
+package com.renny.simplebrowser.business.toast;
 
 import android.content.Context;
 import android.text.TextUtils;

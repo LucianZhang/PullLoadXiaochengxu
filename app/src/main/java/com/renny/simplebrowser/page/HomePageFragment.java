@@ -23,7 +23,7 @@ import com.renny.simplebrowser.base.BaseFragment;
 import com.renny.simplebrowser.base.CommonAdapter;
 import com.renny.simplebrowser.widget.PullExtend.ExtendListFooter;
 import com.renny.simplebrowser.widget.PullExtend.ExtendListHeader;
-import com.renny.simplebrowser.widget.toast.ToastHelper;
+import com.renny.simplebrowser.business.toast.ToastHelper;
 import com.renny.zxing.Activity.CaptureActivity;
 
 import java.util.ArrayList;
