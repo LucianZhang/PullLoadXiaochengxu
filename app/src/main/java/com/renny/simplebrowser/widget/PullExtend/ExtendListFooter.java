@@ -11,14 +11,8 @@ import android.view.View;
 import com.renny.simplebrowser.R;
 
 
-/**
- * 这个类封装了下拉刷新的布局
- *
- * @author chunsoft
- * @since 2015-8-26
- */
-public class ExtendListHeader extends ExtendLayout {
 
+public class ExtendListFooter extends ExtendLayout {
 
     float containerHeight = dip2px(60);
     float listHeight = dip2px(120);
@@ -26,29 +20,17 @@ public class ExtendListHeader extends ExtendLayout {
     private RecyclerView mRecyclerView;
 
     /**
-     * 原点
+     * 圆点
      */
-
     private ExpendPoint mExpendPoint;
 
-    /**
-     * 构造方法
-     *
-     * @param context context
-     */
-    public ExtendListHeader(Context context) {
+    public ExtendListFooter(Context context) {
         super(context);
 
     }
 
 
-    /**
-     * 构造方法
-     *
-     * @param context context
-     * @param attrs   attrs
-     */
-    public ExtendListHeader(Context context, AttributeSet attrs) {
+    public ExtendListFooter(Context context, AttributeSet attrs) {
         super(context, attrs);
 
     }
@@ -63,7 +45,7 @@ public class ExtendListHeader extends ExtendLayout {
 
     @Override
     protected View createLoadingView(Context context, AttributeSet attrs) {
-        return LayoutInflater.from(context).inflate(R.layout.extend_header, null);
+        return LayoutInflater.from(context).inflate(R.layout.extend_footer, null);
     }
 
 
@@ -80,7 +62,6 @@ public class ExtendListHeader extends ExtendLayout {
 
     @Override
     protected void onReset() {
-        Log.d("onReset()", "onReset()");
         mExpendPoint.setAlpha(1);
         mExpendPoint.setTranslationY(0);
         mRecyclerView.setTranslationY(0);
@@ -107,26 +88,26 @@ public class ExtendListHeader extends ExtendLayout {
 
     @Override
     public void onPull(int offset) {
-        Log.d("xxxx", offset + "  " + arrivedListHeight);
+        Log.d("bbbb", "offset: " + offset);
         if (!arrivedListHeight) {
-            float percent = Math.abs(offset) / containerHeight;
             int moreOffset = Math.abs(offset) - (int) containerHeight;
+            float percent = Math.abs(offset) / containerHeight;
             if (percent <= 1.0f) {
                 mExpendPoint.setPercent(percent);
-                mExpendPoint.setTranslationY(-Math.abs(offset) / 2 + mExpendPoint.getHeight() / 2);
-                mRecyclerView.setTranslationY(-containerHeight);
+                mExpendPoint.setTranslationY(Math.abs(offset) / 2 - mExpendPoint.getHeight() / 2);
+                mRecyclerView.setTranslationY(containerHeight);
             } else {
                 float subPercent = (moreOffset) / (listHeight - containerHeight);
                 subPercent = Math.min(1.0f, subPercent);
-                mExpendPoint.setTranslationY(-(int) containerHeight / 2 + mExpendPoint.getHeight() / 2 + (int) containerHeight * subPercent / 2);
+                mExpendPoint.setTranslationY((int) containerHeight / 2 - mExpendPoint.getHeight() / 2 - (int) containerHeight * subPercent / 2);
                 mExpendPoint.setPercent(1.0f);
                 float alpha = (1 - subPercent * 2);
                 mExpendPoint.setAlpha(Math.max(alpha, 0));
-                mRecyclerView.setTranslationY(-(1 - subPercent) * containerHeight);
+                mRecyclerView.setTranslationY((1 - subPercent) * containerHeight);
             }
         }
         if (Math.abs(offset) >= listHeight) {
-            mRecyclerView.setTranslationY(-(Math.abs(offset) - listHeight) / 2);
+            mRecyclerView.setTranslationY((Math.abs(offset) - listHeight) / 2);
         }
     }
 

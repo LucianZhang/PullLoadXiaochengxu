@@ -652,7 +652,6 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
             } else {
                 mPullDownState = State.PULL_TO_REFRESH;
             }
-
             mHeaderLayout.setState(mPullDownState);
             onStateChanged(mPullDownState, true);
         }

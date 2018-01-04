@@ -1,10 +1,8 @@
 package com.renny.simplebrowser.widget.PullExtend;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 /**
@@ -16,10 +14,6 @@ import android.widget.FrameLayout;
 public abstract class ExtendLayout extends FrameLayout implements IExtendLayout {
 
     /**
-     * 容器布局
-     */
-    private View mContainer;
-    /**
      * 当前的状态
      */
     private State mCurState = State.NONE;
@@ -28,120 +22,35 @@ public abstract class ExtendLayout extends FrameLayout implements IExtendLayout 
      */
     private State mPreState = State.NONE;
 
-    /**
-     * 构造方法
-     *
-     * @param context context
-     */
+
     public ExtendLayout(Context context) {
         this(context, null);
     }
 
-    /**
-     * 构造方法
-     *
-     * @param context context
-     * @param attrs   attrs
-     */
+
     public ExtendLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /**
-     * 构造方法
-     *
-     * @param context  context
-     * @param attrs    attrs
-     * @param defStyle defStyle
-     */
+
     public ExtendLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
         init(context, attrs);
     }
 
-    /**
-     * 初始化
-     *
-     * @param context context
-     * @param attrs   attrs
-     */
     protected void init(Context context, AttributeSet attrs) {
-        mContainer = createLoadingView(context, attrs);
-        if (null == mContainer) {
+        View container = createLoadingView(context, attrs);
+        if (null == container) {
             throw new NullPointerException("Loading view can not be null.");
         }
-
         LayoutParams params = new LayoutParams(
                 LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT);
-        addView(mContainer, params);
+        addView(container, params);
+        bindView(container);
     }
 
-    /**
-     * 显示或隐藏这个布局
-     *
-     * @param show flag
-     */
-    public void show(boolean show) {
-        // If is showing, do nothing.
-        if (show == (View.VISIBLE == getVisibility())) {
-            return;
-        }
-
-        ViewGroup.LayoutParams params = mContainer.getLayoutParams();
-        if (null != params) {
-            if (show) {
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            } else {
-                params.height = 0;
-            }
-            setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-        }
-    }
-
-    /**
-     * 设置最后更新的时间文本
-     *
-     * @param label 文本
-     */
-    public void setLastUpdatedLabel(CharSequence label) {
-
-    }
-
-    /**
-     * 设置加载中的图片
-     *
-     * @param drawable 图片
-     */
-    public void setLoadingDrawable(Drawable drawable) {
-
-    }
-
-    /**
-     * 设置拉动的文本，典型的是“下拉可以刷新”
-     *
-     * @param pullLabel 拉动的文本
-     */
-    public void setPullLabel(CharSequence pullLabel) {
-
-    }
-
-    /**
-     * 设置正在刷新的文本，典型的是“正在刷新”
-     *
-     * @param refreshingLabel 刷新文本
-     */
-    public void setRefreshingLabel(CharSequence refreshingLabel) {
-
-    }
-
-    /**
-     * 设置释放的文本，典型的是“松开可以刷新”
-     *
-     * @param releaseLabel 释放文本
-     */
-    public void setReleaseLabel(CharSequence releaseLabel) {
+    protected void bindView(View container) {
 
     }
 
@@ -185,7 +94,7 @@ public abstract class ExtendLayout extends FrameLayout implements IExtendLayout 
                 onReset();
                 break;
 
-            case RELEASE_TO_REFRESH:
+            case beyondListHeight:
                 onReleaseToRefresh();
                 break;
 
@@ -193,12 +102,12 @@ public abstract class ExtendLayout extends FrameLayout implements IExtendLayout 
                 onPullToRefresh();
                 break;
 
-            case REFRESHING:
+            case startShowList:
                 onRefreshing();
                 break;
 
-            case NO_MORE_DATA:
-                onNoMoreData();
+            case arrivedListHeight:
+                onArrivedListHeight();
                 break;
 
             default:
@@ -221,23 +130,23 @@ public abstract class ExtendLayout extends FrameLayout implements IExtendLayout 
     }
 
     /**
-     * 当状态设置为{@link State#RELEASE_TO_REFRESH}时调用
+     * 当状态设置为{@link State#beyondListHeight}时调用
      */
     protected void onReleaseToRefresh() {
 
     }
 
     /**
-     * 当状态设置为{@link State#REFRESHING}时调用
+     * 当状态设置为{@link State#startShowList}时调用
      */
     protected void onRefreshing() {
 
     }
 
     /**
-     * 当状态设置为{@link State#NO_MORE_DATA}时调用
+     * 当状态设置为{@link State#arrivedListHeight}时调用
      */
-    protected void onNoMoreData() {
+    protected void onArrivedListHeight() {
 
     }
 

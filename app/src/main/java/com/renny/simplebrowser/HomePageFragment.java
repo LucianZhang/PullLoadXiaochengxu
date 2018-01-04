@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.renny.simplebrowser.adapter.ExtendHeadAdapter;
 import com.renny.simplebrowser.base.BaseFragment;
+import com.renny.simplebrowser.widget.PullExtend.ExtendListFooter;
 import com.renny.simplebrowser.widget.PullExtend.ExtendListHeader;
 import com.renny.zxing.Activity.CaptureActivity;
 
@@ -40,24 +41,29 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     private static final int REQUEST_SCAN = 0;
     EditText mEditText;
     ExtendListHeader mPullNewHeader;
-    RecyclerView mRecyclerView;
+    ExtendListFooter mPullNewFooter;
+    RecyclerView listHeader,listFooter;
     List<String> mDatas = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
-        return R.layout.homepage;
+        return R.layout.home_page;
     }
 
 
     public void afterViewBind(View rootView, Bundle savedInstanceState) {
         mEditText = rootView.findViewById(R.id.url_edit);
         mPullNewHeader = rootView.findViewById(R.id.extend_header);
-        mRecyclerView = mPullNewHeader.getRecyclerView();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        mPullNewFooter = rootView.findViewById(R.id.extend_footer);
+        listHeader = mPullNewHeader.getRecyclerView();
+        listFooter = mPullNewFooter.getRecyclerView();
+        listHeader.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        listFooter.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         for (int i = 1; i < 10; i++) {
             mDatas.add("应用  " + i);
         }
-        mRecyclerView.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_list, mDatas) );
+        listHeader.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_list, mDatas) );
+        listFooter.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_list, mDatas) );
 
         rootView.findViewById(R.id.profile).setOnClickListener(this);
         rootView.findViewById(R.id.baidu).setOnClickListener(this);

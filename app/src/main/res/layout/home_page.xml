@@ -97,4 +97,10 @@
         </LinearLayout>
 
     </RelativeLayout>
+
+    <com.renny.simplebrowser.widget.PullExtend.ExtendListFooter
+        android:id="@+id/extend_footer"
+        android:layout_width="match_parent"
+        android:layout_height="460dp"
+       />
 </com.renny.simplebrowser.widget.PullExtend.PullExtendLayout>

@@ -10,7 +10,7 @@ public interface IExtendLayout {
     /**
      * 当前的状态
      */
-    public enum State {
+     enum State {
         
         /**
          * Initial state
@@ -30,26 +30,18 @@ public interface IExtendLayout {
         PULL_TO_REFRESH,
         
         /**
-         * When the UI is being pulled by the user, and <strong>has</strong>
-         * been pulled far enough so that it will refresh when released.
+        超出列表高度
          */
-        RELEASE_TO_REFRESH,
+        beyondListHeight,
         
         /**
          * When the UI is currently refreshing, caused by a pull gesture.
          */
-        REFRESHING,
+        startShowList,
         
-        /**
-         * When the UI is currently refreshing, caused by a pull gesture.
-         */
-        @Deprecated
-        LOADING,
-        
-        /**
-         * No more data
-         */
-        NO_MORE_DATA,
+
+
+        arrivedListHeight,
     }
 
     /**
@@ -57,26 +49,26 @@ public interface IExtendLayout {
      * 
      * @param state 状态
      */
-    public void setState(State state);
+     void setState(State state);
     
     /**
      * 得到当前的状态
      *  
      * @return 状态
      */
-    public State getState();
+     State getState();
     
     /**
      * 得到当前Layout的内容大小，它将作为一个刷新的临界点
      * 
      * @return 高度
      */
-    public int getContentSize();
+     int getContentSize();
     
     /**
      * 在拉动时调用
      * 
      * @param offset 拉动的距离
      */
-    public void onPull(int offset);
+     void onPull(int offset);
 }
