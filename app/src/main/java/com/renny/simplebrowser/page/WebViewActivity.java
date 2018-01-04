@@ -1,4 +1,4 @@
-package com.renny.simplebrowser;
+package com.renny.simplebrowser.page;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.widget.GestureLayout;
 import com.tencent.smtt.sdk.WebBackForwardList;
 import com.tencent.smtt.sdk.WebView;

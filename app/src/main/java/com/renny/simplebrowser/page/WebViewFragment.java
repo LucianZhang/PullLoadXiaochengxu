@@ -1,4 +1,4 @@
-package com.renny.simplebrowser;
+package com.renny.simplebrowser.page;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.base.BaseFragment;
 import com.renny.simplebrowser.widget.pullrefresh.PullToRefreshBase;
 import com.renny.simplebrowser.widget.pullrefresh.PullToRefreshWebView;

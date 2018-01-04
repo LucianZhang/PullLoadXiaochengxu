@@ -1,4 +1,4 @@
-package com.renny.simplebrowser;
+package com.renny.simplebrowser.page;
 
 import android.Manifest;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.adapter.ExtendHeadAdapter;
 import com.renny.simplebrowser.base.BaseFragment;
 import com.renny.simplebrowser.base.CommonAdapter;
