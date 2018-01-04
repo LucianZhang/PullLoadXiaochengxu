@@ -34,25 +34,6 @@ public interface IPullToExtend {
      * @return true可用，false不可用
      */
      boolean isPullLoadEnabled();
-    
-
-    /**
-     * 设置刷新的监听器
-     * 
-     * @param refreshListener 监听器对象
-     */
-     void setOnRefreshListener(OnRefreshListener refreshListener);
-    
-    /**
-     * 结束下拉刷新
-     */
-     void onPullDownRefreshComplete();
-    
-    /**
-     * 结束上拉加载更多
-     */
-     void onPullUpRefreshComplete();
-    
 
     /**
      * 得到Header布局对象

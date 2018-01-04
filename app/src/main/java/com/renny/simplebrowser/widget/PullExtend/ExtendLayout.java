@@ -98,10 +98,6 @@ public abstract class ExtendLayout extends FrameLayout implements IExtendLayout 
                 onReleaseToRefresh();
                 break;
 
-            case PULL_TO_REFRESH:
-                onPullToRefresh();
-                break;
-
             case startShowList:
                 onRefreshing();
                 break;

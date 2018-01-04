@@ -23,12 +23,7 @@ public interface IExtendLayout {
          */
         RESET,
         
-        /**
-         * When the UI is being pulled by the user, but has not been pulled far
-         * enough so that it refreshes when released.
-         */
-        PULL_TO_REFRESH,
-        
+
         /**
         超出列表高度
          */

@@ -27,7 +27,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
     /**
      * 回滚的时间
      */
-    private static final int SCROLL_DURATION = 150;
+    private static final int SCROLL_DURATION = 200;
     /**
      * 阻尼系数
      */
@@ -37,10 +37,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
      * 上一次移动的点
      */
     private float mLastMotionY = -1;
-    /**
-     * 下拉刷新和加载更多的监听器
-     */
-    private OnRefreshListener mRefreshListener;
+
     /**
      * 下拉刷新的布局
      */
@@ -90,15 +87,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
      */
     private int mTouchSlop;
     /**
-     * 下拉的状态
-     */
-    private State mPullDownState = State.NONE;
-    /**
-     * 上拉的状态
-     */
-    private State mPullUpState = State.NONE;
-    /**
-     * 可以下拉刷新的View
+     * 主View
      */
     View mRefreshableView;
     /**
@@ -106,33 +95,16 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
      */
     private SmoothScrollRunnable mSmoothScrollRunnable;
 
-
-    /**
-     * 构造方法
-     *
-     * @param context context
-     */
     public PullExtendLayout(Context context) {
         this(context, null);
     }
 
-    /**
-     * 构造方法
-     *
-     * @param context context
-     * @param attrs   attrs
-     */
+
     public PullExtendLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /**
-     * 构造方法
-     *
-     * @param context  context
-     * @param attrs    attrs
-     * @param defStyle defStyle
-     */
+
     public PullExtendLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setOrientation(VERTICAL);
@@ -176,7 +148,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
      * @param context context
      */
     private void init(Context context) {
-        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+        mTouchSlop = (int) (ViewConfiguration.get(context).getScaledTouchSlop() * 1.5);
         ViewGroup.LayoutParams layoutParams = mRefreshableView.getLayoutParams();
         layoutParams.height = 10;
         mRefreshableView.setLayoutParams(layoutParams);
@@ -276,7 +248,6 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
 
             case MotionEvent.ACTION_MOVE:
                 final float deltaY = event.getY() - mLastMotionY;
-                Log.d("deltaY", deltaY + " ");
                 final float absDiff = Math.abs(deltaY);
                 // 位移差大于mTouchSlop，这是为了防止快速拖动引发刷新
                 if ((absDiff > mTouchSlop)) {
@@ -316,7 +287,6 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
             case MotionEvent.ACTION_MOVE:
                 final float deltaY = ev.getY() - mLastMotionY;
                 mLastMotionY = ev.getY();
-                Log.d("llll", deltaY + "");
                 if (isPullRefreshEnabled() && isReadyForPullDown(deltaY)) {
                     pullHeaderLayout(deltaY / offsetRadio);
                     handled = true;
@@ -373,53 +343,6 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
     @Override
     public boolean isPullLoadEnabled() {
         return mPullLoadEnabled && (null != mFooterLayout);
-    }
-
-
-    @Override
-    public void setOnRefreshListener(OnRefreshListener refreshListener) {
-        mRefreshListener = refreshListener;
-    }
-
-    @Override
-    public void onPullDownRefreshComplete() {
-        if (isPullRefreshing()) {
-            changedState(State.RESET, true);
-            // 回滚动有一个时间，我们在回滚完成后再设置状态为normal
-            // 在将ExtendLayout的状态设置为normal之前，我们应该禁止
-            // 截断Touch事件，因为设里有一个post状态，如果有post的Runnable
-            // 未被执行时，用户再一次发起下拉刷新，如果正在刷新时，这个Runnable
-            // 再次被执行到，那么就会把正在刷新的状态改为正常状态，这就不符合期望
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setInterceptTouchEventEnabled(true);
-                    mHeaderLayout.setState(State.RESET);
-                }
-            }, getSmoothScrollDuration());
-
-            resetHeaderLayout();
-            setInterceptTouchEventEnabled(false);
-        }
-    }
-
-    @Override
-    public void onPullUpRefreshComplete() {
-        if (isPullLoading()) {
-            mPullUpState = State.RESET;
-            changedState(State.RESET, false);
-
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setInterceptTouchEventEnabled(true);
-                    mFooterLayout.setState(State.RESET);
-                }
-            }, getSmoothScrollDuration());
-
-            resetFooterLayout();
-            setInterceptTouchEventEnabled(false);
-        }
     }
 
 
@@ -531,7 +454,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         setScrollBy(0, -(int) delta);
         int scrollY = Math.abs(getScrollYValue());
         if (null != mFooterLayout && 0 != mFooterHeight) {
-            if (scrollY >=footerListHeight) {
+            if (scrollY >= footerListHeight) {
                 mFooterLayout.setState(State.arrivedListHeight);
                 setOffsetRadio(3.0f);
             } else {
@@ -566,34 +489,6 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         }
     }
 
-    /**
-     * 判断是否正在下拉刷新
-     *
-     * @return true正在刷新，否则false
-     */
-    protected boolean isPullRefreshing() {
-        return (mPullDownState == State.startShowList);
-    }
-
-    /**
-     * 是否正的上拉加载更多
-     *
-     * @return true正在加载更多，否则false
-     */
-    protected boolean isPullLoading() {
-        return (mPullUpState == State.startShowList);
-    }
-
-
-    /**
-     * 当状态发生变化时调用
-     *
-     * @param state      状态
-     * @param isPullDown 是否向下
-     */
-    protected void changedState(State state, boolean isPullDown) {
-        mPullUpState = state;
-    }
 
     /**
      * 设置滚动位置
