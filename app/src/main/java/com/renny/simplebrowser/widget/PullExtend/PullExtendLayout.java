@@ -505,7 +505,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         if (null != mHeaderLayout && 0 != mHeaderHeight) {
             if (scrollY >= headerListHeight) {
                 mHeaderLayout.setState(State.arrivedListHeight);
-                setOffsetRadio(1.5f);
+                setOffsetRadio(2.0f);
             } else {
                 setOffsetRadio(1.0f);
             }
@@ -532,8 +532,8 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         int scrollY = Math.abs(getScrollYValue());
         if (null != mFooterLayout && 0 != mFooterHeight) {
             if (scrollY > footerListHeight) {
-                mHeaderLayout.setState(State.arrivedListHeight);
-                setOffsetRadio(1.5f);
+                mFooterLayout.setState(State.arrivedListHeight);
+                setOffsetRadio(3.0f);
             } else {
                 setOffsetRadio(1.0f);
             }

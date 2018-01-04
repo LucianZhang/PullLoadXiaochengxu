@@ -45,7 +45,7 @@ public abstract class ExtendLayout extends FrameLayout implements IExtendLayout 
         }
         LayoutParams params = new LayoutParams(
                 LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT);
+                LayoutParams.MATCH_PARENT);
         addView(container, params);
         bindView(container);
     }
