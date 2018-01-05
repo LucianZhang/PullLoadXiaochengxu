@@ -4,7 +4,6 @@ package com.renny.simplebrowser.widget.PullExtend;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -64,6 +63,7 @@ public class ExtendListFooter extends ExtendLayout {
     protected void onReset() {
         mExpendPoint.setAlpha(1);
         mExpendPoint.setTranslationY(0);
+        mExpendPoint.setVisibility(VISIBLE);
         mRecyclerView.setTranslationY(0);
         arrivedListHeight = false;
     }
@@ -88,8 +88,8 @@ public class ExtendListFooter extends ExtendLayout {
 
     @Override
     public void onPull(int offset) {
-        Log.d("bbbb", "offset: " + offset);
         if (!arrivedListHeight) {
+            mExpendPoint.setVisibility(VISIBLE);
             int moreOffset = Math.abs(offset) - (int) containerHeight;
             float percent = Math.abs(offset) / containerHeight;
             if (percent <= 1.0f) {
@@ -107,6 +107,7 @@ public class ExtendListFooter extends ExtendLayout {
             }
         }
         if (Math.abs(offset) >= listHeight) {
+            mExpendPoint.setVisibility(INVISIBLE);
             mRecyclerView.setTranslationY((Math.abs(offset) - listHeight) / 2);
         }
     }

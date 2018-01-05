@@ -17,7 +17,6 @@ import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
 
-
 public class WebViewFragment extends BaseFragment {
 
     private WebView mWebView;
@@ -64,7 +63,7 @@ public class WebViewFragment extends BaseFragment {
             public void onReceivedTitle(WebView webView, String title) {
                 super.onReceivedTitle(webView, title);
                 if (onReceivedTitleListener != null) {
-                    onReceivedTitleListener.onReceivedTitle(title);
+                    onReceivedTitleListener.onReceivedTitle(webView.getUrl(),title);
 
                 }
             }
@@ -124,6 +123,6 @@ public class WebViewFragment extends BaseFragment {
     }
 
     public interface OnReceivedListener {
-        void onReceivedTitle(String title);
+        void onReceivedTitle(String url, String title);
     }
 }

@@ -4,7 +4,6 @@ package com.renny.simplebrowser.widget.PullExtend;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -80,7 +79,7 @@ public class ExtendListHeader extends ExtendLayout {
 
     @Override
     protected void onReset() {
-        Log.d("onReset()", "onReset()");
+        mExpendPoint.setVisibility(VISIBLE);
         mExpendPoint.setAlpha(1);
         mExpendPoint.setTranslationY(0);
         mRecyclerView.setTranslationY(0);
@@ -107,8 +106,8 @@ public class ExtendListHeader extends ExtendLayout {
 
     @Override
     public void onPull(int offset) {
-        Log.d("xxxx", offset + "  " + arrivedListHeight);
         if (!arrivedListHeight) {
+            mExpendPoint.setVisibility(VISIBLE);
             float percent = Math.abs(offset) / containerHeight;
             int moreOffset = Math.abs(offset) - (int) containerHeight;
             if (percent <= 1.0f) {
@@ -126,6 +125,7 @@ public class ExtendListHeader extends ExtendLayout {
             }
         }
         if (Math.abs(offset) >= listHeight) {
+            mExpendPoint.setVisibility(INVISIBLE);
             mRecyclerView.setTranslationY(-(Math.abs(offset) - listHeight) / 2);
         }
     }
@@ -134,12 +134,6 @@ public class ExtendListHeader extends ExtendLayout {
         return mRecyclerView;
     }
 
-    /**
-     * dp转px
-     */
-    public float dip2px(float dpValue) {
-        float scale = getContext().getResources().getDisplayMetrics().density;
-        return dpValue * scale + 0.5f;
-    }
+
 
 }

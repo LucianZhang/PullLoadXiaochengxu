@@ -258,6 +258,7 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
                         // 不可见，存在这样一种case，当正在刷新时并且RefreshableView已经滑到顶部，向上滑动，那么我们期望的结果是
                         // 依然能向上滑动，直到HeaderView完全不可见
                         // 2，deltaY > 0.5f：表示下拉的值大于0.5f
+                        // 3，deltaY <- 0.5f：表示上滑的值大于0.5f
                         mIsHandledTouchEvent = (Math.abs(getScrollYValue()) > 0 || deltaY > 0.5f || deltaY < -0.5f);
                         // 如果截断事件，我们则仍然把这个事件交给刷新View去处理，典型的情况是让ListView/GridView将按下
                         // Child的Selector隐藏

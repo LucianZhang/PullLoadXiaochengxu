@@ -163,4 +163,13 @@ public abstract class ExtendLayout extends FrameLayout implements IExtendLayout 
      * @return Loading的View
      */
     protected abstract View createLoadingView(Context context, AttributeSet attrs);
+
+
+    /**
+     * dp转px
+     */
+    public float dip2px(float dpValue) {
+        float scale = getContext().getResources().getDisplayMetrics().density;
+        return dpValue * scale + 0.5f;
+    }
 }
