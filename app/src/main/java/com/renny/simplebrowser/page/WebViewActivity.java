@@ -12,15 +12,18 @@ import android.widget.Toast;
 
 import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.base.BaseActivity;
+import com.renny.simplebrowser.business.db.dao.MarkDao;
+import com.renny.simplebrowser.business.db.entity.Mark;
 import com.renny.simplebrowser.business.log.Logs;
-import com.renny.simplebrowser.business.sp.SPHelper;
 import com.renny.simplebrowser.widget.GestureLayout;
 import com.tencent.smtt.sdk.WebBackForwardList;
 import com.tencent.smtt.sdk.WebView;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by Renny on 2018/1/2.
+ */
 public class WebViewActivity extends BaseActivity implements WebViewFragment.OnReceivedListener {
     WebViewFragment webViewFragment;
     HomePageFragment mHomePageFragment;
@@ -31,8 +34,12 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
     private boolean isOnHomePage = false;
     private boolean fromBack = false;
     private long mExitTime = 0;
-    String url;
-    List<String> markList;
+    String url, title;
+    MarkDao mMarkDao;
+
+    private String homePage = "https://juejin.im/user/5795bb80d342d30059f14b1c";
+    private String baidu = "https://www.baidu.com/";
+    private String github = "https://github.com/renjianan/SimpleBrowser";
 
     @Override
     protected int getLayoutId() {
@@ -47,10 +54,18 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
         mark.setOnClickListener(this);
     }
 
+
     @Override
     protected void afterViewBind(Bundle savedInstanceState) {
         super.afterViewBind(savedInstanceState);
         mFragmentManager = getSupportFragmentManager();
+        mMarkDao = new MarkDao();
+        List<Mark> markList = mMarkDao.queryForAll();
+        if (markList == null || markList.isEmpty()) {
+            mMarkDao.addMark(new Mark("我的掘金主页", homePage));
+            mMarkDao.addMark(new Mark("GitHub地址", github));
+            mMarkDao.addMark(new Mark("百度", baidu));
+        }
         goHomePage();
         mGestureLayout.setGestureListener(new GestureLayout.GestureListener() {
             @Override
@@ -108,13 +123,13 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
             case R.id.mark:
                 if (!TextUtils.isEmpty(url)) {
                     if (mark.isSelected()) {
-                        markList.remove(url);
+                        mMarkDao.delete(url);
                         mark.setSelected(false);
                     } else {
-                        markList.add(url);
+                        mMarkDao.addMark(new Mark(title, url));
                         mark.setSelected(true);
                     }
-                    SPHelper.putBean("MARK_LIST", markList);
+                    mHomePageFragment.refreshMarklist();
                 }
                 break;
         }
@@ -141,6 +156,7 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
     private void goHomePage() {
         if (mHomePageFragment == null) {
             mHomePageFragment = new HomePageFragment();
+            mHomePageFragment.setMarkDao(mMarkDao);
             mHomePageFragment.setGoPageListener(new HomePageFragment.goPageListener() {
                 @Override
                 public void onGopage(String url) {
@@ -151,10 +167,6 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
         } else {
             mFragmentManager.beginTransaction().replace(R.id.container,
                     mHomePageFragment).commit();
-        }
-        markList = SPHelper.getBean("MARK_LIST", List.class);
-        if (markList == null) {
-            markList = new ArrayList<>();
         }
         titleView.setText("主页");
         mark.setVisibility(View.INVISIBLE);
@@ -209,7 +221,8 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
         Logs.base.d("onReceivedTitle:  " + title + "   " + url);
         mark.setVisibility(View.VISIBLE);
         this.url = url;
-        mark.setSelected(markList.contains(url));
+        this.title = title;
+        mark.setSelected(mMarkDao.query(url));
         if (!TextUtils.isEmpty(title)) {
             titleView.setText(title);
         }

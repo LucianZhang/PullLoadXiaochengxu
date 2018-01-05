@@ -19,11 +19,15 @@ import android.widget.Toast;
 
 import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.adapter.ExtendHeadAdapter;
+import com.renny.simplebrowser.adapter.ExtendMarkAdapter;
 import com.renny.simplebrowser.base.BaseFragment;
 import com.renny.simplebrowser.base.CommonAdapter;
+import com.renny.simplebrowser.business.db.dao.MarkDao;
+import com.renny.simplebrowser.business.db.entity.Mark;
+import com.renny.simplebrowser.business.toast.ToastHelper;
 import com.renny.simplebrowser.widget.PullExtend.ExtendListFooter;
 import com.renny.simplebrowser.widget.PullExtend.ExtendListHeader;
-import com.renny.simplebrowser.business.toast.ToastHelper;
+import com.renny.simplebrowser.widget.PullExtend.PullExtendLayout;
 import com.renny.zxing.Activity.CaptureActivity;
 
 import java.util.ArrayList;
@@ -34,34 +38,53 @@ import static android.app.Activity.RESULT_OK;
 
 
 /**
- * Created by yh on 2016/6/27.
+ * Created by Renny on 2018/1/2.
  */
 public class HomePageFragment extends BaseFragment implements View.OnClickListener {
     private goPageListener mGoPageListener;
-    private String homePage = "https://juejin.im/user/5795bb80d342d30059f14b1c";
-    private String baidu = "https://www.baidu.com/";
-    private String github = "https://github.com/renjianan/SimpleBrowser";
     private static final int REQUEST_SCAN = 0;
     EditText mEditText;
     ExtendListHeader mPullNewHeader;
     ExtendListFooter mPullNewFooter;
+    PullExtendLayout mPullExtendLayout;
     RecyclerView listHeader, listFooter;
     List<String> mDatas = new ArrayList<>();
+    MarkDao mMarkDao;
+    ExtendMarkAdapter mExtendMarkAdapter;
+    List<Mark> markList;
 
     @Override
     protected int getLayoutId() {
         return R.layout.home_page;
     }
 
-
-    public void afterViewBind(View rootView, Bundle savedInstanceState) {
+    @Override
+    public void bindView(View rootView, Bundle savedInstanceState) {
+        super.bindView(rootView, savedInstanceState);
         mEditText = rootView.findViewById(R.id.url_edit);
         mPullNewHeader = rootView.findViewById(R.id.extend_header);
         mPullNewFooter = rootView.findViewById(R.id.extend_footer);
+        mPullExtendLayout = rootView.findViewById(R.id.pull_extend);
+        rootView.findViewById(R.id.scan).setOnClickListener(this);
         listHeader = mPullNewHeader.getRecyclerView();
         listFooter = mPullNewFooter.getRecyclerView();
         listHeader.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         listFooter.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+    }
+
+    public void afterViewBind(View rootView, Bundle savedInstanceState) {
+        markList = mMarkDao.queryForAll();
+        mExtendMarkAdapter = new ExtendMarkAdapter(getActivity(), R.layout.item_list, markList);
+        mExtendMarkAdapter.setItemClickListener(new CommonAdapter.ItemClickListener() {
+            @Override
+            public void onItemClicked(int position, View view) {
+                if (mGoPageListener != null) {
+                    mGoPageListener.onGopage(markList.get(position).getUrl());
+                }
+            }
+        });
+        listFooter.setAdapter(mExtendMarkAdapter);
+        refreshMarklist();
         for (int i = 1; i < 10; i++) {
             mDatas.add("应用  " + i);
         }
@@ -71,17 +94,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 ToastHelper.makeToast("应用  " + (position + 1));
             }
         }));
-        listFooter.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_list, mDatas).setItemClickListener(new CommonAdapter.ItemClickListener() {
-            @Override
-            public void onItemClicked(int position, View view) {
-                ToastHelper.makeToast("应用  " + (position + 1));
-            }
-        }));
 
-        rootView.findViewById(R.id.profile).setOnClickListener(this);
-        rootView.findViewById(R.id.baidu).setOnClickListener(this);
-        rootView.findViewById(R.id.github).setOnClickListener(this);
-        rootView.findViewById(R.id.scan).setOnClickListener(this);
         mEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -95,6 +108,21 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             }
         });
 
+    }
+
+    public void refreshMarklist() {
+        markList.clear();
+        markList.addAll(mMarkDao.queryForAll());
+        mExtendMarkAdapter.notifyDataSetChanged();
+        if (markList != null && !markList.isEmpty()) {
+            mPullExtendLayout.setPullLoadEnabled(true);
+        } else {
+            mPullExtendLayout.setPullLoadEnabled(false);
+        }
+    }
+
+    public void setMarkDao(MarkDao markDao) {
+        mMarkDao = markDao;
     }
 
     private void startBrowser(String text) {
@@ -155,15 +183,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         if (mGoPageListener != null) {
             int id = v.getId();
             switch (id) {
-                case R.id.profile:
-                    mGoPageListener.onGopage(homePage);
-                    break;
-                case R.id.baidu:
-                    mGoPageListener.onGopage(baidu);
-                    break;
-                case R.id.github:
-                    mGoPageListener.onGopage(github);
-                    break;
                 case R.id.scan:
                     getRuntimeRight();
                     break;

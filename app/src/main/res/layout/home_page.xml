@@ -2,6 +2,7 @@
 <com.renny.simplebrowser.widget.PullExtend.PullExtendLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/pull_extend"
     android:layout_height="match_parent"
     android:background="@color/background">
 
@@ -55,46 +56,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="40dp"
             android:src="@drawable/logo"/>
-
-        <LinearLayout
-            android:id="@+id/icon_lay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/url_lay"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/btn_orange"
-                android:padding="5dp"
-                android:text="我的掘金主页"
-                android:textSize="14sp"/>
-
-            <TextView
-                android:id="@+id/baidu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/btn_orange"
-                android:padding="5dp"
-                android:text="百度"
-                android:textSize="14sp"/>
-
-            <TextView
-                android:id="@+id/github"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/btn_orange"
-                android:maxLines="1"
-                android:padding="5dp"
-                android:text="github地址"
-                android:textSize="14sp"/>
-
-        </LinearLayout>
 
     </RelativeLayout>
 

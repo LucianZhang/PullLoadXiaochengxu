@@ -23,6 +23,7 @@ public abstract class BaseFragment extends Fragment {
         }
         if (rootView == null) {
             rootView = inflater.inflate(getLayoutId(), container, false);
+            bindView(rootView, savedInstanceState);
             afterViewBind(rootView, savedInstanceState);
         }
         return rootView;
@@ -34,7 +35,9 @@ public abstract class BaseFragment extends Fragment {
 
     protected abstract int getLayoutId();
 
-    public void afterViewBind(View rootView, Bundle savedInstanceState) {
+    public void bindView(View rootView, Bundle savedInstanceState) {
+
+    } public void afterViewBind(View rootView, Bundle savedInstanceState) {
     }
 
 }

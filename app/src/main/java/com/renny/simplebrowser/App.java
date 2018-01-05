@@ -8,6 +8,7 @@ import com.tencent.smtt.sdk.QbSdk;
 
 /**
  * Created by Renny on 2018/1/2.
+ *
  */
 
 public class App extends Application {
