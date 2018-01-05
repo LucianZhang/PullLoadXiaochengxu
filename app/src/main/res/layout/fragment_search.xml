@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/pull_to_refresh_header_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="44dp"
+            android:background="@color/transparent"/>
+
+        <Button
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/transparent"
+            android:text="进入"/>
+
+    </RelativeLayout>
+
+
+    <com.renny.simplebrowser.widget.pullextend.ExpendPoint
+        android:id="@+id/expend_point"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:layout_alignParentBottom="true"/>
+
+
+</RelativeLayout>

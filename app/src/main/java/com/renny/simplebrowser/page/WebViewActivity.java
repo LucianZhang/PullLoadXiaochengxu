@@ -156,7 +156,6 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
     private void goHomePage() {
         if (mHomePageFragment == null) {
             mHomePageFragment = new HomePageFragment();
-            mHomePageFragment.setMarkDao(mMarkDao);
             mHomePageFragment.setGoPageListener(new HomePageFragment.goPageListener() {
                 @Override
                 public void onGopage(String url) {

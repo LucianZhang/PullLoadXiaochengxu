@@ -25,7 +25,7 @@ public class WebViewFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.webview_item;
+        return R.layout.fragment_webview;
     }
 
 

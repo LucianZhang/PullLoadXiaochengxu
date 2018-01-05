@@ -55,7 +55,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     protected int getLayoutId() {
-        return R.layout.home_page;
+        return R.layout.fragment_home_page;
     }
 
     @Override
@@ -73,6 +73,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     }
 
     public void afterViewBind(View rootView, Bundle savedInstanceState) {
+        mMarkDao=new MarkDao();
         markList = mMarkDao.queryForAll();
         mExtendMarkAdapter = new ExtendMarkAdapter(getActivity(), R.layout.item_list, markList);
         mExtendMarkAdapter.setItemClickListener(new CommonAdapter.ItemClickListener() {
