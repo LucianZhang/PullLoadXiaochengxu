@@ -83,6 +83,13 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 }
             }
         });
+        mExtendMarkAdapter.setLongClickListener(new ExtendMarkAdapter.ItemLongClickListener() {
+            @Override
+            public void onItemLongClicked(int position, View view) {
+                mMarkDao.delete(markList.get(position).getUrl());
+                refreshMarklist();
+            }
+        });
         listFooter.setAdapter(mExtendMarkAdapter);
         refreshMarklist();
         for (int i = 1; i < 10; i++) {

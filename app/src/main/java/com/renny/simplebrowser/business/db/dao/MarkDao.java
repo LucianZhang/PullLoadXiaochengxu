@@ -1,6 +1,7 @@
 package com.renny.simplebrowser.business.db.dao;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.renny.simplebrowser.App;
 import com.renny.simplebrowser.business.db.DatabaseHelper;
 import com.renny.simplebrowser.business.db.entity.Mark;
@@ -47,7 +48,9 @@ public class MarkDao {
      */
     public void delete(String url) {
         try {
-            mMarkDao.deleteBuilder().where().eq("url",url).query();
+            DeleteBuilder<Mark, Integer> deleteBuilder = mMarkDao.deleteBuilder();
+            deleteBuilder.where().eq("url",url);
+            deleteBuilder.delete();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -16,9 +16,13 @@ import java.util.List;
  */
 
 public class ExtendMarkAdapter extends CommonAdapter<Mark> {
-
+    private ItemLongClickListener mLongClickListener;
     public ExtendMarkAdapter(Context context, int layoutId, List<Mark> datas) {
         super(context, layoutId, datas);
+    }
+
+    public void setLongClickListener(ItemLongClickListener longClickListener) {
+        mLongClickListener = longClickListener;
     }
 
     @Override
@@ -34,7 +38,18 @@ public class ExtendMarkAdapter extends CommonAdapter<Mark> {
                 }
             });
         }
+        if (mLongClickListener != null) {
+            tv.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mLongClickListener.onItemLongClicked(position, v);
+                    return true;
+                }
+            });
+        }
     }
-
+    public interface ItemLongClickListener {
+        void onItemLongClicked(int position, View view);
+    }
 
 }
