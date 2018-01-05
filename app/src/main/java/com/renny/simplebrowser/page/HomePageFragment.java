@@ -94,6 +94,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         refreshMarklist();
         mDatas.add("历史记录");
         mDatas.add("无痕浏览");
+        mDatas.add("新建窗口");
         mDatas.add("无图模式");
         mDatas.add("夜间模式");
         mDatas.add("禁用JS");
