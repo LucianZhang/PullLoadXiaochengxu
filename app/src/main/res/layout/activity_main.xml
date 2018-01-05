@@ -11,7 +11,7 @@
         android:id="@+id/gesture_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="33dp">
+        android:layout_above="@id/bottom_bar">
 
         <FrameLayout
             android:id="@+id/container"
@@ -21,6 +21,7 @@
     </com.renny.simplebrowser.widget.GestureLayout>
 
     <RelativeLayout
+        android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="33dp"
         android:layout_alignParentBottom="true"
@@ -48,7 +49,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/title"
-            android:src="@drawable/bg_item_mark"/>
+            android:src="@drawable/bg_mark"/>
 
     </RelativeLayout>
 

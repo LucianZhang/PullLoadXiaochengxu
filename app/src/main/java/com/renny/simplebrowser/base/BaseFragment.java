@@ -11,7 +11,7 @@ import android.view.ViewGroup;
  * Created by Renny on 2018/1/3.
  */
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements View.OnClickListener {
 
     private View rootView;
 
@@ -33,11 +33,18 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
     protected abstract int getLayoutId();
 
     public void bindView(View rootView, Bundle savedInstanceState) {
 
-    } public void afterViewBind(View rootView, Bundle savedInstanceState) {
+    }
+
+    public void afterViewBind(View rootView, Bundle savedInstanceState) {
     }
 
 }

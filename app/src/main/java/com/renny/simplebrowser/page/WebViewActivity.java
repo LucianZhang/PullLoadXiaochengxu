@@ -15,6 +15,7 @@ import com.renny.simplebrowser.base.BaseActivity;
 import com.renny.simplebrowser.business.db.dao.BookMarkDao;
 import com.renny.simplebrowser.business.db.entity.BookMark;
 import com.renny.simplebrowser.business.log.Logs;
+import com.renny.simplebrowser.listener.goPageListener;
 import com.renny.simplebrowser.widget.GestureLayout;
 import com.tencent.smtt.sdk.WebBackForwardList;
 import com.tencent.smtt.sdk.WebView;
@@ -27,8 +28,10 @@ import java.util.List;
 public class WebViewActivity extends BaseActivity implements WebViewFragment.OnReceivedListener {
     WebViewFragment webViewFragment;
     HomePageFragment mHomePageFragment;
+    SearchFragment mSearchFragment;
     TextView titleView;
     ImageView mark;
+    View bottomBar;
     GestureLayout mGestureLayout;
     FragmentManager mFragmentManager;
     private boolean isOnHomePage = false;
@@ -49,6 +52,7 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
     @Override
     protected void bindView(Bundle savedInstanceState) {
         titleView = findViewById(R.id.title);
+        bottomBar = findViewById(R.id.bottom_bar);
         mGestureLayout = findViewById(R.id.gesture_layout);
         mark = findViewById(R.id.mark);
         mark.setOnClickListener(this);
@@ -156,10 +160,14 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
     private void goHomePage() {
         if (mHomePageFragment == null) {
             mHomePageFragment = new HomePageFragment();
-            mHomePageFragment.setGoPageListener(new HomePageFragment.goPageListener() {
+            mHomePageFragment.setGoPageListener(new goPageListener() {
                 @Override
                 public void onGopage(String url) {
-                    goWebView(url);
+                    if (!TextUtils.isEmpty(url)) {
+                        goWebView(url);
+                    } else {
+                        goHomePage();
+                    }
                 }
             });
             mFragmentManager.beginTransaction().add(R.id.container, mHomePageFragment).commit();
@@ -170,6 +178,31 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
         titleView.setText("主页");
         mark.setVisibility(View.INVISIBLE);
         isOnHomePage = true;
+    }
+
+    public void goSearchPage() {
+        if (mSearchFragment == null) {
+            mSearchFragment = new SearchFragment();
+            mSearchFragment.setGoPageListener(new goPageListener() {
+                @Override
+                public void onGopage(String url) {
+                    if (!TextUtils.isEmpty(url)) {
+                        goWebView(url);
+                    } else {
+                        goHomePage();
+                    }
+                }
+            });
+        }
+        mFragmentManager.beginTransaction().replace(R.id.container,
+                mSearchFragment).commit();
+        bottomBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bottomBar.setVisibility(View.VISIBLE);
     }
 
     private void returnLastPage() {

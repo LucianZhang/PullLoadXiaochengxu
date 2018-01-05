@@ -27,17 +27,13 @@
             android:background="@drawable/bg_stroke_grey"
             android:orientation="horizontal">
 
-            <EditText
+            <View
                 android:id="@+id/url_edit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="12dp"
                 android:layout_weight="1"
-                android:background="@null"
-                android:imeOptions="actionGo"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textCursorDrawable="@drawable/color_cursor"/>
+                android:background="@null"/>
 
             <ImageView
                 android:id="@+id/scan"

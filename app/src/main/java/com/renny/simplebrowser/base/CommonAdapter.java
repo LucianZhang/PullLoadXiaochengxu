@@ -31,7 +31,6 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-
         convert(holder, position);
     }
 
