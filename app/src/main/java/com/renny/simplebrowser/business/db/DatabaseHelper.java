@@ -7,7 +7,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.renny.simplebrowser.business.db.entity.Mark;
+import com.renny.simplebrowser.business.db.entity.BookMark;
 
 import java.sql.SQLException;
 
@@ -22,7 +22,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     /**
      * userDao ，每张表对于一个
      */
-    private Dao<Mark, Integer> userDao;
+    private Dao<BookMark, Integer> userDao;
 
     private DatabaseHelper(Context context) {
         super(context, TABLE_NAME, null, 2);
@@ -32,7 +32,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database,
                          ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, Mark.class);
+            TableUtils.createTable(connectionSource, BookMark.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -42,7 +42,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database,
                           ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
-            TableUtils.dropTable(connectionSource, Mark.class, true);
+            TableUtils.dropTable(connectionSource, BookMark.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,9 +74,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      * @return
      * @throws SQLException
      */
-    public Dao<Mark, Integer> getmarkDao() throws SQLException {
+    public Dao<BookMark, Integer> getmarkDao() throws SQLException {
         if (userDao == null) {
-            userDao = getDao(Mark.class);
+            userDao = getDao(BookMark.class);
         }
         return userDao;
     }

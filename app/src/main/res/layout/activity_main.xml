@@ -48,7 +48,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/title"
-            android:src="@drawable/bg_mark"/>
+            android:src="@drawable/bg_item_mark"/>
 
     </RelativeLayout>
 

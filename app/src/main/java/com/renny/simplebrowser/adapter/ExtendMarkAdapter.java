@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.base.CommonAdapter;
 import com.renny.simplebrowser.base.ViewHolder;
-import com.renny.simplebrowser.business.db.entity.Mark;
+import com.renny.simplebrowser.business.db.entity.BookMark;
 
 import java.util.List;
 
@@ -15,9 +15,9 @@ import java.util.List;
  * Created by Renny on 2018/1/3.
  */
 
-public class ExtendMarkAdapter extends CommonAdapter<Mark> {
+public class ExtendMarkAdapter extends CommonAdapter<BookMark> {
     private ItemLongClickListener mLongClickListener;
-    public ExtendMarkAdapter(Context context, int layoutId, List<Mark> datas) {
+    public ExtendMarkAdapter(Context context, int layoutId, List<BookMark> datas) {
         super(context, layoutId, datas);
     }
 
@@ -27,7 +27,7 @@ public class ExtendMarkAdapter extends CommonAdapter<Mark> {
 
     @Override
     protected void convert(ViewHolder holder, final int position) {
-        Mark data=getData(position);
+        BookMark data=getData(position);
         TextView tv = holder.getView(R.id.item_title);
         tv.setText(data.getTitle());
         if (mItemClickListener != null) {

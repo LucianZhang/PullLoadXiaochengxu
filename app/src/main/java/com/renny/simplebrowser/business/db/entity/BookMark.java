@@ -7,18 +7,18 @@ import com.j256.ormlite.table.DatabaseTable;
  * Created by Renny on 2018/1/5.
  */
 @DatabaseTable(tableName = "tb_mark")
-public class Mark {
+public class BookMark {
     @DatabaseField(generatedId = true)
     private int id;
     @DatabaseField(columnName = "title")
-    String title;
+    private String title;
     @DatabaseField(columnName = "url")
-    String url;
+    private String url;
 
-    public Mark() {
+    public BookMark() {
     }
 
-    public Mark(String title, String url) {
+    public BookMark(String title, String url) {
         this.title = title;
         this.url = url;
     }

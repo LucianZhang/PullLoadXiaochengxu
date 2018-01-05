@@ -22,8 +22,8 @@ import com.renny.simplebrowser.adapter.ExtendHeadAdapter;
 import com.renny.simplebrowser.adapter.ExtendMarkAdapter;
 import com.renny.simplebrowser.base.BaseFragment;
 import com.renny.simplebrowser.base.CommonAdapter;
-import com.renny.simplebrowser.business.db.dao.MarkDao;
-import com.renny.simplebrowser.business.db.entity.Mark;
+import com.renny.simplebrowser.business.db.dao.BookMarkDao;
+import com.renny.simplebrowser.business.db.entity.BookMark;
 import com.renny.simplebrowser.business.toast.ToastHelper;
 import com.renny.simplebrowser.widget.pullextend.ExtendListFooter;
 import com.renny.simplebrowser.widget.pullextend.ExtendListHeader;
@@ -50,9 +50,9 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     PullExtendLayout mPullExtendLayout;
     RecyclerView listHeader, listFooter;
     List<String> mDatas = new ArrayList<>();
-    MarkDao mMarkDao;
+    BookMarkDao mMarkDao;
     ExtendMarkAdapter mExtendMarkAdapter;
-    List<Mark> markList;
+    List<BookMark> markList;
 
     @Override
     protected int getLayoutId() {
@@ -74,9 +74,9 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     }
 
     public void afterViewBind(View rootView, Bundle savedInstanceState) {
-        mMarkDao=new MarkDao();
+        mMarkDao=new BookMarkDao();
         markList = mMarkDao.queryForAll();
-        mExtendMarkAdapter = new ExtendMarkAdapter(getActivity(), R.layout.item_list, markList);
+        mExtendMarkAdapter = new ExtendMarkAdapter(getActivity(), R.layout.item_mark, markList);
         mExtendMarkAdapter.setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
@@ -107,7 +107,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         mDatas.add("全屏浏览");
         mDatas.add("翻译");
         mDatas.add("切换UA");
-        listHeader.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_list, mDatas).setItemClickListener(new CommonAdapter.ItemClickListener() {
+        listHeader.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_header, mDatas).setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
                 ToastHelper.makeToast(mDatas.get(position)+" 功能待实现" );
@@ -140,7 +140,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    public void setMarkDao(MarkDao markDao) {
+    public void setMarkDao(BookMarkDao markDao) {
         mMarkDao = markDao;
     }
 

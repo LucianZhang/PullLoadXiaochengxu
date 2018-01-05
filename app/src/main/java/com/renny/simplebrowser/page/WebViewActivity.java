@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.base.BaseActivity;
-import com.renny.simplebrowser.business.db.dao.MarkDao;
-import com.renny.simplebrowser.business.db.entity.Mark;
+import com.renny.simplebrowser.business.db.dao.BookMarkDao;
+import com.renny.simplebrowser.business.db.entity.BookMark;
 import com.renny.simplebrowser.business.log.Logs;
 import com.renny.simplebrowser.widget.GestureLayout;
 import com.tencent.smtt.sdk.WebBackForwardList;
@@ -35,7 +35,7 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
     private boolean fromBack = false;
     private long mExitTime = 0;
     String url, title;
-    MarkDao mMarkDao;
+    BookMarkDao mMarkDao;
 
     private String homePage = "https://juejin.im/user/5795bb80d342d30059f14b1c";
     private String baidu = "https://www.baidu.com/";
@@ -59,12 +59,12 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
     protected void afterViewBind(Bundle savedInstanceState) {
         super.afterViewBind(savedInstanceState);
         mFragmentManager = getSupportFragmentManager();
-        mMarkDao = new MarkDao();
-        List<Mark> markList = mMarkDao.queryForAll();
+        mMarkDao = new BookMarkDao();
+        List<BookMark> markList = mMarkDao.queryForAll();
         if (markList == null || markList.isEmpty()) {
-            mMarkDao.addMark(new Mark("我的掘金主页", homePage));
-            mMarkDao.addMark(new Mark("GitHub地址", github));
-            mMarkDao.addMark(new Mark("百度", baidu));
+            mMarkDao.addMark(new BookMark("我的掘金主页", homePage));
+            mMarkDao.addMark(new BookMark("GitHub地址", github));
+            mMarkDao.addMark(new BookMark("百度", baidu));
         }
         goHomePage();
         mGestureLayout.setGestureListener(new GestureLayout.GestureListener() {
@@ -126,7 +126,7 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
                         mMarkDao.delete(url);
                         mark.setSelected(false);
                     } else {
-                        mMarkDao.addMark(new Mark(title, url));
+                        mMarkDao.addMark(new BookMark(title, url));
                         mark.setSelected(true);
                     }
                     mHomePageFragment.refreshMarklist();
