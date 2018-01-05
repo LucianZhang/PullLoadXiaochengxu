@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.base.BaseFragment;
+import com.renny.simplebrowser.business.log.Logs;
 import com.renny.simplebrowser.widget.pullrefresh.PullToRefreshBase;
 import com.renny.simplebrowser.widget.pullrefresh.PullToRefreshWebView;
 import com.tencent.smtt.sdk.WebChromeClient;
@@ -63,7 +63,7 @@ public class WebViewFragment extends BaseFragment {
             public void onReceivedTitle(WebView webView, String title) {
                 super.onReceivedTitle(webView, title);
                 if (onReceivedTitleListener != null) {
-                    onReceivedTitleListener.onReceivedTitle(webView.getUrl(),title);
+                    onReceivedTitleListener.onReceivedTitle(webView.getUrl(), title);
 
                 }
             }
@@ -107,7 +107,7 @@ public class WebViewFragment extends BaseFragment {
             intent.putExtra("referer", url);
             getActivity().startActivity(intent);
         } catch (Exception e) {
-            Log.e("xxx", "您所打开的第三方App未安装！");
+            Logs.base.e("您所打开的第三方App未安装！");
             return false;
         }
 

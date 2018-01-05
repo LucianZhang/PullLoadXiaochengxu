@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.base.BaseActivity;
+import com.renny.simplebrowser.business.log.Logs;
 import com.renny.simplebrowser.business.sp.SPHelper;
 import com.renny.simplebrowser.widget.GestureLayout;
 import com.tencent.smtt.sdk.WebBackForwardList;
@@ -31,6 +32,7 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
     private boolean fromBack = false;
     private long mExitTime = 0;
     String url;
+    List<String> markList;
 
     @Override
     protected int getLayoutId() {
@@ -42,28 +44,7 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
         titleView = findViewById(R.id.title);
         mGestureLayout = findViewById(R.id.gesture_layout);
         mark = findViewById(R.id.mark);
-        mark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<String> markList = SPHelper.getBean("MARK_LIST", List.class);
-                if (markList == null) {
-                    markList = new ArrayList<>();
-                }
-                if (!TextUtils.isEmpty(url)) {
-                    mark.setVisibility(View.VISIBLE);
-                    if (mark.isSelected()) {
-                        markList.remove(url);
-                        mark.setSelected(false);
-                    } else {
-                        markList.add(url);
-                        SPHelper.putBean("MARK_LIST", markList);
-                        mark.setSelected(true);
-                    }
-                } else {
-                    mark.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+        mark.setOnClickListener(this);
     }
 
     @Override
@@ -120,6 +101,25 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.mark:
+                if (!TextUtils.isEmpty(url)) {
+                    if (mark.isSelected()) {
+                        markList.remove(url);
+                        mark.setSelected(false);
+                    } else {
+                        markList.add(url);
+                        mark.setSelected(true);
+                    }
+                    SPHelper.putBean("MARK_LIST", markList);
+                }
+                break;
+        }
+    }
+
 
     private void goWebView(String url) {
         if (webViewFragment == null || !TextUtils.isEmpty(url)) {
@@ -134,9 +134,8 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
         fromBack = false;
         WebView webView = webViewFragment.getWebView();
         if (webView != null) {
-            setTitle(webView.getTitle());
+            onReceivedTitle(webView.getUrl(), webView.getTitle());
         }
-        mark.setVisibility(View.INVISIBLE);
     }
 
     private void goHomePage() {
@@ -153,7 +152,11 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
             mFragmentManager.beginTransaction().replace(R.id.container,
                     mHomePageFragment).commit();
         }
-        onReceivedTitle("", "主页");
+        markList = SPHelper.getBean("MARK_LIST", List.class);
+        if (markList == null) {
+            markList = new ArrayList<>();
+        }
+        titleView.setText("主页");
         mark.setVisibility(View.INVISIBLE);
         isOnHomePage = true;
     }
@@ -203,18 +206,10 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
 
     @Override
     public void onReceivedTitle(String url, String title) {
-        List<String> markList = SPHelper.getBean("MARK_LIST", List.class);
-        if (markList == null) {
-            markList = new ArrayList<>();
-        }
-        if (!TextUtils.isEmpty(url)) {
-            mark.setVisibility(View.VISIBLE);
-            mark.setSelected(markList.contains(url));
-            this.url = url;
-        } else {
-            mark.setSelected(false);
-            mark.setVisibility(View.INVISIBLE);
-        }
+        Logs.base.d("onReceivedTitle:  " + title + "   " + url);
+        mark.setVisibility(View.VISIBLE);
+        this.url = url;
+        mark.setSelected(markList.contains(url));
         if (!TextUtils.isEmpty(title)) {
             titleView.setText(title);
         }

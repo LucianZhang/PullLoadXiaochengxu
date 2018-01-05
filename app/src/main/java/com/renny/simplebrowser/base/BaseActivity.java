@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by Renny on 2018/1/4.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,4 +38,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected abstract int getLayoutId();
+
+    @Override
+    public void onClick(View v) {
+
+    }
 }
