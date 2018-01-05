@@ -1,5 +1,7 @@
 package com.renny.simplebrowser.business.db.dao;
 
+import android.support.annotation.NonNull;
+
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.renny.simplebrowser.App;
@@ -27,15 +29,17 @@ public class MarkDao {
         }
     }
 
-    public void addMark(Mark mark) {
-        try {
-            mMarkDao.create(mark);
-        } catch (SQLException e) {
-            Logs.base.e(e);
+    public void addMark(@NonNull Mark mark) {
+        if (!query(mark.getUrl())) {
+            try {
+                mMarkDao.create(mark);
+            } catch (SQLException e) {
+                Logs.base.e(e);
+            }
         }
     }
 
-    public void addMarkList(List<Mark> markList) {
+    public void addMarkList(@NonNull List<Mark> markList) {
         try {
             mMarkDao.create(markList);
         } catch (SQLException e) {
@@ -46,10 +50,10 @@ public class MarkDao {
     /**
      * 删除一条记录
      */
-    public void delete(String url) {
+    public void delete(@NonNull String url) {
         try {
             DeleteBuilder<Mark, Integer> deleteBuilder = mMarkDao.deleteBuilder();
-            deleteBuilder.where().eq("url",url);
+            deleteBuilder.where().eq("url", url);
             deleteBuilder.delete();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -59,7 +63,7 @@ public class MarkDao {
     /**
      * 查询一条记录
      */
-    public boolean query(String url) {
+    public boolean query(@NonNull String url) {
         List<Mark> markList = null;
         try {
             markList = mMarkDao.queryBuilder().where().eq("url", url).query();
@@ -71,7 +75,6 @@ public class MarkDao {
 
     /**
      * 查询所有记录
-     *
      */
     public List<Mark> queryForAll() {
         List<Mark> markList = new ArrayList<>();

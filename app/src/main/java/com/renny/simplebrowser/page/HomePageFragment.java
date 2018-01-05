@@ -92,13 +92,21 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         });
         listFooter.setAdapter(mExtendMarkAdapter);
         refreshMarklist();
-        for (int i = 1; i < 10; i++) {
-            mDatas.add("应用  " + i);
-        }
+        mDatas.add("历史记录");
+        mDatas.add("无痕浏览");
+        mDatas.add("无图模式");
+        mDatas.add("夜间模式");
+        mDatas.add("禁用JS");
+        mDatas.add("下载内容");
+        mDatas.add("查找");
+        mDatas.add("拦截广告");
+        mDatas.add("全屏浏览");
+        mDatas.add("翻译");
+        mDatas.add("切换UA");
         listHeader.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_list, mDatas).setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
-                ToastHelper.makeToast("应用  " + (position + 1));
+                ToastHelper.makeToast(mDatas.get(position)+" 功能待实现" );
             }
         }));
 
