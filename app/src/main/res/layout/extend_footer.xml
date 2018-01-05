@@ -11,7 +11,7 @@
         android:layout_height="120dp"/>
 
 
-    <com.renny.simplebrowser.widget.PullExtend.ExpendPoint
+    <com.renny.simplebrowser.widget.pullextend.ExpendPoint
         android:id="@+id/expend_point"
         android:layout_width="match_parent"
         android:layout_height="12dp"/>

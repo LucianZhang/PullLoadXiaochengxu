@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.widget.PullExtend;
+package com.renny.simplebrowser.widget.pullextend;
 
 
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 
-import com.renny.simplebrowser.widget.PullExtend.IExtendLayout.State;
+import com.renny.simplebrowser.widget.pullextend.IExtendLayout.State;
 
 
 /**
@@ -405,7 +405,6 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         return SCROLL_DURATION;
     }
 
-
     /**
      * 拉动Header Layout时调用
      *
@@ -490,6 +489,9 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
         }
     }
 
+    public void closeExtendHeadAndFooter() {
+        smoothScrollTo(0);
+    }
 
     /**
      * 设置滚动位置

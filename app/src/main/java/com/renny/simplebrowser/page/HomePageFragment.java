@@ -25,9 +25,9 @@ import com.renny.simplebrowser.base.CommonAdapter;
 import com.renny.simplebrowser.business.db.dao.MarkDao;
 import com.renny.simplebrowser.business.db.entity.Mark;
 import com.renny.simplebrowser.business.toast.ToastHelper;
-import com.renny.simplebrowser.widget.PullExtend.ExtendListFooter;
-import com.renny.simplebrowser.widget.PullExtend.ExtendListHeader;
-import com.renny.simplebrowser.widget.PullExtend.PullExtendLayout;
+import com.renny.simplebrowser.widget.pullextend.ExtendListFooter;
+import com.renny.simplebrowser.widget.pullextend.ExtendListHeader;
+import com.renny.simplebrowser.widget.pullextend.PullExtendLayout;
 import com.renny.zxing.Activity.CaptureActivity;
 
 import java.util.ArrayList;
@@ -80,6 +80,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             public void onItemClicked(int position, View view) {
                 if (mGoPageListener != null) {
                     mGoPageListener.onGopage(markList.get(position).getUrl());
+                    mPullExtendLayout.closeExtendHeadAndFooter();
                 }
             }
         });
