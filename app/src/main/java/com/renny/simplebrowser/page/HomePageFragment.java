@@ -39,6 +39,7 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Renny on 2018/1/2.
+ *
  */
 public class HomePageFragment extends BaseFragment implements View.OnClickListener {
     private goPageListener mGoPageListener;
