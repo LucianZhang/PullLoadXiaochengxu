@@ -55,6 +55,7 @@ public class SearchActivity extends BaseActivity {
                 if (actionId == EditorInfo.IME_ACTION_GO) {
                     searchEdit.setText("");
                     startBrowser(text);
+                    KeyboardUtils.hideSoftInput(SearchActivity.this);
                     finish();
                     return true;
                 }
@@ -121,6 +122,7 @@ public class SearchActivity extends BaseActivity {
                     startBrowser(text);
                 }
                 finish();
+                KeyboardUtils.hideSoftInput(this);
                 break;
         }
     }
@@ -142,7 +144,6 @@ public class SearchActivity extends BaseActivity {
                 setResult(111, intent);
             }
         }
-        KeyboardUtils.hideSoftInput(this);
     }
 
 
