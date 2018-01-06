@@ -30,6 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         afterViewBind(savedInstanceState);
     }
 
+
     protected void bindView(Bundle savedInstanceState) {
 
     }

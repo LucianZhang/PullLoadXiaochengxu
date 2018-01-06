@@ -28,7 +28,6 @@ import java.util.List;
 public class WebViewActivity extends BaseActivity implements WebViewFragment.OnReceivedListener {
     WebViewFragment webViewFragment;
     HomePageFragment mHomePageFragment;
-    SearchFragment mSearchFragment;
     TextView titleView;
     ImageView mark;
     View bottomBar;
@@ -39,10 +38,6 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
     private long mExitTime = 0;
     String url, title;
     BookMarkDao mMarkDao;
-
-    private String homePage = "https://juejin.im/user/5795bb80d342d30059f14b1c";
-    private String baidu = "https://www.baidu.com/";
-    private String github = "https://github.com/renjianan/SimpleBrowser";
 
     @Override
     protected int getLayoutId() {
@@ -66,9 +61,9 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
         mMarkDao = new BookMarkDao();
         List<BookMark> markList = mMarkDao.queryForAll();
         if (markList == null || markList.isEmpty()) {
-            mMarkDao.addMark(new BookMark("我的掘金主页", homePage));
-            mMarkDao.addMark(new BookMark("GitHub地址", github));
-            mMarkDao.addMark(new BookMark("百度", baidu));
+            mMarkDao.addMark(new BookMark("我的掘金主页", "https://juejin.im/user/5795bb80d342d30059f14b1c"));
+            mMarkDao.addMark(new BookMark("GitHub地址", "https://github.com/renjianan/SimpleBrowser"));
+            mMarkDao.addMark(new BookMark("百度", "https://www.baidu.com/"));
         }
         goHomePage();
         mGestureLayout.setGestureListener(new GestureLayout.GestureListener() {
@@ -180,30 +175,11 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
         isOnHomePage = true;
     }
 
+
     public void goSearchPage() {
-        if (mSearchFragment == null) {
-            mSearchFragment = new SearchFragment();
-            mSearchFragment.setGoPageListener(new goPageListener() {
-                @Override
-                public void onGopage(String url) {
-                    if (!TextUtils.isEmpty(url)) {
-                        goWebView(url);
-                    } else {
-                        goHomePage();
-                    }
-                }
-            });
-        }
-        mFragmentManager.beginTransaction().replace(R.id.container,
-                mSearchFragment).commit();
-        bottomBar.setVisibility(View.GONE);
+        startActivityForResult(new Intent(WebViewActivity.this, SearchActivity.class), 123);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bottomBar.setVisibility(View.VISIBLE);
-    }
 
     private void returnLastPage() {
         if (fromBack && isOnHomePage) {
@@ -259,5 +235,17 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
             titleView.setText(title);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 123 && data != null) {
+            String result = data.getStringExtra("url");
+            if (!TextUtils.isEmpty(result)) {
+                goWebView(result);
+            }
+        }
+    }
+
 
 }

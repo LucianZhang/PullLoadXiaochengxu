@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -66,6 +67,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         listFooter = mPullNewFooter.getRecyclerView();
         listHeader.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         listFooter.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        listFooter.setItemAnimator(new DefaultItemAnimator());
     }
 
     public void afterViewBind(View rootView, Bundle savedInstanceState) {
@@ -120,6 +122,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         if (markList != null && !markList.isEmpty()) {
             mPullExtendLayout.setPullLoadEnabled(true);
         } else {
+            mPullExtendLayout.closeExtendHeadAndFooter();
             mPullExtendLayout.setPullLoadEnabled(false);
         }
     }
@@ -189,7 +192,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 }
                 break;
             case R.id.url_edit:
-                ((WebViewActivity)getActivity()).goSearchPage();
+                ((WebViewActivity) getActivity()).goSearchPage();
 
         }
     }
