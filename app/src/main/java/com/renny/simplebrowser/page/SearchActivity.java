@@ -120,7 +120,6 @@ public class SearchActivity extends BaseActivity {
                 if (!text.isEmpty()) {
                     startBrowser(text);
                 }
-                KeyboardUtils.hideSoftInput(this);
                 finish();
                 break;
         }
@@ -137,13 +136,13 @@ public class SearchActivity extends BaseActivity {
             Intent intent = new Intent();
             if (!HostHelper.isUrl(temp.replace(" ", ""))) {
                 intent.putExtra("url", "http://www.baidu.com/s?wd=" + text);
-                setResult(111,intent);
+                setResult(111, intent);
             } else {
                 intent.putExtra("url", temp);
-                setResult(111,intent);
+                setResult(111, intent);
             }
         }
-
+        KeyboardUtils.hideSoftInput(this);
     }
 
 
