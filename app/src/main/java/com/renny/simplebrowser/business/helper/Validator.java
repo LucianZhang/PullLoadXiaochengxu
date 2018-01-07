@@ -161,7 +161,7 @@ public class Validator {
         String temp = url.replace(" ", "");
         boolean flag;
         try {
-            String check = "^((https|http|ftp|rtsp|mms):\\/\\/)[^\\s]+";
+            String check = "(http|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&:/~\\+#]*[\\w\\-\\@?^=%&/~\\+#])?";
             Pattern regex = Pattern.compile(check, Pattern.CASE_INSENSITIVE);
             Matcher matcher = regex.matcher(temp.replaceAll(" ", ""));
             flag = matcher.matches();
@@ -171,6 +171,7 @@ public class Validator {
 
         return flag;
     }
+
 
     public static boolean checkColor(String color) {
         if (TextUtils.isEmpty(color))
