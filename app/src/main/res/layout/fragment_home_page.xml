@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.renny.simplebrowser.widget.pullextend.PullExtendLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/pull_extend"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
 
@@ -18,6 +18,14 @@
         android:clickable="true"
         android:paddingLeft="25dp"
         android:paddingRight="25dp">
+
+        <ImageView
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_above="@id/url_lay"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40dp"
+            android:src="@drawable/logo"/>
 
         <LinearLayout
             android:id="@+id/url_lay"
@@ -45,19 +53,12 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="66dp"
-            android:layout_height="66dp"
-            android:layout_above="@id/url_lay"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="40dp"
-            android:src="@drawable/logo"/>
 
     </RelativeLayout>
 
     <com.renny.simplebrowser.widget.pullextend.ExtendListFooter
         android:id="@+id/extend_footer"
         android:layout_width="match_parent"
-        android:layout_height="460dp"
-       />
+        android:layout_height="460dp"/>
+
 </com.renny.simplebrowser.widget.pullextend.PullExtendLayout>

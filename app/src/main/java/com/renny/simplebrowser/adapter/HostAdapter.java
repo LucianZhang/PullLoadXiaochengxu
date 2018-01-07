@@ -1,6 +1,5 @@
 package com.renny.simplebrowser.adapter;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,17 +11,18 @@ import java.util.List;
 
 /**
  * Created by Renny on 2018/1/3.
+ *
  */
 
 public class HostAdapter extends CommonAdapter<String> {
 
-    public HostAdapter( int layoutId, List<String> datas) {
-        super( layoutId, datas);
+    public HostAdapter(List<String> datas) {
+        super(R.layout.item_host, datas);
     }
 
     @Override
     protected void convert(ViewHolder holder, final int position) {
-        String data=getData(position);
+        String data = getData(position);
         TextView textView = holder.getView(R.id.item_title);
         textView.setText(data);
         if (mItemClickListener != null) {

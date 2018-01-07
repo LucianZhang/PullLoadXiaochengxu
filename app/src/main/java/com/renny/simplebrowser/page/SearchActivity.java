@@ -86,7 +86,7 @@ public class SearchActivity extends BaseActivity {
         footerList.add(".cc");
         footerList.add(".io");
         footerList.add(".im");
-        mRecyclerViewHeader.setAdapter(new HostAdapter(R.layout.item_host, headerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
+        mRecyclerViewHeader.setAdapter(new HostAdapter(  headerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
                 String content = String.format("%s%s", searchEdit.getText().toString(), headerList.get(position));
@@ -94,7 +94,7 @@ public class SearchActivity extends BaseActivity {
                 searchEdit.setSelection(content.length());//将光标移至文字末尾
             }
         }));
-        mRecyclerViewFooter.setAdapter(new HostAdapter(R.layout.item_host, footerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
+        mRecyclerViewFooter.setAdapter(new HostAdapter( footerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
                 String content = String.format("%s%s", searchEdit.getText().toString(), footerList.get(position));

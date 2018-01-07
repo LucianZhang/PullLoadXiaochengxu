@@ -15,8 +15,8 @@ import java.util.List;
 
 public class ExtendHeadAdapter extends CommonAdapter<String> {
 
-    public ExtendHeadAdapter( int layoutId, List<String> datas) {
-        super( layoutId, datas);
+    public ExtendHeadAdapter(  List<String> datas) {
+        super( R.layout.item_header, datas);
     }
 
     @Override

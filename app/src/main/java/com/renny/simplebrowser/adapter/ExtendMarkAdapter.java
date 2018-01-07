@@ -1,6 +1,5 @@
 package com.renny.simplebrowser.adapter;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,7 +17,7 @@ import java.util.List;
 public class ExtendMarkAdapter extends CommonAdapter<BookMark> {
     private ItemLongClickListener mLongClickListener;
 
-    public ExtendMarkAdapter(Context context, List<BookMark> datas) {
+    public ExtendMarkAdapter( List<BookMark> datas) {
         super( R.layout.item_mark, datas);
     }
 

@@ -119,7 +119,6 @@ public abstract class ExtendLayout extends FrameLayout implements IExtendLayout 
     }
 
     /**
-     * 当状态设置为{@link State#PULL_TO_REFRESH}时调用
      */
     protected void onPullToRefresh() {
 
@@ -165,11 +164,5 @@ public abstract class ExtendLayout extends FrameLayout implements IExtendLayout 
     protected abstract View createLoadingView(Context context, AttributeSet attrs);
 
 
-    /**
-     * dp转px
-     */
-    public float dip2px(float dpValue) {
-        float scale = getContext().getResources().getDisplayMetrics().density;
-        return dpValue * scale + 0.5f;
-    }
+
 }

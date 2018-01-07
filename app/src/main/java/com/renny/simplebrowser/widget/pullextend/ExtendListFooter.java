@@ -8,13 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.renny.simplebrowser.R;
-
+import com.renny.simplebrowser.business.helper.UIHelper;
 
 
 public class ExtendListFooter extends ExtendLayout {
 
-    float containerHeight = dip2px(60);
-    float listHeight = dip2px(120);
+    float containerHeight = UIHelper.dip2px(60);
+    float listHeight = UIHelper.dip2px(100);
     boolean arrivedListHeight = false;
     private RecyclerView mRecyclerView;
 
@@ -25,7 +25,6 @@ public class ExtendListFooter extends ExtendLayout {
 
     public ExtendListFooter(Context context) {
         super(context);
-
     }
 
 
@@ -36,11 +35,13 @@ public class ExtendListFooter extends ExtendLayout {
 
     @Override
     protected void bindView(View container) {
-        super.bindView(container);
         mRecyclerView = findViewById(R.id.list);
         mExpendPoint = findViewById(R.id.expend_point);
     }
 
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
 
     @Override
     protected View createLoadingView(Context context, AttributeSet attrs) {
@@ -112,16 +113,5 @@ public class ExtendListFooter extends ExtendLayout {
         }
     }
 
-    public RecyclerView getRecyclerView() {
-        return mRecyclerView;
-    }
-
-    /**
-     * dp转px
-     */
-    public float dip2px(float dpValue) {
-        float scale = getContext().getResources().getDisplayMetrics().density;
-        return dpValue * scale + 0.5f;
-    }
 
 }

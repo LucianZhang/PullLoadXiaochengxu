@@ -73,7 +73,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     public void afterViewBind(View rootView, Bundle savedInstanceState) {
         mMarkDao = new BookMarkDao();
         markList = mMarkDao.queryForAll();
-        mExtendMarkAdapter = new ExtendMarkAdapter(getActivity(),  markList);
+        mExtendMarkAdapter = new ExtendMarkAdapter(markList);
         mExtendMarkAdapter.setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
@@ -105,7 +105,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         mDatas.add("全屏浏览");
         mDatas.add("翻译");
         mDatas.add("切换UA");
-        listHeader.setAdapter(new ExtendHeadAdapter( R.layout.item_header, mDatas).setItemClickListener(new CommonAdapter.ItemClickListener() {
+        listHeader.setAdapter(new ExtendHeadAdapter(mDatas).setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
                 ToastHelper.makeToast(mDatas.get(position) + " 功能待实现");

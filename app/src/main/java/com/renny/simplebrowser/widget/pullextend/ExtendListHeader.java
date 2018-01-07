@@ -8,19 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.renny.simplebrowser.R;
+import com.renny.simplebrowser.business.helper.UIHelper;
 
 
 /**
  * 这个类封装了下拉刷新的布局
- *
- * @author chunsoft
- * @since 2015-8-26
  */
 public class ExtendListHeader extends ExtendLayout {
 
 
-    float containerHeight = dip2px(60);
-    float listHeight = dip2px(120);
+    float containerHeight = UIHelper.dip2px(60);
+    float listHeight = UIHelper.dip2px(120);
     boolean arrivedListHeight = false;
     private RecyclerView mRecyclerView;
 
@@ -54,11 +52,13 @@ public class ExtendListHeader extends ExtendLayout {
 
     @Override
     protected void bindView(View container) {
-        super.bindView(container);
         mRecyclerView = findViewById(R.id.list);
         mExpendPoint = findViewById(R.id.expend_point);
     }
 
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
 
     @Override
     protected View createLoadingView(Context context, AttributeSet attrs) {
@@ -129,11 +129,6 @@ public class ExtendListHeader extends ExtendLayout {
             mRecyclerView.setTranslationY(-(Math.abs(offset) - listHeight) / 2);
         }
     }
-
-    public RecyclerView getRecyclerView() {
-        return mRecyclerView;
-    }
-
 
 
 }
