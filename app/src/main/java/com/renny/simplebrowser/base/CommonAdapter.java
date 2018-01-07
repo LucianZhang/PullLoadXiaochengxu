@@ -1,6 +1,5 @@
 package com.renny.simplebrowser.base;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +11,23 @@ import java.util.List;
  */
 
 public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
-    private Context mContext;
     private int mLayoutId;
     private List<T> mDatas;
     protected ItemClickListener mItemClickListener;
 
+    public void setDatas(List<T> datas) {
+        mDatas = datas;
+        notifyDataSetChanged();
+    }
 
-    public CommonAdapter(Context context, int layoutId, List<T> datas) {
-        mContext = context;
+    public CommonAdapter(int layoutId, List<T> datas) {
         mLayoutId = layoutId;
         mDatas = datas;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        return ViewHolder.get(mContext, parent, mLayoutId);
+        return ViewHolder.get(parent, mLayoutId);
     }
 
     @Override

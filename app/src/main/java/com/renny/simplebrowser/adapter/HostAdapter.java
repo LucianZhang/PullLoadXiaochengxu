@@ -16,8 +16,8 @@ import java.util.List;
 
 public class HostAdapter extends CommonAdapter<String> {
 
-    public HostAdapter(Context context, int layoutId, List<String> datas) {
-        super(context, layoutId, datas);
+    public HostAdapter( int layoutId, List<String> datas) {
+        super( layoutId, datas);
     }
 
     @Override

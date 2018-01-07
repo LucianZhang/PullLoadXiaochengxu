@@ -1,6 +1,5 @@
 package com.renny.simplebrowser.adapter;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,8 +15,8 @@ import java.util.List;
 
 public class ExtendHeadAdapter extends CommonAdapter<String> {
 
-    public ExtendHeadAdapter(Context context, int layoutId, List<String> datas) {
-        super(context, layoutId, datas);
+    public ExtendHeadAdapter( int layoutId, List<String> datas) {
+        super( layoutId, datas);
     }
 
     @Override

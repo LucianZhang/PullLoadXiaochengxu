@@ -17,8 +17,8 @@ import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.adapter.HostAdapter;
 import com.renny.simplebrowser.base.BaseActivity;
 import com.renny.simplebrowser.base.CommonAdapter;
-import com.renny.simplebrowser.business.helper.HostHelper;
 import com.renny.simplebrowser.business.helper.KeyboardUtils;
+import com.renny.simplebrowser.business.helper.Validator;
 import com.renny.simplebrowser.business.toast.ToastHelper;
 import com.renny.simplebrowser.listener.SimpleTextWatcher;
 
@@ -86,7 +86,7 @@ public class SearchActivity extends BaseActivity {
         footerList.add(".cc");
         footerList.add(".io");
         footerList.add(".im");
-        mRecyclerViewHeader.setAdapter(new HostAdapter(this, R.layout.item_host, headerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
+        mRecyclerViewHeader.setAdapter(new HostAdapter(R.layout.item_host, headerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
                 String content = String.format("%s%s", searchEdit.getText().toString(), headerList.get(position));
@@ -94,7 +94,7 @@ public class SearchActivity extends BaseActivity {
                 searchEdit.setSelection(content.length());//将光标移至文字末尾
             }
         }));
-        mRecyclerViewFooter.setAdapter(new HostAdapter(this, R.layout.item_host, footerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
+        mRecyclerViewFooter.setAdapter(new HostAdapter(R.layout.item_host, footerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
                 String content = String.format("%s%s", searchEdit.getText().toString(), footerList.get(position));
@@ -136,7 +136,7 @@ public class SearchActivity extends BaseActivity {
                 temp = "https://" + temp;
             }
             Intent intent = new Intent();
-            if (!HostHelper.isUrl(temp.replace(" ", ""))) {
+            if (!Validator.checkUrl(temp)) {
                 intent.putExtra("url", "http://www.baidu.com/s?wd=" + text);
                 setResult(111, intent);
             } else {

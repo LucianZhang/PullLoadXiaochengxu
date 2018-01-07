@@ -21,9 +21,9 @@ import com.renny.simplebrowser.base.BaseFragment;
 import com.renny.simplebrowser.base.CommonAdapter;
 import com.renny.simplebrowser.business.db.dao.BookMarkDao;
 import com.renny.simplebrowser.business.db.entity.BookMark;
-import com.renny.simplebrowser.business.helper.HostHelper;
+import com.renny.simplebrowser.business.helper.Validator;
 import com.renny.simplebrowser.business.toast.ToastHelper;
-import com.renny.simplebrowser.listener.goPageListener;
+import com.renny.simplebrowser.listener.GoPageListener;
 import com.renny.simplebrowser.widget.pullextend.ExtendListFooter;
 import com.renny.simplebrowser.widget.pullextend.ExtendListHeader;
 import com.renny.simplebrowser.widget.pullextend.PullExtendLayout;
@@ -39,7 +39,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Renny on 2018/1/2.
  */
 public class HomePageFragment extends BaseFragment implements View.OnClickListener {
-    private goPageListener mGoPageListener;
+    private GoPageListener mGoPageListener;
     private static final int REQUEST_SCAN = 0;
     ExtendListHeader mPullNewHeader;
     ExtendListFooter mPullNewFooter;
@@ -73,12 +73,12 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     public void afterViewBind(View rootView, Bundle savedInstanceState) {
         mMarkDao = new BookMarkDao();
         markList = mMarkDao.queryForAll();
-        mExtendMarkAdapter = new ExtendMarkAdapter(getActivity(), R.layout.item_mark, markList);
+        mExtendMarkAdapter = new ExtendMarkAdapter(getActivity(),  markList);
         mExtendMarkAdapter.setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
                 if (mGoPageListener != null) {
-                    mGoPageListener.onGopage(markList.get(position).getUrl());
+                    mGoPageListener.onGoPage(markList.get(position).getUrl());
                     mPullExtendLayout.closeExtendHeadAndFooter();
                 }
             }
@@ -105,7 +105,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         mDatas.add("全屏浏览");
         mDatas.add("翻译");
         mDatas.add("切换UA");
-        listHeader.setAdapter(new ExtendHeadAdapter(getActivity(), R.layout.item_header, mDatas).setItemClickListener(new CommonAdapter.ItemClickListener() {
+        listHeader.setAdapter(new ExtendHeadAdapter( R.layout.item_header, mDatas).setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
                 ToastHelper.makeToast(mDatas.get(position) + " 功能待实现");
@@ -136,16 +136,16 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 if (!temp.startsWith("http") && !temp.startsWith("https")) {
                     temp = "https://" + temp;
                 }
-                if (!HostHelper.isUrl(temp.replace(" ", ""))) {
-                    mGoPageListener.onGopage("http://www.baidu.com/s?wd=" + text);
+                if (!Validator.checkUrl(temp)) {
+                    mGoPageListener.onGoPage("http://www.baidu.com/s?wd=" + text);
                 } else {
-                    mGoPageListener.onGopage(temp);
+                    mGoPageListener.onGoPage(temp);
                 }
             }
         }
     }
 
-    public void setGoPageListener(goPageListener goPageListener) {
+    public void setGoPageListener(GoPageListener goPageListener) {
         mGoPageListener = goPageListener;
     }
 

@@ -15,7 +15,7 @@ import com.renny.simplebrowser.base.BaseActivity;
 import com.renny.simplebrowser.business.db.dao.BookMarkDao;
 import com.renny.simplebrowser.business.db.entity.BookMark;
 import com.renny.simplebrowser.business.log.Logs;
-import com.renny.simplebrowser.listener.goPageListener;
+import com.renny.simplebrowser.listener.GoPageListener;
 import com.renny.simplebrowser.widget.GestureLayout;
 import com.tencent.smtt.sdk.WebBackForwardList;
 import com.tencent.smtt.sdk.WebView;
@@ -155,9 +155,9 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
     private void goHomePage() {
         if (mHomePageFragment == null) {
             mHomePageFragment = new HomePageFragment();
-            mHomePageFragment.setGoPageListener(new goPageListener() {
+            mHomePageFragment.setGoPageListener(new GoPageListener() {
                 @Override
-                public void onGopage(String url) {
+                public void onGoPage(String url) {
                     if (!TextUtils.isEmpty(url)) {
                         goWebView(url);
                     } else {

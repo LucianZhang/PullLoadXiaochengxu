@@ -17,8 +17,9 @@ import java.util.List;
 
 public class ExtendMarkAdapter extends CommonAdapter<BookMark> {
     private ItemLongClickListener mLongClickListener;
-    public ExtendMarkAdapter(Context context, int layoutId, List<BookMark> datas) {
-        super(context, layoutId, datas);
+
+    public ExtendMarkAdapter(Context context, List<BookMark> datas) {
+        super( R.layout.item_mark, datas);
     }
 
     public void setLongClickListener(ItemLongClickListener longClickListener) {
@@ -27,7 +28,7 @@ public class ExtendMarkAdapter extends CommonAdapter<BookMark> {
 
     @Override
     protected void convert(ViewHolder holder, final int position) {
-        BookMark data=getData(position);
+        BookMark data = getData(position);
         TextView tv = holder.getView(R.id.item_title);
         tv.setText(data.getTitle());
         if (mItemClickListener != null) {
@@ -48,6 +49,7 @@ public class ExtendMarkAdapter extends CommonAdapter<BookMark> {
             });
         }
     }
+
     public interface ItemLongClickListener {
         void onItemLongClicked(int position, View view);
     }

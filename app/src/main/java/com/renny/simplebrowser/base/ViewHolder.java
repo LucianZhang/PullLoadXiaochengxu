@@ -1,6 +1,5 @@
 package com.renny.simplebrowser.base;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -14,21 +13,19 @@ import android.view.ViewGroup;
 public class ViewHolder extends RecyclerView.ViewHolder {
     private SparseArray<View> mViews;
     private View mConvertView;
-    private Context mContext;
 
-    public ViewHolder(Context context, View itemView, ViewGroup parent) {
+    public ViewHolder(View itemView) {
         super(itemView);
-        mContext = context;
         mConvertView = itemView;
-        mViews = new SparseArray<View>();
+        mViews = new SparseArray<>();
     }
 
 
-    public static ViewHolder get(Context context, ViewGroup parent, int layoutId) {
+    public static ViewHolder get(ViewGroup parent, int layoutId) {
 
-        View itemView = LayoutInflater.from(context).inflate(layoutId, parent,
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent,
                 false);
-        return new ViewHolder(context, itemView, parent);
+        return new ViewHolder(itemView);
     }
 
 
