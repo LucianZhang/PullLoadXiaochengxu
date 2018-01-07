@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.adapter.ExtendHeadAdapter;
 import com.renny.simplebrowser.adapter.ExtendMarkAdapter;
+import com.renny.simplebrowser.adapter.OverFlyingLayoutManager;
 import com.renny.simplebrowser.base.BaseFragment;
 import com.renny.simplebrowser.base.CommonAdapter;
 import com.renny.simplebrowser.business.db.dao.BookMarkDao;
@@ -65,7 +67,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         rootView.findViewById(R.id.url_edit).setOnClickListener(this);
         listHeader = mPullNewHeader.getRecyclerView();
         listFooter = mPullNewFooter.getRecyclerView();
-        listHeader.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        listHeader.setLayoutManager( new OverFlyingLayoutManager(OrientationHelper.HORIZONTAL));
         listFooter.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         listFooter.setItemAnimator(new DefaultItemAnimator());
     }
