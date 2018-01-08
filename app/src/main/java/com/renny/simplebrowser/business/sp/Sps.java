@@ -12,7 +12,7 @@ import java.util.Map;
 
 
 public enum Sps {
-    defaults("renny_default"), h5("renny_h5"), cookie("renny_cookie");
+    defaults("renny_default"), h5("renny_h5");
     private SharedPreferences sharedPreferences;
 
     Sps(String spFile) {
