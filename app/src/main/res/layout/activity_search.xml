@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/search_lay"
-       />
+        />
 
     <RelativeLayout
         android:id="@+id/search_lay"
@@ -72,6 +72,7 @@
             android:layout_alignParentRight="true"
             android:background="@color/transparent"
             android:text="@string/cancel"
+            android:textColor="@color/color_text_normal"
             android:textSize="14sp"/>
 
     </RelativeLayout>
