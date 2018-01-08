@@ -10,5 +10,5 @@ import com.renny.simplebrowser.globe.http.request.Api;
 public interface Apis {
 
     Api uploadBuildNum = Api.POST("build_version/android_axd_build.json", String.class).setIHttpCell(HttpCells.Img);
-    Api searchSuggestion = Api.GET("http://suggestion.baidu.com/su?wd=123&json=1&p=3&cb=dachie").setIHttpCell(HttpCells.Img);
+    Api searchSuggestion = Api.GET("http://suggestion.baidu.com/su").setIHttpCell(HttpCells.search);
 }

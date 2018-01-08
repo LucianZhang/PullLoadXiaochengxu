@@ -2,6 +2,7 @@ package com.renny.simplebrowser.business.http.constants;
 
 
 import com.renny.simplebrowser.globe.http.parambuilder.ImgRequestBuilder;
+import com.renny.simplebrowser.globe.http.parambuilder.SearchRequestBuilder;
 
 /**
  * 参数构建器
@@ -12,6 +13,8 @@ public interface ParamBuilders {
      * 新的接口参数构建
      */
     ImgRequestBuilder img = new ImgRequestBuilder();
+
+    SearchRequestBuilder search = new SearchRequestBuilder();
 
 
 }

@@ -21,16 +21,16 @@ import com.renny.simplebrowser.business.base.BaseActivity;
 import com.renny.simplebrowser.business.base.CommonAdapter;
 import com.renny.simplebrowser.business.helper.KeyboardUtils;
 import com.renny.simplebrowser.business.helper.Validator;
-import com.renny.simplebrowser.business.http.constants.HttpCells;
+import com.renny.simplebrowser.business.http.constants.Apis;
 import com.renny.simplebrowser.business.toast.ToastHelper;
 import com.renny.simplebrowser.globe.http.callback.ApiCallback;
 import com.renny.simplebrowser.globe.http.reponse.IResult;
-import com.renny.simplebrowser.globe.http.request.Api;
 import com.renny.simplebrowser.globe.task.TaskHelper;
 import com.renny.simplebrowser.view.adapter.HostAdapter;
 import com.renny.simplebrowser.view.listener.SimpleTextWatcher;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SearchActivity extends BaseActivity {
@@ -75,19 +75,20 @@ public class SearchActivity extends BaseActivity {
         searchEdit.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                String textContain=s.toString();
+                String textContain = s.toString();
                 if (TextUtils.isEmpty(textContain)) {
                     actionBtn.setText("取消");
                     keyListView.setAdapter(new ArrayAdapter<>(SearchActivity.this, android.R.layout.simple_expandable_list_item_1, new ArrayList<>()));
 
                 } else {
-                    if (!Validator.checkUrl(textContain)){
+                    if (!Validator.checkUrl(textContain)) {
                         actionBtn.setText("搜索");
-                    }else {
+                    } else {
                         actionBtn.setText("进入");
                     }
-                    Api searchSuggestion = Api.GET("http://suggestion.baidu.com/su?wd=" + s.toString() + "&json=1&p=3&cb=dachie").setIHttpCell(HttpCells.search);
-                    TaskHelper.apiCall(searchSuggestion, null, new ApiCallback<List<String>>() {
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("wd", s.toString());
+                    TaskHelper.apiCall(Apis.searchSuggestion, params, new ApiCallback<List<String>>() {
                         @Override
                         public void onSuccess(IResult<List<String>> result) {
                             final List<String> keyList = result.data();

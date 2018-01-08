@@ -55,7 +55,7 @@ public interface HttpCells {
 
         @Override
         public IParamBuilder getParamBuilder() {
-            return null;
+            return ParamBuilders.search;
         }
     };
 }
