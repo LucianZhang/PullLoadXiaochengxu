@@ -3,7 +3,7 @@ package com.renny.simplebrowser.view.widget.pullrefresh;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.tencent.smtt.sdk.WebView;
+import com.renny.simplebrowser.business.webview.X5WebView;
 
 /**
  * 封装了WebView的下拉刷新
@@ -11,7 +11,7 @@ import com.tencent.smtt.sdk.WebView;
  * @author Li Hong
  * @since 2013-8-22
  */
-public class PullToRefreshWebView extends PullToRefreshBase<WebView> {
+public class PullToRefreshWebView extends PullToRefreshBase<X5WebView> {
     /**
      * 构造方法
      * 
@@ -45,8 +45,8 @@ public class PullToRefreshWebView extends PullToRefreshBase<WebView> {
     /**
      */
     @Override
-    protected WebView createRefreshableView(Context context, AttributeSet attrs) {
-        return new WebView(context);
+    protected X5WebView createRefreshableView(Context context, AttributeSet attrs) {
+        return new X5WebView(context);
     }
 
     /**

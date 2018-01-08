@@ -1,18 +1,17 @@
 package com.renny.simplebrowser.view.page;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
 import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.business.base.BaseFragment;
-import com.renny.simplebrowser.business.log.Logs;
+import com.renny.simplebrowser.business.webview.X5WebChromeClient;
+import com.renny.simplebrowser.business.webview.X5WebView;
+import com.renny.simplebrowser.business.webview.X5WebViewClient;
 import com.renny.simplebrowser.view.widget.pullrefresh.PullToRefreshBase;
 import com.renny.simplebrowser.view.widget.pullrefresh.PullToRefreshWebView;
 import com.tencent.smtt.sdk.WebChromeClient;
-import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
@@ -42,23 +41,19 @@ public class WebViewFragment extends BaseFragment {
     public void afterViewBind(View rootView, Bundle savedInstanceState) {
         final PullToRefreshWebView pullToRefreshWebView = rootView.findViewById(R.id.refreshLayout);
         mWebView = pullToRefreshWebView.getRefreshableView();
-        pullToRefreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
+        pullToRefreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<X5WebView>() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<WebView> refreshView) {
+            public void onPullDownToRefresh(PullToRefreshBase<X5WebView> refreshView) {
                 mWebView.reload();
             }
 
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<WebView> refreshView) {
+            public void onPullUpToRefresh(PullToRefreshBase<X5WebView> refreshView) {
 
             }
         });
         pullToRefreshWebView.setPullLoadEnabled(false);
-        WebSettings setting = mWebView.getSettings();
-        setting.setJavaScriptEnabled(true);
-        setting.setDomStorageEnabled(true);
-        setting.setAllowFileAccess(true);
-        WebChromeClient webChromeClient = new WebChromeClient() {
+        WebChromeClient webChromeClient = new X5WebChromeClient(getActivity()) {
             @Override
             public void onReceivedTitle(WebView webView, String title) {
                 super.onReceivedTitle(webView, title);
@@ -68,13 +63,12 @@ public class WebViewFragment extends BaseFragment {
                 }
             }
         };
-        WebViewClient webViewClient = new WebViewClient() {
+        WebViewClient webViewClient = new X5WebViewClient(getActivity()) {
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
                 pullToRefreshWebView.onPullDownRefreshComplete();
-
             }
 
             @Override
@@ -82,37 +76,12 @@ public class WebViewFragment extends BaseFragment {
                 super.onPageFinished(webView, s);
                 pullToRefreshWebView.onPullDownRefreshComplete();
             }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView webView, String url) {
-                if (url.startsWith("http://") || url.startsWith("https://")) {
-                    webView.loadUrl(url);
-                    return true;
-                } else {
-                    return jumpScheme(url);
-                }
-            }
         };
         mWebView.setWebChromeClient(webChromeClient);
         mWebView.setWebViewClient(webViewClient);
         mWebView.loadUrl(mUrl);
     }
 
-    private boolean jumpScheme(String url) {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(url));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra("referer", url);
-            getActivity().startActivity(intent);
-        } catch (Exception e) {
-            Logs.base.e("您所打开的第三方App未安装！");
-            return false;
-        }
-
-        return true;
-    }
 
     @Override
     public void onAttach(Context context) {

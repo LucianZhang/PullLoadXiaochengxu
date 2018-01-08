@@ -9,6 +9,10 @@ public interface Logs {
      */
     LogScheduler base = LogScheduler.instance("base");
     /**
+     * h5库
+     */
+    LogScheduler h5 = LogScheduler.instance("h5");
+    /**
      *base库
      */
     LogScheduler common = LogScheduler.instance("common");
