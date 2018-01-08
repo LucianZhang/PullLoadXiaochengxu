@@ -1,5 +1,7 @@
 package com.renny.simplebrowser.business.http.request;
 
+import android.text.TextUtils;
+
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okgo.request.PostRequest;
@@ -39,7 +41,7 @@ public class HttpRequest {
         }
         IParamBuilder iParamBuilder = iHttpCell.getParamBuilder();
         Map<String, String> paramsAfter = params;
-        if (iParamBuilder != null) {
+        if (iParamBuilder != null && params != null) {
             paramsAfter = iParamBuilder.buildParams(params, null);
         }
         okhttp3.Response response = null;
@@ -48,8 +50,12 @@ public class HttpRequest {
         switch (method) {
             case Get: {
                 GetRequest getRequest = OkGo.<String>get(url);
-                getRequest.headers("User-Agent", iHttpCell.getUA());
-                getRequest.params(paramsAfter);
+                if (!TextUtils.isEmpty(iHttpCell.getUA())) {
+                    getRequest.headers("User-Agent", iHttpCell.getUA());
+                }
+                if (paramsAfter != null) {
+                    getRequest.params(paramsAfter);
+                }
                 response = getRequest.execute();
                 break;
             }

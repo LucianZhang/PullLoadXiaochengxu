@@ -23,7 +23,8 @@ public abstract class ApiCallback<T> extends SimpleCallback<IResult<T>> {
     public ApiCallback(ILoading iLoading) {
         this.iLoading = iLoading;
     }
-
+    public ApiCallback() {
+    }
     @Override
     public final void onException(Throwable t) {
         if (t instanceof NetworkNotAvailableException) {

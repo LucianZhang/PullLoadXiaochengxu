@@ -9,17 +9,25 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.renny.simplebrowser.R;
-import com.renny.simplebrowser.view.adapter.HostAdapter;
 import com.renny.simplebrowser.business.base.BaseActivity;
 import com.renny.simplebrowser.business.base.CommonAdapter;
 import com.renny.simplebrowser.business.helper.KeyboardUtils;
 import com.renny.simplebrowser.business.helper.Validator;
+import com.renny.simplebrowser.business.http.constants.HttpCells;
 import com.renny.simplebrowser.business.toast.ToastHelper;
+import com.renny.simplebrowser.globe.http.callback.ApiCallback;
+import com.renny.simplebrowser.globe.http.reponse.IResult;
+import com.renny.simplebrowser.globe.http.request.Api;
+import com.renny.simplebrowser.globe.task.TaskHelper;
+import com.renny.simplebrowser.view.adapter.HostAdapter;
 import com.renny.simplebrowser.view.listener.SimpleTextWatcher;
 
 import java.util.ArrayList;
@@ -30,6 +38,7 @@ public class SearchActivity extends BaseActivity {
     RecyclerView mRecyclerViewHeader, mRecyclerViewFooter;
     EditText searchEdit;
     Button actionBtn;
+    ListView keyListView;
 
     @Override
     protected int getLayoutId() {
@@ -42,6 +51,7 @@ public class SearchActivity extends BaseActivity {
         searchEdit = findViewById(R.id.search_edit);
         mRecyclerViewHeader = findViewById(R.id.list_header);
         mRecyclerViewFooter = findViewById(R.id.list_footer);
+        keyListView = findViewById(R.id.search_key);
         actionBtn = findViewById(R.id.do_action);
         actionBtn.setOnClickListener(this);
     }
@@ -67,8 +77,27 @@ public class SearchActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 if (TextUtils.isEmpty(s.toString())) {
                     actionBtn.setText("取消");
+                    keyListView.setAdapter(new ArrayAdapter<>(SearchActivity.this, android.R.layout.simple_expandable_list_item_1, new ArrayList<>()));
+
                 } else {
                     actionBtn.setText("进入");
+                    Api searchSuggestion = Api.GET("http://suggestion.baidu.com/su?wd=" + s.toString() + "&json=1&p=3&cb=dachie").setIHttpCell(HttpCells.search);
+                    TaskHelper.apiCall(searchSuggestion, null, new ApiCallback<List<String>>() {
+                        @Override
+                        public void onSuccess(IResult<List<String>> result) {
+                            final List<String> keyList = result.data();
+                            if (keyList != null && !result.data().isEmpty()) {
+                                keyListView.setAdapter(new ArrayAdapter<>(SearchActivity.this, R.layout.item_suggestion_word, keyList));
+                                keyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        searchEdit.setText(keyList.get(position));
+                                        searchEdit.setSelection(keyList.get(position).length());
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -86,7 +115,7 @@ public class SearchActivity extends BaseActivity {
         footerList.add(".cc");
         footerList.add(".io");
         footerList.add(".im");
-        mRecyclerViewHeader.setAdapter(new HostAdapter(  headerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
+        mRecyclerViewHeader.setAdapter(new HostAdapter(headerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
                 String content = String.format("%s%s", searchEdit.getText().toString(), headerList.get(position));
@@ -94,7 +123,7 @@ public class SearchActivity extends BaseActivity {
                 searchEdit.setSelection(content.length());//将光标移至文字末尾
             }
         }));
-        mRecyclerViewFooter.setAdapter(new HostAdapter( footerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
+        mRecyclerViewFooter.setAdapter(new HostAdapter(footerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
                 String content = String.format("%s%s", searchEdit.getText().toString(), footerList.get(position));
