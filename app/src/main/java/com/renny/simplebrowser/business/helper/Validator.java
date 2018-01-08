@@ -159,6 +159,9 @@ public class Validator {
             return false;
         }
         String temp = url.replace(" ", "");
+        if (!temp.startsWith("http") && !temp.startsWith("https")) {
+            temp = "https://" + temp;
+        }
         boolean flag;
         try {
             String check = "(http|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&:/~\\+#]*[\\w\\-\\@?^=%&/~\\+#])?";

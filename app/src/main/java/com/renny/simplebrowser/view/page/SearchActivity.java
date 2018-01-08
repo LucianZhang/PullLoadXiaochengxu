@@ -75,12 +75,17 @@ public class SearchActivity extends BaseActivity {
         searchEdit.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(s.toString())) {
+                String textContain=s.toString();
+                if (TextUtils.isEmpty(textContain)) {
                     actionBtn.setText("取消");
                     keyListView.setAdapter(new ArrayAdapter<>(SearchActivity.this, android.R.layout.simple_expandable_list_item_1, new ArrayList<>()));
 
                 } else {
-                    actionBtn.setText("进入");
+                    if (!Validator.checkUrl(textContain)){
+                        actionBtn.setText("搜索");
+                    }else {
+                        actionBtn.setText("进入");
+                    }
                     Api searchSuggestion = Api.GET("http://suggestion.baidu.com/su?wd=" + s.toString() + "&json=1&p=3&cb=dachie").setIHttpCell(HttpCells.search);
                     TaskHelper.apiCall(searchSuggestion, null, new ApiCallback<List<String>>() {
                         @Override
@@ -161,11 +166,8 @@ public class SearchActivity extends BaseActivity {
             ToastHelper.makeToast("请输入网址");
         } else {
             String temp = text;
-            if (!temp.startsWith("http") && !temp.startsWith("https")) {
-                temp = "https://" + temp;
-            }
             Intent intent = new Intent();
-            if (!Validator.checkUrl(temp)) {
+            if (!Validator.checkUrl(text)) {
                 intent.putExtra("url", "http://wap.baidu.com/s?wd=" + text);
                 setResult(111, intent);
             } else {

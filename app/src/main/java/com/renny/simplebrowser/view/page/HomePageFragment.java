@@ -135,9 +135,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 Toast.makeText(getActivity(), "请输入网址", Toast.LENGTH_SHORT).show();
             } else {
                 String temp = text;
-                if (!temp.startsWith("http") && !temp.startsWith("https")) {
-                    temp = "https://" + temp;
-                }
+
                 if (!Validator.checkUrl(temp)) {
                     mGoPageListener.onGoPage("http://www.baidu.com/s?wd=" + text);
                 } else {
