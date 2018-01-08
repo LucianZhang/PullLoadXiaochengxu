@@ -21,12 +21,21 @@ public class X5WebView extends WebView {
 
     public X5WebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     private void init() {
         WebSettings setting = getSettings();
+        setting.setGeolocationEnabled(true);
         setting.setJavaScriptEnabled(true);
         setting.setDomStorageEnabled(true);
+        setting.setAppCacheMaxSize(1024 * 1024 * 10);
+        setting.setAppCacheEnabled(true);
+        setting.setSupportZoom(true);
+        setting.setTextSize(WebSettings.TextSize.NORMAL);
+        String appCachePath = getContext().getCacheDir().getAbsolutePath();
+        setting.setAppCachePath(appCachePath);
         setting.setAllowFileAccess(true);
+        setting.setSavePassword(false);
     }
 }

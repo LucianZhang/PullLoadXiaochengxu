@@ -166,7 +166,7 @@ public class SearchActivity extends BaseActivity {
             }
             Intent intent = new Intent();
             if (!Validator.checkUrl(temp)) {
-                intent.putExtra("url", "http://www.baidu.com/s?wd=" + text);
+                intent.putExtra("url", "http://wap.baidu.com/s?wd=" + text);
                 setResult(111, intent);
             } else {
                 intent.putExtra("url", temp);
@@ -174,6 +174,5 @@ public class SearchActivity extends BaseActivity {
             }
         }
     }
-
 
 }

@@ -1,6 +1,8 @@
 package com.renny.simplebrowser.view.page;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,6 +13,7 @@ import com.renny.simplebrowser.business.webview.X5WebView;
 import com.renny.simplebrowser.business.webview.X5WebViewClient;
 import com.renny.simplebrowser.view.widget.pullrefresh.PullToRefreshBase;
 import com.renny.simplebrowser.view.widget.pullrefresh.PullToRefreshWebView;
+import com.tencent.smtt.sdk.DownloadListener;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
@@ -18,7 +21,7 @@ import com.tencent.smtt.sdk.WebViewClient;
 
 public class WebViewFragment extends BaseFragment {
 
-    private WebView mWebView;
+    private X5WebView mWebView;
     private String mUrl;
     private OnReceivedListener onReceivedTitleListener;
 
@@ -80,6 +83,15 @@ public class WebViewFragment extends BaseFragment {
         mWebView.setWebChromeClient(webChromeClient);
         mWebView.setWebViewClient(webViewClient);
         mWebView.loadUrl(mUrl);
+        mWebView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition,
+                                        String mimetype, long contentLength) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
 
