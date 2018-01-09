@@ -224,6 +224,57 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        boolean handled = false;
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mLastMotionY = ev.getY();
+                mIsHandledTouchEvent = false;
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                final float deltaY = ev.getY() - mLastMotionY;
+                mLastMotionY = ev.getY();
+                if (isPullRefreshEnabled() && isReadyForPullDown(deltaY)) {
+                    pullHeaderLayout(deltaY / offsetRadio);
+                    handled = true;
+                    if (null != mFooterLayout && 0 != mFooterHeight) {
+                        mFooterLayout.setState(IExtendLayout.State.RESET);
+                    }
+                } else if (isPullLoadEnabled() && isReadyForPullUp(deltaY)) {
+                    pullFooterLayout(deltaY / offsetRadio);
+                    handled = true;
+                    if (null != mHeaderLayout && 0 != mHeaderHeight) {
+                        mHeaderLayout.setState(IExtendLayout.State.RESET);
+
+                    }
+                } else {
+                    mIsHandledTouchEvent = false;
+                }
+                break;
+
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                if (Math.abs(getScrollYValue()) > 0) {
+                    // 当第一个显示出来时
+                    if (isReadyForPullDown(0)) {
+                        resetHeaderLayout();
+                    } else if (isReadyForPullUp(0)) {
+                        resetFooterLayout();
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
+        if (handled) {
+            return handled;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     public final boolean onInterceptTouchEvent(MotionEvent event) {
         if (!isInterceptTouchEventEnabled()) {
             return false;
@@ -280,7 +331,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
     }
 
 
-    @Override
+   /* @Override
     public final boolean onTouchEvent(MotionEvent ev) {
         boolean handled = false;
         switch (ev.getAction()) {
@@ -327,7 +378,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
                 break;
         }
         return handled;
-    }
+    }*/
 
     @Override
     public void setPullRefreshEnabled(boolean pullRefreshEnabled) {
