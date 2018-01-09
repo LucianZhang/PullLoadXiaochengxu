@@ -13,7 +13,6 @@ import com.renny.simplebrowser.business.base.CommonAdapter;
 import com.renny.simplebrowser.business.base.ViewHolder;
 import com.renny.simplebrowser.business.toast.ToastHelper;
 import com.renny.simplebrowser.view.adapter.ExtendHeadAdapter;
-import com.renny.simplebrowser.view.adapter.OverFlyingLayoutManager;
 import com.renny.simplebrowser.view.widget.pullextend.ExtendListHeader;
 import com.renny.simplebrowser.view.widget.pullextend.PullExtendLayoutForRecyclerView;
 
@@ -52,15 +51,8 @@ public class RecyclerActivity extends AppCompatActivity {
         mDatas.add("新建窗口");
         mDatas.add("无图模式");
         mDatas.add("夜间模式");
-        mDatas.add("网页截图");
-        mDatas.add("禁用JS");
-        mDatas.add("下载内容");
-        mDatas.add("查找");
-        mDatas.add("拦截广告");
-        mDatas.add("全屏浏览");
-        mDatas.add("翻译");
-        mDatas.add("切换UA");
-        listHeader.setLayoutManager(new OverFlyingLayoutManager(OrientationHelper.HORIZONTAL));
+
+        listHeader.setLayoutManager(new LinearLayoutManager(this,OrientationHelper.HORIZONTAL,false));
         listHeader.setAdapter(new ExtendHeadAdapter(mDatas).setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {

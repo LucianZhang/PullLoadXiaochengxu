@@ -234,22 +234,24 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
 
             case MotionEvent.ACTION_MOVE:
                 final float deltaY = ev.getY() - mLastMotionY;
-                mLastMotionY = ev.getY();
-                if (isPullRefreshEnabled() && isReadyForPullDown(deltaY)) {
-                    pullHeaderLayout(deltaY / offsetRadio);
-                    handled = true;
-                    if (null != mFooterLayout && 0 != mFooterHeight) {
-                        mFooterLayout.setState(IExtendLayout.State.RESET);
-                    }
-                } else if (isPullLoadEnabled() && isReadyForPullUp(deltaY)) {
-                    pullFooterLayout(deltaY / offsetRadio);
-                    handled = true;
-                    if (null != mHeaderLayout && 0 != mHeaderHeight) {
-                        mHeaderLayout.setState(IExtendLayout.State.RESET);
+                if (!((Math.abs(deltaY) < mTouchSlop) && getScrollYValue() == mHeaderHeight)) {
+                    mLastMotionY = ev.getY();
+                    if (isPullRefreshEnabled() && isReadyForPullDown(deltaY)) {
+                        pullHeaderLayout(deltaY / offsetRadio);
+                        handled = true;
+                        if (null != mFooterLayout && 0 != mFooterHeight) {
+                            mFooterLayout.setState(IExtendLayout.State.RESET);
+                        }
+                    } else if (isPullLoadEnabled() && isReadyForPullUp(deltaY)) {
+                        pullFooterLayout(deltaY / offsetRadio);
+                        handled = true;
+                        if (null != mHeaderLayout && 0 != mHeaderHeight) {
+                            mHeaderLayout.setState(IExtendLayout.State.RESET);
 
+                        }
+                    } else {
+                        mIsHandledTouchEvent = false;
                     }
-                } else {
-                    mIsHandledTouchEvent = false;
                 }
                 break;
 
@@ -274,7 +276,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
         return super.dispatchTouchEvent(ev);
     }
 
-    @Override
+   /* @Override
     public final boolean onInterceptTouchEvent(MotionEvent event) {
         if (!isInterceptTouchEventEnabled()) {
             return false;
@@ -329,7 +331,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
         }
         return mIsHandledTouchEvent;
     }
-
+*/
 
    /* @Override
     public final boolean onTouchEvent(MotionEvent ev) {
