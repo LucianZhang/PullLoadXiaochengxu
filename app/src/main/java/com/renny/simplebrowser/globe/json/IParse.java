@@ -1,4 +1,4 @@
-package com.renny.simplebrowser.business.json;
+package com.renny.simplebrowser.globe.json;
 
 import java.lang.reflect.Type;
 

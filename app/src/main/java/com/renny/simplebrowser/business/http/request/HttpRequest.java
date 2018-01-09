@@ -7,7 +7,7 @@ import com.lzy.okgo.request.GetRequest;
 import com.lzy.okgo.request.PostRequest;
 import com.renny.simplebrowser.business.helper.DeviceHelper;
 import com.renny.simplebrowser.business.http.constants.HttpCells;
-import com.renny.simplebrowser.business.json.JsonHelper;
+import com.renny.simplebrowser.globe.json.JsonHelper;
 import com.renny.simplebrowser.globe.exception.NetworkNotAvailableException;
 import com.renny.simplebrowser.globe.http.IHttpCell;
 import com.renny.simplebrowser.globe.http.parambuilder.IParamBuilder;

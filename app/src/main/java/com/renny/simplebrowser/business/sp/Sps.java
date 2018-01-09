@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.renny.simplebrowser.App;
-import com.renny.simplebrowser.business.json.JsonHelper;
+import com.renny.simplebrowser.globe.json.JsonHelper;
 
 import java.lang.reflect.Type;
 import java.util.Map;
