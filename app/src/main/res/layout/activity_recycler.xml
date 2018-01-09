@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/parent"
     tools:context="com.renny.simplebrowser.view.page.RecyclerActivity">
 
     <com.renny.simplebrowser.view.widget.pullextend.ExtendListHeader
         android:id="@+id/extend_header"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="460dp"/>
 

@@ -48,7 +48,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     PullExtendLayout mPullExtendLayout;
     RecyclerView listHeader, listFooter;
     List<String> mDatas = new ArrayList<>();
-    BookMarkDao mMarkDao;
+    BookMarkDao mMarkDao = new BookMarkDao();
     ExtendMarkAdapter mExtendMarkAdapter;
     List<BookMark> markList;
 
@@ -123,6 +123,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             mPullExtendLayout.setPullLoadEnabled(false);
         }
     }
+
     public void reloadMarkListData() {
         markList = mMarkDao.queryForAll();
         mExtendMarkAdapter = new ExtendMarkAdapter(markList);

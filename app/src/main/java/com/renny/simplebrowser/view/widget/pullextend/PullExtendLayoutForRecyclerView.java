@@ -70,7 +70,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
     /**
      * 上拉加载是否可用
      */
-    private boolean mPullLoadEnabled = true;
+    private boolean mPullLoadEnabled = false;
 
     /**
      * 是否截断touch事件

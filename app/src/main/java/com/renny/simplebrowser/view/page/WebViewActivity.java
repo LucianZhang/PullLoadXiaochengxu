@@ -177,7 +177,7 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
 
 
     public void goSearchPage() {
-        startActivityForResult(new Intent(WebViewActivity.this, SearchActivity.class), 123);
+        startActivityForResult(new Intent(WebViewActivity.this, RecyclerActivity.class), 123);
     }
 
 
