@@ -33,7 +33,7 @@ public class RecyclerActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         final List<String> headerList = new ArrayList<>();
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 80; i++) {
             headerList.add("item" + i);
         }
         mRecyclerView.setAdapter(new CommonAdapter(android.R.layout.simple_expandable_list_item_1, headerList) {
