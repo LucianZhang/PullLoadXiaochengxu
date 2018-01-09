@@ -31,6 +31,8 @@
             android:name=".view.page.SearchActivity"
             android:windowSoftInputMode="stateAlwaysVisible|adjustResize">
         </activity>
+        <activity android:name=".view.page.RecyclerActivity">
+        </activity>
     </application>
 
 </manifest>
