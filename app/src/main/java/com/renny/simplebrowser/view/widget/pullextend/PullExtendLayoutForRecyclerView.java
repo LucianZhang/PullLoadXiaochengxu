@@ -234,7 +234,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
 
             case MotionEvent.ACTION_MOVE:
                 final float deltaY = ev.getY() - mLastMotionY;
-                if (!((Math.abs(deltaY) < mTouchSlop) && getScrollYValue() == mHeaderHeight)) {
+                if (ev.getY() > Math.abs(getScrollYValue())) {
                     mLastMotionY = ev.getY();
                     if (isPullRefreshEnabled() && isReadyForPullDown(deltaY)) {
                         pullHeaderLayout(deltaY / offsetRadio);
@@ -270,10 +270,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
             default:
                 break;
         }
-        if (handled) {
-            return handled;
-        }
-        return super.dispatchTouchEvent(ev);
+        return handled || super.dispatchTouchEvent(ev);
     }
 
    /* @Override
