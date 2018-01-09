@@ -147,7 +147,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
      * @param context context
      */
     private void init(Context context) {
-        mTouchSlop = (int) (ViewConfiguration.get(context).getScaledTouchSlop() * 1.5);
+        mTouchSlop = (int) (ViewConfiguration.get(context).getScaledTouchSlop());
         ViewGroup.LayoutParams layoutParams = mRefreshableView.getLayoutParams();
         layoutParams.height = 10;
         mRefreshableView.setLayoutParams(layoutParams);
@@ -251,20 +251,25 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
                 // 位移差大于mTouchSlop，这是为了防止快速拖动引发刷新
                 if ((absDiff > mTouchSlop)) {
                     mLastMotionY = event.getY();
-                    // 第一个显示出来，Header已经显示或拉下
-                    if (isPullRefreshEnabled() || isPullLoadEnabled()) {
-                        // 1，Math.abs(getScrollY()) > 0：表示当前滑动的偏移量的绝对值大于0，表示当前HeaderView滑出来了或完全
+                    if (isPullRefreshEnabled() && isReadyForPullDown(deltaY)) {
+                        // 1，Math.abs(getFirstTop()) >
+                        // 0：表示当前滑动的偏移量的绝对值大于0，表示当前HeaderView滑出来了或完全
                         // 不可见，存在这样一种case，当正在刷新时并且RefreshableView已经滑到顶部，向上滑动，那么我们期望的结果是
                         // 依然能向上滑动，直到HeaderView完全不可见
                         // 2，deltaY > 0.5f：表示下拉的值大于0.5f
-                        // 3，deltaY <- 0.5f：表示上滑的值大于0.5f
-                        mIsHandledTouchEvent = (Math.abs(getScrollYValue()) > 0 || deltaY > 0.5f || deltaY < -0.5f);
+                        mIsHandledTouchEvent = (Math.abs(getScrollYValue()) > 10 || deltaY > 0.5f);
                         // 如果截断事件，我们则仍然把这个事件交给刷新View去处理，典型的情况是让ListView/GridView将按下
                         // Child的Selector隐藏
-                        if (mIsHandledTouchEvent) {
-                            mRefreshableView.onTouchEvent(event);
-                        }
+//                        if (mIsHandledTouchEvent) {
+//                            mRefreshableView.onTouchEvent(event);
+//                        }
+//                        Logs.defaults.d("pull down mIsHandledTouchEvent="+mIsHandledTouchEvent );
+                    } else if (isPullLoadEnabled() && isReadyForPullUp(deltaY)) {
+                        // 原理如上
+                        mIsHandledTouchEvent = (Math.abs(getScrollYValue()) > 10 || deltaY < -0.5f);
+//                        Logs.defaults.d("pull load" );
                     }
+
                 }
                 break;
 
@@ -382,7 +387,10 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
      * @return true表示已经滑动到顶部，否则false
      */
     protected boolean isReadyForPullDown(float deltaY) {
-        RecyclerView mRecyclerView= (RecyclerView) mRefreshableView;
+        if (getScrollYValue() < 0) {
+            return true;
+        }
+        RecyclerView mRecyclerView = (RecyclerView) mRefreshableView;
         View firstView = mRecyclerView.getChildAt(0);
         int position = mRecyclerView.getChildAdapterPosition(firstView);
         if (position == 0) {
@@ -494,6 +502,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
             smoothScrollTo(footerListHeight);
         }
     }
+
     /**
      * 隐藏header和footer
      */
