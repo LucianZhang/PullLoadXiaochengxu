@@ -1,6 +1,7 @@
 package com.renny.simplebrowser.business.webview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,11 @@ public class X5WebChromeClient extends WebChromeClient {
         }
     }
 
-
+    //获取图标
+    @Override
+    public void onReceivedIcon(WebView view, Bitmap icon) {
+        super.onReceivedIcon(view, icon);
+    }
 
     @Override
     public void onReceivedTitle(WebView arg0, final String arg1) {

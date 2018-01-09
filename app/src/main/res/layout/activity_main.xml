@@ -40,7 +40,7 @@
             android:ellipsize="end"
             android:maxEms="11"
             android:maxLines="1"
-            android:text="@string/home"/>
+            android:text=""/>
 
         <ImageView
             android:id="@+id/mark"

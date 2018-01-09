@@ -170,7 +170,7 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
             mFragmentManager.beginTransaction().replace(R.id.container,
                     mHomePageFragment).commit();
         }
-        titleView.setText("主页");
+        titleView.setText("");
         mark.setVisibility(View.INVISIBLE);
         isOnHomePage = true;
     }
@@ -233,6 +233,9 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
         mark.setSelected(mMarkDao.query(url));
         if (!TextUtils.isEmpty(title)) {
             titleView.setText(title);
+        }
+        if (isOnHomePage){
+            titleView.setText("");
         }
     }
 
