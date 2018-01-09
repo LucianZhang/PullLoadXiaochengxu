@@ -67,15 +67,13 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         rootView.findViewById(R.id.url_edit).setOnClickListener(this);
         listHeader = mPullNewHeader.getRecyclerView();
         listFooter = mPullNewFooter.getRecyclerView();
-        listHeader.setLayoutManager( new OverFlyingLayoutManager(OrientationHelper.HORIZONTAL));
+        listHeader.setLayoutManager(new OverFlyingLayoutManager(OrientationHelper.HORIZONTAL));
         listFooter.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         listFooter.setItemAnimator(new DefaultItemAnimator());
     }
 
     public void afterViewBind(View rootView, Bundle savedInstanceState) {
-        mMarkDao = new BookMarkDao();
-        markList = mMarkDao.queryForAll();
-        mExtendMarkAdapter = new ExtendMarkAdapter(markList);
+        reloadMarkListData();
         mExtendMarkAdapter.setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
@@ -88,12 +86,14 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         mExtendMarkAdapter.setLongClickListener(new ExtendMarkAdapter.ItemLongClickListener() {
             @Override
             public void onItemLongClicked(int position, View view) {
+                mExtendMarkAdapter.removeData(position);
                 mMarkDao.delete(markList.get(position).getUrl());
-                refreshMarklist();
+                refreshMarkList();
             }
         });
+        listFooter.setItemAnimator(new DefaultItemAnimator());
         listFooter.setAdapter(mExtendMarkAdapter);
-        refreshMarklist();
+        refreshMarkList();
         mDatas.add("历史记录");
         mDatas.add("无痕浏览");
         mDatas.add("新建窗口");
@@ -113,20 +113,19 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 ToastHelper.makeToast(mDatas.get(position) + " 功能待实现");
             }
         }));
-
-
     }
 
-    public void refreshMarklist() {
-        markList.clear();
-        markList.addAll(mMarkDao.queryForAll());
-        mExtendMarkAdapter.notifyDataSetChanged();
-        if (markList != null && !markList.isEmpty()) {
+    public void refreshMarkList() {
+        if (mExtendMarkAdapter.getItemCount() > 0) {
             mPullExtendLayout.setPullLoadEnabled(true);
         } else {
             mPullExtendLayout.closeExtendHeadAndFooter();
             mPullExtendLayout.setPullLoadEnabled(false);
         }
+    }
+    public void reloadMarkListData() {
+        markList = mMarkDao.queryForAll();
+        mExtendMarkAdapter = new ExtendMarkAdapter(markList);
     }
 
     private void startBrowser(String text) {

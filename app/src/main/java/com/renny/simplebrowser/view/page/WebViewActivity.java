@@ -128,7 +128,7 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
                         mMarkDao.addMark(new BookMark(title, url));
                         mark.setSelected(true);
                     }
-                    mHomePageFragment.refreshMarklist();
+                    mHomePageFragment.reloadMarkListData();
                 }
                 break;
         }

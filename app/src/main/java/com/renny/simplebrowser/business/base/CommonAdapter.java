@@ -51,6 +51,13 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
         return this;
     }
 
+    public void removeData(int position) {
+        if (mDatas != null && mDatas.size() > position) {
+            mDatas.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
     public interface ItemClickListener {
         void onItemClicked(int position, View view);
     }
