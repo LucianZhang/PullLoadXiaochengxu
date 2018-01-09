@@ -1,13 +1,16 @@
 package com.renny.simplebrowser.view.page;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.URLUtil;
 
 import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.business.base.BaseFragment;
+import com.renny.simplebrowser.business.toast.ToastHelper;
 import com.renny.simplebrowser.business.webview.X5WebChromeClient;
 import com.renny.simplebrowser.business.webview.X5WebView;
 import com.renny.simplebrowser.business.webview.X5WebViewClient;
@@ -94,6 +97,19 @@ public class WebViewFragment extends BaseFragment {
         });
     }
 
+    private void donwnload(String ingUrl) {
+        if (URLUtil.isValidUrl(ingUrl)) {
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(ingUrl));
+            request.allowScanningByMediaScanner();
+            //设置图片的保存路径
+            request.setDestinationInExternalFilesDir(getActivity(), "/img", "/a.png");
+            DownloadManager downloadManager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+            downloadManager.enqueue(request);
+            ToastHelper.makeToast("下载成功");
+        } else {
+            ToastHelper.makeToast("下载失败");
+        }
+    }
 
     @Override
     public void onAttach(Context context) {

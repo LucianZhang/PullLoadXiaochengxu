@@ -24,12 +24,16 @@ public class X5WebViewClient extends WebViewClient {
      * 防止加载网页时调起系统浏览器
      */
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        if (url.startsWith("http://") || url.startsWith("https://")) {
-            view.loadUrl(url);
-            return true;
+        WebView.HitTestResult hitTestResult = view.getHitTestResult();
+        if ((url.startsWith("http://") || url.startsWith("https://"))) {
+            if (hitTestResult == null) {//hitTestResult==null解决重定向问题
+                view.loadUrl(url);
+                return true;
+            }
         } else {
             return jumpScheme(url);
         }
+        return super.shouldOverrideUrlLoading(view, url);
     }
 
     private boolean jumpScheme(String url) {

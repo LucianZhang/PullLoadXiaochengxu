@@ -37,5 +37,39 @@ public class X5WebView extends WebView {
         setting.setAppCachePath(appCachePath);
         setting.setAllowFileAccess(true);
         setting.setSavePassword(false);
+        setting.setJavaScriptCanOpenWindowsAutomatically(false);
+        // 自适应屏幕
+        setting.setUseWideViewPort(true);
+        setting.setLoadWithOverviewMode(true);
+       /* setOnLongClickListener(new View.OnLongClickListener() {
+
+            public boolean onLongClick(View v) {
+                WebView.HitTestResult result = ((WebView) v).getHitTestResult();
+                if (null == result)
+                    return false;
+                int type = result.getType();
+                switch (type) {
+                    case WebView.HitTestResult.EDIT_TEXT_TYPE: // 选中的文字类型
+                        break;
+                    case WebView.HitTestResult.PHONE_TYPE: // 处理拨号
+                        break;
+                    case WebView.HitTestResult.EMAIL_TYPE: // 处理Email
+                        break;
+                    case WebView.HitTestResult.GEO_TYPE: // 　地图类型
+                        break;
+                    case WebView.HitTestResult.SRC_ANCHOR_TYPE: // 超链接
+                        break;
+                    case WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE: // 带有链接的图片类型
+                    case WebView.HitTestResult.IMAGE_TYPE: // 处理长按图片的菜单项 }
+                        return true;
+                    case WebView.HitTestResult.UNKNOWN_TYPE: //未知
+                        break;
+
+                }
+                return false;
+
+            }
+
+        });*/
     }
 }
