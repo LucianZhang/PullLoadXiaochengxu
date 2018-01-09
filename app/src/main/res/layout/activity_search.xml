@@ -11,7 +11,9 @@
         android:layout_height="44dp"
         android:layout_alignParentBottom="true"
         android:background="@color/background"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_header"
@@ -36,8 +38,7 @@
         android:id="@+id/search_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/search_lay"
-        />
+        android:layout_above="@id/search_lay"/>
 
     <RelativeLayout
         android:id="@+id/search_lay"
@@ -47,7 +48,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="2px"
             android:background="#888888"/>
 
         <EditText

@@ -486,7 +486,9 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend {
             smoothScrollTo(footerListHeight);
         }
     }
-
+    /**
+     * 隐藏header和footer
+     */
     public void closeExtendHeadAndFooter() {
         smoothScrollTo(0);
     }
