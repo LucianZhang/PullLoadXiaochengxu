@@ -79,7 +79,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             public void onItemClicked(int position, View view) {
                 if (mGoPageListener != null) {
                     mGoPageListener.onGoPage(markList.get(position).getUrl());
-                    mPullExtendLayout.closeExtendHeadAndFooter();
                 }
             }
         });
