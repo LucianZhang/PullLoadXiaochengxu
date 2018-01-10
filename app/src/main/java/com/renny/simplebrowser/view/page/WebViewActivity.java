@@ -241,7 +241,7 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 123 && data != null) {
             String result = data.getStringExtra("url");

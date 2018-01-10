@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission">权限(permission)</string>
+    <string name="no_permissions">应用需要必要的运行权限</string>
+    <string name="permission_sure">重新允许</string>
+    <string name="permission_request">去允许</string>
+    <string name="permission_settings">设置</string>
+    <string name="permission_help">提示</string>
+    <string name="string_help_text">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。\n\n最后点击两次后退按钮，即可返回。</string>
+    <string name="string_help_retry">当前应用缺少必要权限。若想继续操作，请点击重新允许。拒绝后应用将无法进行下一步操作。</string>
+    <string name="string_read_phoneState">为了保证您的正常使用，请点击重新允许。拒绝后应用将无法正常运行。</string>
+    <string name="permission_quit">退出</string>
+    <string name="permission_dismiss">取消</string>
+</resources>

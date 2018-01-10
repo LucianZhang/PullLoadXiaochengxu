@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 
@@ -17,7 +18,12 @@ import com.renny.simplebrowser.App;
  */
 public class DeviceHelper {
 
-
+    /**
+     * 版本是否在Android6.0 以上
+     */
+    public static boolean isOverMarshmallow() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
 
     /**
      * x

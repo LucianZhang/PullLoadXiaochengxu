@@ -1,12 +1,7 @@
 package com.renny.simplebrowser.view.page;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -16,15 +11,18 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.renny.simplebrowser.R;
-import com.renny.simplebrowser.view.adapter.ExtendHeadAdapter;
-import com.renny.simplebrowser.view.adapter.ExtendMarkAdapter;
-import com.renny.simplebrowser.view.adapter.OverFlyingLayoutManager;
 import com.renny.simplebrowser.business.base.BaseFragment;
 import com.renny.simplebrowser.business.base.CommonAdapter;
 import com.renny.simplebrowser.business.db.dao.BookMarkDao;
 import com.renny.simplebrowser.business.db.entity.BookMark;
 import com.renny.simplebrowser.business.helper.Validator;
+import com.renny.simplebrowser.business.permission.PermissionHelper;
+import com.renny.simplebrowser.business.permission.PermissionListener;
+import com.renny.simplebrowser.business.permission.Permissions;
 import com.renny.simplebrowser.business.toast.ToastHelper;
+import com.renny.simplebrowser.view.adapter.ExtendHeadAdapter;
+import com.renny.simplebrowser.view.adapter.ExtendMarkAdapter;
+import com.renny.simplebrowser.view.adapter.OverFlyingLayoutManager;
 import com.renny.simplebrowser.view.listener.GoPageListener;
 import com.renny.simplebrowser.view.widget.pullextend.ExtendListFooter;
 import com.renny.simplebrowser.view.widget.pullextend.ExtendListHeader;
@@ -151,21 +149,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         mGoPageListener = goPageListener;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    jumpScanPage();
-                } else {
-                    Toast.makeText(getActivity(), "拒绝", Toast.LENGTH_LONG).show();
-                }
-                break;
-            default:
-                break;
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -175,13 +158,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    /**
-     * 跳转到扫码页
-     */
-    private void jumpScanPage() {
-        startActivityForResult(new Intent(getActivity(), CaptureActivity.class), REQUEST_SCAN);
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -189,23 +165,22 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         switch (id) {
             case R.id.scan:
                 if (mGoPageListener != null) {
-                    getRuntimeRight();
+                    PermissionHelper.requestPermissions(getActivity(), Permissions.PERMISSIONS_CAMERA, new PermissionListener() {
+                        @Override
+                        public void onPassed() {
+                            //跳转到扫码页
+                            startActivityForResult(new Intent(getActivity(), CaptureActivity.class), REQUEST_SCAN);
+                        }
+                    });
                 }
                 break;
             case R.id.url_edit:
-                ((WebViewActivity) getActivity()).goSearchPage();
+                if (getActivity() != null) {
+                    ((WebViewActivity) getActivity()).goSearchPage();
+                }
         }
     }
 
-    /**
-     * 获得运行时权限
-     */
-    private void getRuntimeRight() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 1);
-        } else {
-            jumpScanPage();
-        }
-    }
+
 
 }
