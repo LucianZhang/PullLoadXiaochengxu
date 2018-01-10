@@ -42,7 +42,7 @@ public class HttpResultParse {
         }
         long startTime1 = System.currentTimeMillis();
         Type type = api.getResultType();
-        Result<T> result = null;
+        Result result = null;
         if (api instanceof Api) {
             Api api2 = (Api) api;
             IHttpCell iHttpCell = api2.getIHttpCell();

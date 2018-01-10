@@ -15,10 +15,10 @@ public interface Hosts {
         }
     };
 
-    IHost jenkins = new IHost() {
+    IHost mine = new IHost() {
         @Override
         public String getHost() {
-            return "http://192.168.4.21:9090/";
+            return "http://oo6pz0u05.bkt.clouddn.com/";
         }
     };
 

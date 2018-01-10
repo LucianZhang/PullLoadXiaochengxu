@@ -28,12 +28,11 @@ public class ParseDefault implements IResultParse {
         }
         try {
             JSONObject jsonObject = JSON.parseObject(json);
-            JSONObject jsonObject1 = jsonObject.getJSONObject("ret");
-            if (jsonObject1 != null) {
-                boolean isSuccess = jsonObject1.getBoolean("success");
-                String code = jsonObject1.getString("code");
-                String msg = jsonObject1.getString("resultDes");
-                Object body = jsonObject1.getObject("result", Object.class);
+            if (jsonObject != null) {
+                boolean isSuccess = jsonObject.getBoolean("success");
+                String code = jsonObject.getString("code");
+                String msg = jsonObject.getString("resultDes");
+                Object body = jsonObject.getObject("result", Object.class);
                 if (body != null && type != null) {
                     if (type == String.class || type == List.class) {
                         body = body.toString();
@@ -41,8 +40,6 @@ public class ParseDefault implements IResultParse {
                         body = JSON.parseObject(body.toString(), type);
                     }
                 }
-
-
                 return new Result<>(body, isSuccess, code, msg, type);
             } else {
                 Logs.network.e("数据结构错误 url=%s model=%s", iApi.getUrl(), type);

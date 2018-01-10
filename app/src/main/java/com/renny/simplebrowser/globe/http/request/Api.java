@@ -174,6 +174,16 @@ public final class Api implements IApi {
         return api;
     }
 
+    public static Api GET(String path, Type type) {
+        Api api = new Api();
+        api.type = type;
+        api.path = path;
+        api.requestMethod = RequestMethod.Get;
+        api.paramType = ParamType.normal;
+        api.contentType = ContentType.APP_FORM_URLENCODED;
+        return api;
+    }
+
     public static Api POST(String path) {
         Api api = new Api();
         api.path = path;

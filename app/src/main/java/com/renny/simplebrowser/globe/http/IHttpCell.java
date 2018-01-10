@@ -9,13 +9,13 @@ import com.renny.simplebrowser.globe.http.request.IHost;
  * Created by LuckyCrystal on 2017/10/25.
  */
 
-public interface IHttpCell<T> {
+public interface IHttpCell {
 
     IHost getHost();
 
     String getUA();
 
-    IResultParse<T> getResultParse();
+    IResultParse getResultParse();
 
     IParamBuilder getParamBuilder();
 }

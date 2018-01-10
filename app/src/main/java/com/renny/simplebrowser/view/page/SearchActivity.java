@@ -27,6 +27,7 @@ import com.renny.simplebrowser.globe.http.callback.ApiCallback;
 import com.renny.simplebrowser.globe.http.reponse.IResult;
 import com.renny.simplebrowser.globe.task.TaskHelper;
 import com.renny.simplebrowser.view.adapter.HostAdapter;
+import com.renny.simplebrowser.view.bean.SuggestionHost;
 import com.renny.simplebrowser.view.listener.SimpleTextWatcher;
 
 import java.util.ArrayList;
@@ -44,7 +45,6 @@ public class SearchActivity extends BaseActivity {
     protected int getLayoutId() {
         return R.layout.activity_search;
     }
-
 
     @Override
     public void bindView(Bundle savedInstanceState) {
@@ -78,8 +78,7 @@ public class SearchActivity extends BaseActivity {
                 String textContain = s.toString();
                 if (TextUtils.isEmpty(textContain)) {
                     actionBtn.setText("取消");
-                    keyListView.setAdapter(new ArrayAdapter<>(SearchActivity.this, android.R.layout.simple_expandable_list_item_1, new ArrayList<>()));
-
+                    keyListView.setAdapter(new ArrayAdapter<>(SearchActivity.this, R.layout.item_host, new ArrayList<>()));
                 } else {
                     if (!Validator.checkUrl(textContain)) {
                         actionBtn.setText("搜索");
@@ -109,34 +108,36 @@ public class SearchActivity extends BaseActivity {
         });
         mRecyclerViewHeader.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mRecyclerViewFooter.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        final List<String> headerList = new ArrayList<>();
-        headerList.add("www.");
-        headerList.add("wap.");
-        headerList.add("m.");
-        final List<String> footerList = new ArrayList<>();
-        footerList.add(".com");
-        footerList.add(".cn");
-        footerList.add(".net");
-        footerList.add(".edu");
-        footerList.add(".cc");
-        footerList.add(".io");
-        footerList.add(".im");
-        mRecyclerViewHeader.setAdapter(new HostAdapter(headerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
+
+        TaskHelper.apiCall(Apis.host, null, new ApiCallback<SuggestionHost>() {
             @Override
-            public void onItemClicked(int position, View view) {
-                String content = String.format("%s%s", searchEdit.getText().toString(), headerList.get(position));
-                searchEdit.setText(content);
-                searchEdit.setSelection(content.length());//将光标移至文字末尾
+            public void onSuccess(IResult<SuggestionHost> result) {
+                SuggestionHost suggestionHost = result.data();
+                final List<String> headerList = suggestionHost.getHeader();
+                final List<String> footerList = suggestionHost.getFooter();
+                if (headerList != null) {
+                    mRecyclerViewHeader.setAdapter(new HostAdapter(headerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
+                        @Override
+                        public void onItemClicked(int position, View view) {
+                            String content = String.format("%s%s", searchEdit.getText().toString(), headerList.get(position));
+                            searchEdit.setText(content);
+                            searchEdit.setSelection(content.length());//将光标移至文字末尾
+                        }
+                    }));
+                }
+                if (footerList != null) {
+                    mRecyclerViewFooter.setAdapter(new HostAdapter(footerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
+                        @Override
+                        public void onItemClicked(int position, View view) {
+                            String content = String.format("%s%s", searchEdit.getText().toString(), footerList.get(position));
+                            searchEdit.setText(content);
+                            searchEdit.setSelection(content.length());//将光标移至文字末尾
+                        }
+                    }));
+                }
             }
-        }));
-        mRecyclerViewFooter.setAdapter(new HostAdapter(footerList).setItemClickListener(new CommonAdapter.ItemClickListener() {
-            @Override
-            public void onItemClicked(int position, View view) {
-                String content = String.format("%s%s", searchEdit.getText().toString(), footerList.get(position));
-                searchEdit.setText(content);
-                searchEdit.setSelection(content.length());//将光标移至文字末尾
-            }
-        }));
+        });
+
     }
 
     @Override
@@ -166,13 +167,12 @@ public class SearchActivity extends BaseActivity {
         if (TextUtils.isEmpty(text)) {
             ToastHelper.makeToast("请输入网址");
         } else {
-            String temp = text;
             Intent intent = new Intent();
             if (!Validator.checkUrl(text)) {
                 intent.putExtra("url", "http://wap.baidu.com/s?wd=" + text);
                 setResult(111, intent);
             } else {
-                intent.putExtra("url", temp);
+                intent.putExtra("url", text);
                 setResult(111, intent);
             }
         }

@@ -19,9 +19,9 @@ import java.util.List;
  *
  */
 
-public  class ParseImg<T> implements IResultParse {
+public  class ParseImg implements IResultParse {
     @Override
-    public Result<T> parseResult(IApi iApi, String json, Type type) {
+    public Result parseResult(IApi iApi, String json, Type type) {
         if (TextUtils.isEmpty(json)) {
             Logs.network.e("服务器数据返回异常 url=%s model=%s", iApi.getUrl(), type);
             return Result.fail(ResultCode.ERROR_SERVER_DATA_Empty, "搜索无结果");
@@ -39,7 +39,7 @@ public  class ParseImg<T> implements IResultParse {
                         body = JSON.parseObject(body.toString(), type);
                     }
                 }
-                return new Result<>((T)body, true, code, msg, type);
+                return new Result<>(body, true, code, msg, type);
             } else {
                 Logs.network.e("数据结构错误 url=%s model=%s", iApi.getUrl(), type);
                 return Result.fail(ResultCode.ERROR_SERVER_DATA_ERROR, "服务器数据返回异常");

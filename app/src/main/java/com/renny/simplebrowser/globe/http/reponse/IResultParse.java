@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
  * Created by LuckyCrystal on 2017/10/25.
  */
 
-public interface IResultParse<T> {
+public interface IResultParse {
 
-     Result<T> parseResult(IApi iApi, String json, Type type);
+     Result parseResult(IApi iApi, String json, Type type);
 }
