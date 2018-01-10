@@ -48,7 +48,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     PullExtendLayout mPullExtendLayout;
     RecyclerView listHeader, listFooter;
     List<String> mDatas = new ArrayList<>();
-    BookMarkDao mMarkDao=new BookMarkDao();
+    BookMarkDao mMarkDao = new BookMarkDao();
     ExtendMarkAdapter mExtendMarkAdapter;
     List<BookMark> markList;
 
@@ -73,6 +73,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     }
 
     public void afterViewBind(View rootView, Bundle savedInstanceState) {
+        markList = mMarkDao.queryForAll();
+        mExtendMarkAdapter = new ExtendMarkAdapter(markList);
         reloadMarkListData();
         mExtendMarkAdapter.setItemClickListener(new CommonAdapter.ItemClickListener() {
             @Override
@@ -86,14 +88,18 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         mExtendMarkAdapter.setLongClickListener(new ExtendMarkAdapter.ItemLongClickListener() {
             @Override
             public void onItemLongClicked(int position, View view) {
-                mExtendMarkAdapter.removeData(position);
                 mMarkDao.delete(markList.get(position).getUrl());
-                refreshMarkList();
+                mExtendMarkAdapter.removeData(position);
+                if (mExtendMarkAdapter.getItemCount() > 0) {
+                    mPullExtendLayout.setPullLoadEnabled(true);
+                } else {
+                    mPullExtendLayout.closeExtendHeadAndFooter();
+                    mPullExtendLayout.setPullLoadEnabled(false);
+                }
             }
         });
         listFooter.setItemAnimator(new DefaultItemAnimator());
         listFooter.setAdapter(mExtendMarkAdapter);
-        refreshMarkList();
         mDatas.add("历史记录");
         mDatas.add("无痕浏览");
         mDatas.add("新建窗口");
@@ -115,7 +121,10 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         }));
     }
 
-    public void refreshMarkList() {
+    public void reloadMarkListData() {
+        markList.clear();
+        markList.addAll(mMarkDao.queryForAll());
+        mExtendMarkAdapter.notifyDataSetChanged();
         if (mExtendMarkAdapter.getItemCount() > 0) {
             mPullExtendLayout.setPullLoadEnabled(true);
         } else {
@@ -123,22 +132,16 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             mPullExtendLayout.setPullLoadEnabled(false);
         }
     }
-    public void reloadMarkListData() {
-        markList = mMarkDao.queryForAll();
-        mExtendMarkAdapter = new ExtendMarkAdapter(markList);
-    }
 
     private void startBrowser(String text) {
         if (mGoPageListener != null) {
             if (TextUtils.isEmpty(text)) {
                 Toast.makeText(getActivity(), "请输入网址", Toast.LENGTH_SHORT).show();
             } else {
-                String temp = text;
-
-                if (!Validator.checkUrl(temp)) {
+                if (!Validator.checkUrl(text)) {
                     mGoPageListener.onGoPage("http://www.baidu.com/s?wd=" + text);
                 } else {
-                    mGoPageListener.onGoPage(temp);
+                    mGoPageListener.onGoPage(text);
                 }
             }
         }
@@ -182,7 +185,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-
         int id = v.getId();
         switch (id) {
             case R.id.scan:
@@ -192,7 +194,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.url_edit:
                 ((WebViewActivity) getActivity()).goSearchPage();
-
         }
     }
 

@@ -18,7 +18,7 @@ public class ExtendMarkAdapter extends CommonAdapter<BookMark> {
     private ItemLongClickListener mLongClickListener;
 
     public ExtendMarkAdapter( List<BookMark> datas) {
-        super( R.layout.item_mark, datas);
+        super(R.layout.item_mark, datas);
     }
 
     public void setLongClickListener(ItemLongClickListener longClickListener) {

@@ -234,8 +234,9 @@ public class WebViewActivity extends BaseActivity implements WebViewFragment.OnR
         if (!TextUtils.isEmpty(title)) {
             titleView.setText(title);
         }
-        if (isOnHomePage){
+        if (isOnHomePage) {
             titleView.setText("");
+            mark.setVisibility(View.INVISIBLE);
         }
     }
 

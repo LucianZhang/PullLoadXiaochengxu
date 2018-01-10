@@ -55,6 +55,7 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
         if (mDatas != null && mDatas.size() > position) {
             mDatas.remove(position);
             notifyItemRemoved(position);
+            notifyItemRangeChanged(position, getItemCount()); //刷新被删除数据，以及其后面的数据
         }
     }
 
