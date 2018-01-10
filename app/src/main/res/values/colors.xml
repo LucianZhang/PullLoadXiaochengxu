@@ -10,7 +10,7 @@
     <color name="color_btn_major">#FFe352</color>
     <color name="color_btn_major_deep">#ffb626</color>
     <color name="transparent">#00000000</color>
-
+    <color name="gray_little">#40b4b4b4</color>
     <!--用于重要文字-->
     <color name="color_text_major">#222222</color>
     <!--用于次要文字-->

@@ -9,11 +9,8 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.renny.simplebrowser.R;
@@ -27,6 +24,7 @@ import com.renny.simplebrowser.globe.http.callback.ApiCallback;
 import com.renny.simplebrowser.globe.http.reponse.IResult;
 import com.renny.simplebrowser.globe.task.TaskHelper;
 import com.renny.simplebrowser.view.adapter.HostAdapter;
+import com.renny.simplebrowser.view.adapter.KeyListAdapter;
 import com.renny.simplebrowser.view.bean.SuggestionHost;
 import com.renny.simplebrowser.view.listener.SimpleTextWatcher;
 
@@ -39,7 +37,9 @@ public class SearchActivity extends BaseActivity {
     RecyclerView mRecyclerViewHeader, mRecyclerViewFooter;
     EditText searchEdit;
     Button actionBtn;
-    ListView keyListView;
+    RecyclerView keyListView;
+    KeyListAdapter mKeyListAdapter;
+    List<String> keyList = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -58,6 +58,23 @@ public class SearchActivity extends BaseActivity {
 
     @Override
     public void afterViewBind(Bundle savedInstanceState) {
+        mKeyListAdapter = new KeyListAdapter(keyList);
+        mKeyListAdapter.setOnClickListener(new KeyListAdapter.OnClickListener() {
+            @Override
+            public void onWordClick(int position, View view) {
+                startBrowser(keyList.get(position));
+                KeyboardUtils.hideSoftInput(SearchActivity.this);
+                finish();
+            }
+
+            @Override
+            public void onGoClick(int position, View view) {
+                searchEdit.setText(keyList.get(position));
+                searchEdit.setSelection(keyList.get(position).length());
+            }
+        });
+        keyListView.setAdapter(mKeyListAdapter);
+        keyListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         searchEdit.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -78,7 +95,7 @@ public class SearchActivity extends BaseActivity {
                 String textContain = s.toString();
                 if (TextUtils.isEmpty(textContain)) {
                     actionBtn.setText("取消");
-                    keyListView.setAdapter(new ArrayAdapter<>(SearchActivity.this, R.layout.item_host, new ArrayList<>()));
+                    mKeyListAdapter.clear();
                 } else {
                     if (!Validator.checkUrl(textContain)) {
                         actionBtn.setText("搜索");
@@ -90,16 +107,10 @@ public class SearchActivity extends BaseActivity {
                     TaskHelper.apiCall(Apis.searchSuggestion, params, new ApiCallback<List<String>>() {
                         @Override
                         public void onSuccess(IResult<List<String>> result) {
-                            final List<String> keyList = result.data();
-                            if (keyList != null && !result.data().isEmpty()) {
-                                keyListView.setAdapter(new ArrayAdapter<>(SearchActivity.this, R.layout.item_suggestion_word, keyList));
-                                keyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        searchEdit.setText(keyList.get(position));
-                                        searchEdit.setSelection(keyList.get(position).length());
-                                    }
-                                });
+                            final List<String> resultList = result.data();
+                            if (resultList != null && !resultList.isEmpty()) {
+                                keyList = resultList;
+                                mKeyListAdapter.setDataWithNotify(keyList);
                             }
                         }
                     });

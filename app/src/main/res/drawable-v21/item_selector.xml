@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/gray_little">
+    <item>
+        <selector>
+            <item android:state_enabled="true">
+                <shape>
+                    <solid android:color="@color/transparent" />
+                </shape>
+            </item>
+            <item android:state_enabled="false">
+                <shape>
+                    <solid android:color="@color/color_line" />
+                </shape>
+            </item>
+
+            <item android:drawable="@color/transparent" />
+
+        </selector>
+    </item>
+</ripple>

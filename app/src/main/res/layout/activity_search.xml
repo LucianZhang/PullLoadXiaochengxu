@@ -19,7 +19,8 @@
             android:id="@+id/list_header"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"/>
+            android:layout_weight="2"
+            android:overScrollMode="never"/>
 
         <View
             android:layout_width="0dp"
@@ -30,15 +31,17 @@
             android:id="@+id/list_footer"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"/>
+            android:layout_weight="2"
+            android:overScrollMode="never"/>
 
     </LinearLayout>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/search_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/search_lay"/>
+        android:layout_above="@id/search_lay"
+        android:overScrollMode="never"/>
 
     <RelativeLayout
         android:id="@+id/search_lay"

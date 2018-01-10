@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:id="@android:id/text1"
-          android:layout_width="match_parent"
-          android:layout_height="33dp"
-          android:gravity="center_vertical"
-          android:paddingLeft="15dp"
-          android:textSize="12sp"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@android:id/text1"
+              android:layout_width="match_parent"
+              android:layout_height="46dp"
+              android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/word"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
+        android:background="@drawable/item_selector"
+        android:drawableLeft="@drawable/ic_search"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:textSize="15sp"/>
+
+    <ImageView
+        android:id="@+id/go"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:src="@drawable/ic_input"/>
+</LinearLayout>
