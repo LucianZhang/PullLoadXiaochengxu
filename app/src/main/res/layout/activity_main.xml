@@ -44,11 +44,14 @@
 
         <ImageView
             android:id="@+id/mark"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="63dp"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/title"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="10dp"
+            android:paddingTop="8dp"
             android:src="@drawable/bg_mark"/>
 
     </RelativeLayout>

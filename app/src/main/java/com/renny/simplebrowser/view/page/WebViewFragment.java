@@ -3,7 +3,6 @@ package com.renny.simplebrowser.view.page;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -21,9 +20,6 @@ import com.tencent.smtt.sdk.DownloadListener;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class WebViewFragment extends BaseFragment {
@@ -51,11 +47,7 @@ public class WebViewFragment extends BaseFragment {
     public void afterViewBind(View rootView, Bundle savedInstanceState) {
         final PullToRefreshWebView pullToRefreshWebView = rootView.findViewById(R.id.refreshLayout);
         mWebView = pullToRefreshWebView.getRefreshableView();
-        List<String> list = new ArrayList<>();
-        list.add("Item1");
-        list.add("Item2");
-        list.add("APIWeb");
-
+        mWebView.getView().setOverScrollMode(View.OVER_SCROLL_NEVER);
         pullToRefreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<X5WebView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<X5WebView> refreshView) {
@@ -76,12 +68,6 @@ public class WebViewFragment extends BaseFragment {
                     onReceivedTitleListener.onReceivedTitle(webView.getUrl(), title);
 
                 }
-            }
-
-            //获取图标
-            @Override
-            public void onReceivedIcon(WebView view, Bitmap icon) {
-                super.onReceivedIcon(view, icon);
             }
         };
 
