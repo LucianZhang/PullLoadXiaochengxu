@@ -4,10 +4,8 @@ package com.renny.simplebrowser.view.widget.pullextend;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
@@ -73,22 +71,9 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
     private boolean mPullLoadEnabled = false;
 
     /**
-     * 是否截断touch事件
-     */
-    private boolean mInterceptEventEnable = true;
-
-    /**
-     * 表示是否消费了touch事件，如果是，则不调用父类的onTouchEvent方法
-     */
-    private boolean mIsHandledTouchEvent = false;
-    /**
-     * 移动点的保护范围值
-     */
-    private int mTouchSlop;
-    /**
      * 主View
      */
-    View mRefreshableView;
+    RecyclerView mRefreshableView;
     /**
      * 平滑滚动的Runnable
      */
@@ -116,16 +101,16 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
         if (childCount == 2) {
             if (getChildAt(0) instanceof ExtendLayout) {
                 mHeaderLayout = (ExtendLayout) getChildAt(0);
-                mRefreshableView = getChildAt(1);
+                mRefreshableView = (RecyclerView) getChildAt(1);
             } else {
-                mRefreshableView = getChildAt(0);
+                mRefreshableView = (RecyclerView) getChildAt(0);
                 mFooterLayout = (ExtendLayout) getChildAt(1);
             }
         } else if (childCount == 3) {
             if (getChildAt(0) instanceof ExtendLayout) {
                 mHeaderLayout = (ExtendLayout) getChildAt(0);
             }
-            mRefreshableView = getChildAt(1);
+            mRefreshableView = (RecyclerView) getChildAt(1);
             mFooterLayout = (ExtendLayout) getChildAt(2);
         } else {
             throw new IllegalStateException("布局异常，最多三个，最少一个");
@@ -133,6 +118,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
         if (mRefreshableView == null) {
             throw new IllegalStateException("布局异常，一定要有内容布局");
         }
+        mRefreshableView.setOverScrollMode(OVER_SCROLL_NEVER);
         // mRefreshableView.setClickable(true);需要自己设置
         init(getContext());
     }
@@ -147,7 +133,6 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
      * @param context context
      */
     private void init(Context context) {
-        mTouchSlop = (int) (ViewConfiguration.get(context).getScaledTouchSlop());
         ViewGroup.LayoutParams layoutParams = mRefreshableView.getLayoutParams();
         layoutParams.height = 10;
         mRefreshableView.setLayoutParams(layoutParams);
@@ -229,9 +214,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastMotionY = ev.getY();
-                mIsHandledTouchEvent = false;
                 break;
-
             case MotionEvent.ACTION_MOVE:
                 final float deltaY = ev.getY() - mLastMotionY;
                 if (ev.getY() > Math.abs(getScrollYValue())) {
@@ -247,10 +230,7 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
                         handled = true;
                         if (null != mHeaderLayout && 0 != mHeaderHeight) {
                             mHeaderLayout.setState(IExtendLayout.State.RESET);
-
                         }
-                    } else {
-                        mIsHandledTouchEvent = false;
                     }
                 }
                 break;
@@ -272,113 +252,6 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
         }
         return handled || super.dispatchTouchEvent(ev);
     }
-
-   /* @Override
-    public final boolean onInterceptTouchEvent(MotionEvent event) {
-        if (!isInterceptTouchEventEnabled()) {
-            return false;
-        }
-        if (!isPullLoadEnabled() && !isPullRefreshEnabled()) {
-            return false;
-        }
-        final int action = event.getAction();
-        if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
-            mIsHandledTouchEvent = false;
-            return false;
-        }
-        if (action != MotionEvent.ACTION_DOWN && mIsHandledTouchEvent) {
-            return true;
-        }
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                mLastMotionY = event.getY();
-                mIsHandledTouchEvent = false;
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                final float deltaY = event.getY() - mLastMotionY;
-                final float absDiff = Math.abs(deltaY);
-                // 位移差大于mTouchSlop，这是为了防止快速拖动引发刷新
-                if ((absDiff > mTouchSlop)) {
-                    mLastMotionY = event.getY();
-                    if (isPullRefreshEnabled() && isReadyForPullDown(deltaY)) {
-                        // 1，Math.abs(getFirstTop()) >
-                        // 0：表示当前滑动的偏移量的绝对值大于0，表示当前HeaderView滑出来了或完全
-                        // 不可见，存在这样一种case，当正在刷新时并且RefreshableView已经滑到顶部，向上滑动，那么我们期望的结果是
-                        // 依然能向上滑动，直到HeaderView完全不可见
-                        // 2，deltaY > 0.5f：表示下拉的值大于0.5f
-                        mIsHandledTouchEvent = (Math.abs(getScrollYValue()) > 10 || deltaY > 0.5f);
-                        // 如果截断事件，我们则仍然把这个事件交给刷新View去处理，典型的情况是让ListView/GridView将按下
-                        // Child的Selector隐藏
-//                        if (mIsHandledTouchEvent) {
-//                            mRefreshableView.onTouchEvent(event);
-//                        }
-//                        Logs.defaults.d("pull down mIsHandledTouchEvent="+mIsHandledTouchEvent );
-                    } else if (isPullLoadEnabled() && isReadyForPullUp(deltaY)) {
-                        // 原理如上
-                        mIsHandledTouchEvent = (Math.abs(getScrollYValue()) > 10 || deltaY < -0.5f);
-//                        Logs.defaults.d("pull load" );
-                    }
-
-                }
-                break;
-
-            default:
-                break;
-        }
-        return mIsHandledTouchEvent;
-    }
-*/
-
-   /* @Override
-    public final boolean onTouchEvent(MotionEvent ev) {
-        boolean handled = false;
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mLastMotionY = ev.getY();
-                mIsHandledTouchEvent = false;
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                final float deltaY = ev.getY() - mLastMotionY;
-                mLastMotionY = ev.getY();
-                if (isPullRefreshEnabled() && isReadyForPullDown(deltaY)) {
-                    pullHeaderLayout(deltaY / offsetRadio);
-                    handled = true;
-                    if (null != mFooterLayout && 0 != mFooterHeight) {
-                        mFooterLayout.setState(IExtendLayout.State.RESET);
-                    }
-                } else if (isPullLoadEnabled() && isReadyForPullUp(deltaY)) {
-                    pullFooterLayout(deltaY / offsetRadio);
-                    handled = true;
-                    if (null != mHeaderLayout && 0 != mHeaderHeight) {
-                        mHeaderLayout.setState(IExtendLayout.State.RESET);
-
-                    }
-                } else {
-                    mIsHandledTouchEvent = false;
-                }
-                break;
-
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_UP:
-                if (mIsHandledTouchEvent) {
-                    mIsHandledTouchEvent = false;
-                    // 当第一个显示出来时
-                    if (isReadyForPullDown(0)) {
-                        resetHeaderLayout();
-                    } else if (isReadyForPullUp(0)) {
-                        resetFooterLayout();
-                    }
-                }
-                break;
-
-            default:
-                break;
-        }
-        return handled;
-    }*/
-
     @Override
     public void setPullRefreshEnabled(boolean pullRefreshEnabled) {
         mPullRefreshEnabled = pullRefreshEnabled;
@@ -440,12 +313,11 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
         if (getScrollYValue() < 0) {
             return true;
         }
-        RecyclerView mRecyclerView = (RecyclerView) mRefreshableView;
-        View firstView = mRecyclerView.getChildAt(0);
-        int position = mRecyclerView.getChildAdapterPosition(firstView);
+        View firstView = mRefreshableView.getChildAt(0);
+        int position = mRefreshableView.getChildAdapterPosition(firstView);
         if (position == 0) {
             return (getScrollYValue() < 0 || (getScrollYValue() == 0 && deltaY > 0))
-                    && firstView.getTop() >= mRecyclerView.getTop();
+                    && firstView.getTop() >= mRefreshableView.getTop();
         }
         return false;
     }
@@ -625,23 +497,6 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
         }
     }
 
-    /**
-     * 设置是否截断touch事件
-     *
-     * @param enabled true截断，false不截断
-     */
-    private void setInterceptTouchEventEnabled(boolean enabled) {
-        mInterceptEventEnable = enabled;
-    }
-
-    /**
-     * 标志是否截断touch事件
-     *
-     * @return true截断，false不截断
-     */
-    private boolean isInterceptTouchEventEnabled() {
-        return mInterceptEventEnable;
-    }
 
     /**
      * 实现了平滑滚动的Runnable
@@ -719,8 +574,6 @@ public class PullExtendLayoutForRecyclerView extends LinearLayout implements IPu
                         * mInterpolator.getInterpolation(normalizedTime / (float) oneSecond));
                 mCurrentY = mScrollFromY - deltaY;
                 setScrollTo(0, mCurrentY);
-                Log.d("setScrollTo", " " + mCurrentY);
-
                 if (null != mHeaderLayout && 0 != mHeaderHeight) {
                     mHeaderLayout.onPull(Math.abs(mCurrentY));
                     if (mCurrentY == 0) {
