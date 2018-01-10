@@ -29,4 +29,7 @@
     <color name="color_white">#FFFFFFFF</color>
 
     <color name="white_0.5">#80FFFFFF</color>
+
+    <color name="popup_bg">#8f000000</color>
+    <color name="line_bg">#CDCDCD</color>
 </resources>

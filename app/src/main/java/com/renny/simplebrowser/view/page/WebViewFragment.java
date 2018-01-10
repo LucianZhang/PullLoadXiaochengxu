@@ -1,19 +1,27 @@
 package com.renny.simplebrowser.view.page;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.webkit.URLUtil;
 
 import com.renny.simplebrowser.R;
 import com.renny.simplebrowser.business.base.BaseFragment;
+import com.renny.simplebrowser.business.helper.Folders;
+import com.renny.simplebrowser.business.helper.ImgHelper;
 import com.renny.simplebrowser.business.toast.ToastHelper;
 import com.renny.simplebrowser.business.webview.X5WebChromeClient;
 import com.renny.simplebrowser.business.webview.X5WebView;
 import com.renny.simplebrowser.business.webview.X5WebViewClient;
+import com.renny.simplebrowser.globe.helper.BitmapUtils;
+import com.renny.simplebrowser.globe.helper.FileUtil;
+import com.renny.simplebrowser.globe.task.ITaskWithResult;
+import com.renny.simplebrowser.globe.task.TaskHelper;
+import com.renny.simplebrowser.view.dialog.LongClickDialogFragment;
+import com.renny.simplebrowser.view.listener.OnItemClickListener;
 import com.renny.simplebrowser.view.widget.pullrefresh.PullToRefreshBase;
 import com.renny.simplebrowser.view.widget.pullrefresh.PullToRefreshWebView;
 import com.tencent.smtt.sdk.DownloadListener;
@@ -21,9 +29,10 @@ import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
+import java.io.File;
+
 
 public class WebViewFragment extends BaseFragment {
-
     private X5WebView mWebView;
     private String mUrl;
     private OnReceivedListener onReceivedTitleListener;
@@ -97,19 +106,47 @@ public class WebViewFragment extends BaseFragment {
                 getActivity().startActivity(intent);
             }
         });
+
+
+        mWebView.setOnSelectItemListener(new X5WebView.onSelectItemListener() {
+            @Override
+            public void onSelected(int x, int y, int type, final String extra) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                LongClickDialogFragment bottomDialogFragment = LongClickDialogFragment.getInstance(x, y);
+                bottomDialogFragment.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(int position) {
+                        donwnload(extra);
+                    }
+                });
+                bottomDialogFragment.show(fm, "fragment_bottom_dialog");
+            }
+        });
     }
 
-    private void donwnload(String ingUrl) {
-        if (URLUtil.isValidUrl(ingUrl)) {
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(ingUrl));
-            request.allowScanningByMediaScanner();
-            //设置图片的保存路径
-            request.setDestinationInExternalFilesDir(getActivity(), "/img", "/a.png");
-            DownloadManager downloadManager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
-            downloadManager.enqueue(request);
-            ToastHelper.makeToast("下载成功");
+    private void donwnload(final String imgUrl) {
+        if (URLUtil.isValidUrl(imgUrl)) {
+            TaskHelper.submitResult(new ITaskWithResult<File>() {
+                @Override
+                public File onBackground() throws Exception {
+                    return ImgHelper.syncLoadFile(imgUrl);
+
+                }
+
+                @Override
+                public void onComplete(File sourceFile) {
+                    if (sourceFile != null && sourceFile.exists()) {
+                        File file = Folders.gallery.getFile(System.currentTimeMillis() + ".jpg");
+                        FileUtil.copyFile(sourceFile, file);
+                        BitmapUtils.displayToGallery(getActivity(), file);
+                        ToastHelper.makeToast("保存成功");
+                    }else {
+                        ToastHelper.makeToast("保存失败");
+                    }
+                }
+            });
         } else {
-            ToastHelper.makeToast("下载失败");
+            ToastHelper.makeToast("保存失败");
         }
     }
 

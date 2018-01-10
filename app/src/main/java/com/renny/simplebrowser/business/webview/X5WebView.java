@@ -14,7 +14,8 @@ import com.tencent.smtt.sdk.WebView;
  */
 
 public class X5WebView extends WebView {
-    float touchX = 0, touchY = 0;
+    int touchX = 0, touchY = 0;
+    private onSelectItemListener mOnSelectItemListener;
 
     public X5WebView(Context context) {
         this(context, null);
@@ -27,6 +28,10 @@ public class X5WebView extends WebView {
     public X5WebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+    }
+
+    public void setOnSelectItemListener(onSelectItemListener onSelectItemListener) {
+        mOnSelectItemListener = onSelectItemListener;
     }
 
     private void init() {
@@ -54,6 +59,7 @@ public class X5WebView extends WebView {
                 if (null == result)
                     return false;
                 int type = result.getType();
+
                 switch (type) {
                     case WebView.HitTestResult.EDIT_TEXT_TYPE: // 选中的文字类型
                         break;
@@ -68,7 +74,9 @@ public class X5WebView extends WebView {
                         break;
                     case WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE: // 带有链接的图片类型
                     case WebView.HitTestResult.IMAGE_TYPE: // 处理长按图片的菜单项
-                        Logs.h5.d("HitTestResult:" + touchX + "    " + touchY + result.getExtra());
+                        if (mOnSelectItemListener != null) {
+                            mOnSelectItemListener.onSelected(touchX, touchY, result.getType(), result.getExtra());
+                        }
                         return true;
                     case WebView.HitTestResult.UNKNOWN_TYPE: //未知
                         break;
@@ -84,10 +92,12 @@ public class X5WebView extends WebView {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         Logs.h5.d("onTouchEvent:" + event.getRawX() + "    " + event.getY());
-        touchX = event.getRawX();
-        touchY = event.getRawY();
+        touchX = (int) event.getRawX();
+        touchY = (int) event.getRawY();
         return super.onInterceptTouchEvent(event);
     }
 
-
+    public interface onSelectItemListener {
+        void onSelected(int x, int y, int type, String extra);
+    }
 }
