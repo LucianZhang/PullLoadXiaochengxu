@@ -125,12 +125,12 @@ public class WebViewFragment extends BaseFragment {
     }
 
     private void donwnload(final String imgUrl) {
+        ToastHelper.makeToast("开始保存");
         if (URLUtil.isValidUrl(imgUrl)) {
             TaskHelper.submitResult(new ITaskWithResult<File>() {
                 @Override
                 public File onBackground() throws Exception {
                     return ImgHelper.syncLoadFile(imgUrl);
-
                 }
 
                 @Override
