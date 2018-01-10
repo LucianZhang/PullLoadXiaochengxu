@@ -116,7 +116,9 @@ public class WebViewFragment extends BaseFragment {
                 bottomDialogFragment.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClicked(int position) {
-                        donwnload(extra);
+                        if (position==0) {
+                            donwnload(extra);
+                        }
                     }
                 });
                 bottomDialogFragment.show(fm, "fragment_bottom_dialog");
